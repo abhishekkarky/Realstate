@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,12 +9,18 @@
 </head>
 <body>
     <main class="md:flex justify-center items-center w-[100%] h-screen mx-auto my-auto">
-        <form class="flex flex-col justify-center items-center px-10 w-full md:w-[400px] py-20 shadow-lg rounded-md">
-            <img class="w-20 h-20 rounded-full" src="../static/images/realstate-logo.png" alt="">
+        <form class="flex flex-col justify-center items-center px-10 w-full md:w-[400px] py-20 shadow-lg rounded-md" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <img class="w-20 h-20 rounded-full" src="/static/images/realstatelogo.png" alt="">
             <h1 class="font-bold text-3xl mt-20">Login here...</h1>
-            <input class="w-full h-[50px] mt-10 border-2 px-5 rounded-md" type="email"  id="email" placeholder="Enter your email address..." required>
-            <input class="w-full h-[50px] mt-3 mb-8 border-2 px-5 rounded-md" type="password" id="password" placeholder="Enter your password..." required>
+            {% if error %}
+                <p class="text-red-500">{{ error }}</p>
+            {% endif %}
+            <input class="w-full h-[50px] mt-10 border-2 px-5 rounded-md" type="email"  id="email" name="email" placeholder="Enter your email address..." required>
+            <input class="w-full h-[50px] mt-3 mb-8 border-2 px-5 rounded-md" type="password" id="password" name="password" placeholder="Enter your password..." required>
             <button class="bg-black text-white py-3 px-10" type="submit">Login</button>
+            <a class=" text-black-500 py-3 px-10" href="signup">New Member ? <span style=":hover:underline"> Click here</span></a>
+
         </form>
     </main>
 </body>

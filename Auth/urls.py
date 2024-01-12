@@ -3,8 +3,12 @@ from Auth import views
 
 
 urlpatterns = [
-    path('login', views.login, name='login'),
+    path('login', views.user_login, name='login'),
     path('signup', views.register, name='register'),
-    path('dashboard', views.dashboard, name='dashboard'),
-    path('contact', views.contact, name='contact')
+    path('', views.dashboard, name='dashboard'),
+    path('contact', views.contact, name='contact'),
+    path('singleproperty', views.singleProperty, name='singleproperty'),
+    path('services', views.services, name='services'),
+    path('about', views.about, name='about'),
+    path('properties', views.properties, name='properties')
 ]

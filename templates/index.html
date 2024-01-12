@@ -1,6 +1,5 @@
-
+{% load static %}
 <!DOCTYPE html>
-<!-- {% load static %} -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -18,15 +17,15 @@
       rel="stylesheet"
     />
     
-    <link rel="stylesheet" href="../static/fonts/icomoon/style.css" />
-    <link rel="stylesheet" href="../static/fonts/flaticon/font/flaticon.css" />
+    <link rel="stylesheet" href="/static/fonts/icomoon/style.css" />
+    <link rel="stylesheet" href="/static/fonts/flaticon/font/flaticon.css" />
 
-    <link rel="stylesheet" href="../static/css/tiny-slider.css" />
-    <link rel="stylesheet" href="../static/css/aos.css" />
-    <link rel="stylesheet" href="../static/css/style.css" />
+    <link rel="stylesheet" href="/static/css/tiny-slider.css" />
+    <link rel="stylesheet" href="/static/css/aos.css" />
+    <link rel="stylesheet" href="/static/css/style.css" />
 
     <title>
-      Property &mdash; Free Bootstrap 5 Website Template by Untree.co
+      Realestate  &mdash; 
     </title>
   </head>
   <body>
@@ -43,30 +42,16 @@
       <div class="container">
         <div class="menu-bg-wrap">
           <div class="site-navigation">
-            <a href="index.html" class="logo m-0 float-start">Property</a>
+            <a href="/" class="logo m-0 float-start">Property</a>
 
             <ul
               class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end"
             >
-              <li class="active"><a href="index.html">Home</a></li>
-              <li class="has-children">
-                <a href="properties.html">Properties</a>
-                <ul class="dropdown">
-                  <li><a href="#">Buy Property</a></li>
-                  <li><a href="#">Sell Property</a></li>
-                  <li class="has-children">
-                    <a href="#">Dropdown</a>
-                    <ul class="dropdown">
-                      <li><a href="#">Sub Menu One</a></li>
-                      <li><a href="#">Sub Menu Two</a></li>
-                      <li><a href="#">Sub Menu Three</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-              <li><a href="services.html">Services</a></li>
-              <li><a href="about.html">About</a></li>
-              <li><a href="contact.html">Contact Us</a></li>
+              <li class="active"><a href="/">Home</a></li>
+              <li><a href="properties">Properties</a></li>
+              <li><a href="services">Services</a></li>
+              <li><a href="about">About</a></li>
+              <li><a href="contact">Contact Us</a></li>
             </ul>
 
             <a
@@ -86,15 +71,15 @@
       <div class="hero-slide">
         <div
           class="img overlay"
-          style="background-image: url('images/hero_bg_3.jpg')"
+          style="background-image: url('static/images/hero_bg_3.jpg')"
         ></div>
         <div
           class="img overlay"
-          style="background-image: url('images/hero_bg_2.jpg')"
+          style="background-image: url('static/images/hero_bg_2.jpg')"
         ></div>
         <div
           class="img overlay"
-          style="background-image: url('images/hero_bg_1.jpg')"
+          style="background-image: url('static/images/hero_bg_1.jpg')"
         ></div>
       </div>
 
@@ -146,8 +131,8 @@
             <div class="property-slider-wrap">
               <div class="property-slider">
                 <div class="property-item">
-                  <a href="property-single.html" class="img">
-                    <img src="images/img_1.jpg" alt="Image" class="img-fluid" />
+                  <a href="singleproperty" class="img">
+                    <img src="static/images/img_1.jpg" alt="Image" class="img-fluid" />
                   </a>
 
                   <div class="property-content">
@@ -170,7 +155,7 @@
                       </div>
 
                       <a
-                        href="property-single.html"
+                        href="singleproperty"
                         class="btn btn-primary py-2 px-3"
                         >See details</a
                       >
@@ -180,8 +165,8 @@
                 <!-- .item -->
 
                 <div class="property-item">
-                  <a href="property-single.html" class="img">
-                    <img src="images/img_2.jpg" alt="Image" class="img-fluid" />
+                  <a href="singlepropertyl" class="img">
+                    <img src="static/images/img_2.jpg" alt="Image" class="img-fluid" />
                   </a>
 
                   <div class="property-content">
@@ -204,7 +189,7 @@
                       </div>
 
                       <a
-                        href="property-single.html"
+                        href="singleproperty"
                         class="btn btn-primary py-2 px-3"
                         >See details</a
                       >
@@ -214,8 +199,8 @@
                 <!-- .item -->
 
                 <div class="property-item">
-                  <a href="property-single.html" class="img">
-                    <img src="images/img_3.jpg" alt="Image" class="img-fluid" />
+                  <a href="singleproperty" class="img">
+                    <img src="static/images/img_3.jpg" alt="Image" class="img-fluid" />
                   </a>
 
                   <div class="property-content">
@@ -238,7 +223,7 @@
                       </div>
 
                       <a
-                        href="property-single.html"
+                        href="singleproperty"
                         class="btn btn-primary py-2 px-3"
                         >See details</a
                       >
@@ -248,8 +233,8 @@
                 <!-- .item -->
 
                 <div class="property-item">
-                  <a href="property-single.html" class="img">
-                    <img src="images/img_4.jpg" alt="Image" class="img-fluid" />
+                  <a href="singleproperty" class="img">
+                    <img src="static/images/img_4.jpg" alt="Image" class="img-fluid" />
                   </a>
 
                   <div class="property-content">
@@ -272,7 +257,7 @@
                       </div>
 
                       <a
-                        href="property-single.html"
+                        href="singleproperty"
                         class="btn btn-primary py-2 px-3"
                         >See details</a
                       >
@@ -282,8 +267,8 @@
                 <!-- .item -->
 
                 <div class="property-item">
-                  <a href="property-single.html" class="img">
-                    <img src="images/img_5.jpg" alt="Image" class="img-fluid" />
+                  <a href="singleproperty" class="img">
+                    <img src="static/images/img_5.jpg" alt="Image" class="img-fluid" />
                   </a>
 
                   <div class="property-content">
@@ -306,7 +291,7 @@
                       </div>
 
                       <a
-                        href="property-single.html"
+                        href="singleproperty"
                         class="btn btn-primary py-2 px-3"
                         >See details</a
                       >
@@ -316,8 +301,8 @@
                 <!-- .item -->
 
                 <div class="property-item">
-                  <a href="property-single.html" class="img">
-                    <img src="images/img_6.jpg" alt="Image" class="img-fluid" />
+                  <a href="singleproperty" class="img">
+                    <img src="static/images/img_6.jpg" alt="Image" class="img-fluid" />
                   </a>
 
                   <div class="property-content">
@@ -340,7 +325,7 @@
                       </div>
 
                       <a
-                        href="property-single.html"
+                        href="singleproperty"
                         class="btn btn-primary py-2 px-3"
                         >See details</a
                       >
@@ -350,8 +335,8 @@
                 <!-- .item -->
 
                 <div class="property-item">
-                  <a href="property-single.html" class="img">
-                    <img src="images/img_7.jpg" alt="Image" class="img-fluid" />
+                  <a href="singleproperty" class="img">
+                    <img src="static/images/img_7.jpg" alt="Image" class="img-fluid" />
                   </a>
 
                   <div class="property-content">
@@ -374,7 +359,7 @@
                       </div>
 
                       <a
-                        href="property-single.html"
+                        href="singleproperty"
                         class="btn btn-primary py-2 px-3"
                         >See details</a
                       >
@@ -384,8 +369,8 @@
                 <!-- .item -->
 
                 <div class="property-item">
-                  <a href="property-single.html" class="img">
-                    <img src="images/img_8.jpg" alt="Image" class="img-fluid" />
+                  <a href="singleproperty" class="img">
+                    <img src="static/images/img_8.jpg" alt="Image" class="img-fluid" />
                   </a>
 
                   <div class="property-content">
@@ -408,7 +393,7 @@
                       </div>
 
                       <a
-                        href="property-single.html"
+                        href="singleproperty"
                         class="btn btn-primary py-2 px-3"
                         >See details</a
                       >
@@ -418,8 +403,8 @@
                 <!-- .item -->
 
                 <div class="property-item">
-                  <a href="property-single.html" class="img">
-                    <img src="images/img_1.jpg" alt="Image" class="img-fluid" />
+                  <a href="singleproperty" class="img">
+                    <img src="static/images/img_1.jpg" alt="Image" class="img-fluid" />
                   </a>
 
                   <div class="property-content">
@@ -442,7 +427,7 @@
                       </div>
 
                       <a
-                        href="property-single.html"
+                        href="singleproperty"
                         class="btn btn-primary py-2 px-3"
                         >See details</a
                       >
@@ -555,7 +540,7 @@
             <div class="item">
               <div class="testimonial">
                 <img
-                  src="images/person_1-min.jpg"
+                  src="static/images/person_1-min.jpg"
                   alt="Image"
                   class="img-fluid rounded-circle w-25 mb-4"
                 />
@@ -582,7 +567,7 @@
             <div class="item">
               <div class="testimonial">
                 <img
-                  src="images/person_2-min.jpg"
+                  src="static/images/person_2-min.jpg"
                   alt="Image"
                   class="img-fluid rounded-circle w-25 mb-4"
                 />
@@ -609,7 +594,7 @@
             <div class="item">
               <div class="testimonial">
                 <img
-                  src="images/person_3-min.jpg"
+                  src="static/images/person_3-min.jpg"
                   alt="Image"
                   class="img-fluid rounded-circle w-25 mb-4"
                 />
@@ -636,7 +621,7 @@
             <div class="item">
               <div class="testimonial">
                 <img
-                  src="images/person_4-min.jpg"
+                  src="static/images/person_4-min.jpg"
                   alt="Image"
                   class="img-fluid rounded-circle w-25 mb-4"
                 />
@@ -680,7 +665,7 @@
         <div class="row justify-content-between mb-5">
           <div class="col-lg-7 mb-5 mb-lg-0 order-lg-2">
             <div class="img-about dots">
-              <img src="images/hero_bg_3.jpg" alt="Image" class="img-fluid" />
+              <img src="static/images/hero_bg_3.jpg" alt="Image" class="img-fluid" />
             </div>
           </div>
           <div class="col-lg-4">
@@ -813,7 +798,7 @@
           <div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
             <div class="h-100 person">
               <img
-                src="images/person_1-min.jpg"
+                src="static/images/person_1-min.jpg"
                 alt="Image"
                 class="img-fluid"
               />
@@ -847,7 +832,7 @@
           <div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
             <div class="h-100 person">
               <img
-                src="images/person_2-min.jpg"
+                src="static/images/person_2-min.jpg"
                 alt="Image"
                 class="img-fluid"
               />
@@ -881,7 +866,7 @@
           <div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
             <div class="h-100 person">
               <img
-                src="images/person_3-min.jpg"
+                src="static/images/person_3-min.jpg"
                 alt="Image"
                 class="img-fluid"
               />
@@ -992,28 +977,6 @@
           <!-- /.col-lg-4 -->
         </div>
         <!-- /.row -->
-
-        <div class="row mt-5">
-          <div class="col-12 text-center">
-            <!-- 
-              **==========
-              NOTE: 
-              Please don't remove this copyright link unless you buy the license here https://untree.co/license/  
-              **==========
-            -->
-
-            <p>
-              Copyright &copy;
-              <script>
-                document.write(new Date().getFullYear());
-              </script>
-              . All Rights Reserved. &mdash; Designed with love by
-              <a href="https://untree.co">Untree.co</a>
-              <!-- License information: https://untree.co/license/ -->
-            </p>
-
-          </div>
-        </div>
       </div>
       <!-- /.container -->
     </div>
@@ -1027,11 +990,11 @@
       </div>
     </div>
 
-    <script src="../static/js/bootstrap.bundle.min.js"></script>
-    <script src="../static/js/tiny-slider.js"></script>
-    <script src="../static/js/aos.js"></script>
-    <script src="../static/js/navbar.js"></script>
-    <script src="../static/js/counter.js"></script>
-    <script src="../static/js/custom.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/tiny-slider.js"></script>
+    <script src="/static/js/aos.js"></script>
+    <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/counter.js"></script>
+    <script src="/static/js/custom.js"></script>
   </body>
 </html>
