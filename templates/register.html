@@ -14,11 +14,10 @@
             <h1 class="font-bold text-3xl mt-20">Register here...</h1>
             <input class="w-full h-[50px] mt-10 border-2 px-5 rounded-md" type="text" name="name" placeholder="Enter your name..." required>
             <input class="w-full h-[50px] mt-3 border-2 px-5 rounded-md" type="email" name="email" placeholder="Enter your email address..." required>
-            <input class="w-full h-[50px] mt-3 border-2 px-5 rounded-md" type="tel" name="phone" placeholder="Enter your number..." required>
+            <input class="w-full h-[50px] mt-3 border-2 px-5 rounded-md" type="tel" name="number" placeholder="Enter your number..." required>
             <input class="w-full h-[50px] mt-3 mb-8 border-2 px-5 rounded-md" type="password" name="password" placeholder="Enter your password..." required>
             <button class="bg-black text-white py-3 px-10" type="submit">Signup</button>
-            <a class=" text-black-500 py-3 px-10" href="login">Already Member ? <span style=":hover:underline"> Click here</span></a>
-
+            <a class="text-black-500 py-3 px-10" href="{% url 'login' %}">Already a member? <span>Click here</span></a>
         </form>
     </main>
 </body>
