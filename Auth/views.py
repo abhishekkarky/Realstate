@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, authenticate
 from Auth.models import ContactList
 
+
 def user_login(request):
     if request.method == 'POST':
         number = request.POST['number']
@@ -21,6 +22,7 @@ def user_login(request):
 
     return render(request, 'login.html')
 
+
 def register(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -30,28 +32,35 @@ def register(request):
 
         User = get_user_model()
 
-        user = User.objects.create_user(username=number, email=email, password=password)
+        user = User.objects.create_user(
+            username=number, email=email, password=password)
         user.name = name
         user.number = number
         user.save()
 
-        messages.success(request, 'Registration successful. You can now log in.')
+        messages.success(
+            request, 'Registration successful. You can now log in.')
         return redirect('login')
 
     return render(request, 'register.html')
 
 # @login_required
+
+
 def dashboard(request):
     return render(request, 'index.html')
 
 # @login_required
+
+
 def contact(request):
     if request.method == 'POST':
         name = request.POST.get("name")
         email = request.POST.get("email")
         subject = request.POST.get("subject")
         message = request.POST.get("message")
-        query = ContactList(name = name, email = email, subject = subject, message = message)
+        query = ContactList(name=name, email=email,
+                            subject=subject, message=message)
         print(name, email, subject, message)
         try:
             query.save()
@@ -65,17 +74,29 @@ def contact(request):
     return render(request, 'contact.html')
 
 # @login_required
+
+
 def singleProperty(request):
     return render(request, 'property-single.html')
 
 # @login_required
+
+
 def services(request):
     return render(request, 'services.html')
 
 # @login_required
+
+
 def properties(request):
     return render(request, 'properties.html')
 
 # @login_required
+
+
 def about(request):
     return render(request, 'about.html')
+
+
+def adminPage(request):
+    return render(request, 'admin/admin-panel.html')

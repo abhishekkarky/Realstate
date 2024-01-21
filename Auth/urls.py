@@ -10,5 +10,6 @@ urlpatterns = [
     path('singleproperty', views.singleProperty, name='singleproperty'),
     path('services', views.services, name='services'),
     path('about', views.about, name='about'),
-    path('properties', views.properties, name='properties')
+    path('properties', views.properties, name='properties'),
+    path('admin-page', views.adminPage, name='admin-page')
 ]
