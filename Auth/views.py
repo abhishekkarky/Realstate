@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import get_user_model, authenticate
+from Auth.models import ContactList
 
 def user_login(request):
     if request.method == 'POST':
@@ -39,26 +40,42 @@ def register(request):
 
     return render(request, 'register.html')
 
-@login_required
+# @login_required
 def dashboard(request):
     return render(request, 'index.html')
 
-@login_required
+# @login_required
 def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        subject = request.POST.get("subject")
+        message = request.POST.get("message")
+        query = ContactList(name = name, email = email, subject = subject, message = message)
+        print(name, email, subject, message)
+        try:
+            query.save()
+            message = "Received your message!! We will contact you shortly."
+            messages.success(request, message)
+            return redirect('/contact')
+        except Exception as e:
+            message = "Couldn't process your request!! Please try again later."
+            messages.error(request, message)
+            print(e)
     return render(request, 'contact.html')
 
-@login_required
+# @login_required
 def singleProperty(request):
     return render(request, 'property-single.html')
 
-@login_required
+# @login_required
 def services(request):
     return render(request, 'services.html')
 
-@login_required
+# @login_required
 def properties(request):
     return render(request, 'properties.html')
 
-@login_required
+# @login_required
 def about(request):
     return render(request, 'about.html')
