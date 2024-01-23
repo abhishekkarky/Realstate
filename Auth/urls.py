@@ -11,5 +11,7 @@ urlpatterns = [
     path('services', views.services, name='services'),
     path('about', views.about, name='about'),
     path('properties', views.properties, name='properties'),
-    path('admin-page', views.adminPage, name='admin-page')
+    path('admin-page', views.adminPage, name='admin-page'),
+    path('admin-property-management', views.adminProperty, name='admin-property-management'),
+    path('admin-enquiry-management', views.enquiryProperty, name='admin-enquiry-management')
 ]

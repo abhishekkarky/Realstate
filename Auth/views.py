@@ -100,3 +100,9 @@ def about(request):
 
 def adminPage(request):
     return render(request, 'admin/admin-panel.html')
+
+def adminProperty(request):
+    return render(request, 'admin/property-management.html')
+
+def enquiryProperty(request):
+    return render(request, 'admin/enquiry-management.html')
