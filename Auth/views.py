@@ -106,3 +106,7 @@ def adminProperty(request):
 
 def enquiryProperty(request):
     return render(request, 'admin/enquiry-management.html')
+def agentManagement(request):
+    return render(request, 'admin/agent-management.html')
+def teamsManagement(request):
+    return render(request, 'admin/teams-management.html')
