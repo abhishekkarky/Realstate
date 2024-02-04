@@ -24,3 +24,27 @@ class ContactList(models.Model):
     subject = models.CharField(max_length=12, default = 'subject')
     message = models.TextField()
 
+class BrokerAccount(models.Model):
+    photo = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
+    name = models.CharField(max_length = 20)
+    intro = models.CharField(max_length = 50)
+    instagramLink = models.CharField(max_length = 1000, default='https://instagram.com')
+    facebookLink = models.CharField(max_length = 1000, default='https://facebook.com')
+    twitterLink = models.CharField(max_length = 1000, default = 'https://twitter.com')
+    linkedInLink = models.CharField(max_length = 1000, default='https://linkedin.com')
+
+
+class Properties(models.Model):
+    image = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
+    imageTwo = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
+    imageThree = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
+    broker = models.ForeignKey(BrokerAccount, on_delete=models.CASCADE)
+    name = models.CharField(max_length = 20)
+    location = models.CharField(max_length = 50)
+    beds = models.CharField(max_length = 10)
+    baths = models.CharField(max_length = 10)
+    price = models.CharField(max_length = 30)
+    description = models.CharField(max_length = 1000)
+
+
+

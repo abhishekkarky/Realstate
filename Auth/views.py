@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
 # from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import get_user_model, authenticate
-from Auth.models import ContactList
+from Auth.models import ContactList, Properties
 
 
 def user_login(request):
@@ -76,8 +76,9 @@ def contact(request):
 # @login_required
 
 
-def singleProperty(request):
-    return render(request, 'property-single.html')
+def singleProperty(request, id):
+    details = get_object_or_404(Properties, id=id)
+    return render(request, 'property-single.html', {'details': details})
 
 # @login_required
 
@@ -89,7 +90,8 @@ def services(request):
 
 
 def properties(request):
-    return render(request, 'properties.html')
+    properties = Properties.objects.all()
+    return render(request, 'properties.html', {'properties': properties})
 
 # @login_required
 
