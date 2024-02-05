@@ -4,9 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="Untree.co" />
-    <link rel="shortcut icon" href="favicon.png" />
-
-    <meta name="description" content="" />
     <meta name="keywords" content="bootstrap, bootstrap5" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -37,13 +34,13 @@
     {% include 'navbar.html' %}
     <div
       class="hero page-inner overlay"
-      style="background-image: url('static/images/hero_bg_3.jpg')"
+      style="background-image: url('/static/images/hero_bg_3.jpg')"
     >
       <div class="container">
         <div class="row justify-content-center align-items-center">
           <div class="col-lg-9 text-center mt-5">
             <h1 class="heading" data-aos="fade-up">
-              Kathmandu Metro City. 31 Kotheshwor
+              {{details.name}}
             </h1>
 
             <nav
@@ -221,18 +218,18 @@
     <!-- /.site-footer -->
 
     <!-- Preloader -->
-    <div id="overlayer"></div>
-    <div class="loader">
+    <!-- <div id="overlayer"></div> -->
+    <!-- <div class="loader">
       <div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
-    </div>
+    </div> -->
 
-    <script src="static/js/bootstrap.bundle.min.js"></script>
-    <script src="static/js/tiny-slider.js"></script>
-    <script src="static/js/aos.js"></script>
-    <script src="static/js/navbar.js"></script>
-    <script src="static/js/counter.js"></script>
-    <script src="static/js/custom.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/tiny-slider.js"></script>
+    <script src="/static/js/aos.js"></script>
+    <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/counter.js"></script>
+    <script src="/static/js/custom.js"></script>
   </body>
 </html>
