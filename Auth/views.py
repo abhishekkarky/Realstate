@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
 from django.shortcuts import get_object_or_404, redirect, render
 
-from Auth.models import ContactList, Properties
+from Auth.models import ContactList, Properties, Testimonials, BrokerAccount
 
 
 def user_login(request):
@@ -47,7 +47,14 @@ def register(request):
 # @login_required
 def dashboard(request):
     properties = Properties.objects.all()[:9]
-    return render(request, 'index.html', {'properties': properties})
+    testimonials = Testimonials.objects.all()[:3]
+    broker = BrokerAccount.objects.all()[:3]
+    context = {
+        'properties': properties,
+        'testimonials': testimonials,
+        'broker': broker
+    }
+    return render(request, 'index.html', context)
 
 # @login_required
 
@@ -83,7 +90,8 @@ def singleProperty(request, id):
 
 
 def services(request):
-    return render(request, 'services.html')
+    testimonials = Testimonials.objects.all()[:6]
+    return render(request, 'services.html', {'testimonials': testimonials})
 
 # @login_required
 

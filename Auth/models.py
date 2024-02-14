@@ -46,5 +46,9 @@ class Properties(models.Model):
     price = models.CharField(max_length = 30)
     description = models.CharField(max_length = 1000)
 
-
+class Testimonials(models.Model):
+    image = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
+    intro = models.CharField(max_length = 100)
+    name = models.CharField(max_length = 100)
+    description = models.CharField(max_length = 1000)
 

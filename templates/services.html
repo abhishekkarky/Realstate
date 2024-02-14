@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -24,9 +23,7 @@
     <link rel="stylesheet" href="static/css/aos.css" />
     <link rel="stylesheet" href="static/css/style.css" />
 
-    <title>
-      Gurkha Gateway: Real estate company &mdash; 
-    </title>
+    <title>Gurkha Gateway: Real estate company &mdash;</title>
   </head>
   <body>
     <div class="site-mobile-menu site-navbar-target">
@@ -193,10 +190,11 @@
         </div>
         <div class="testimonial-slider-wrap">
           <div class="testimonial-slider">
+            {% for testimonials in testimonials %}
             <div class="item">
               <div class="testimonial">
                 <img
-                  src="static/images/person_1-min.jpg"
+                  src="{{testimonials.image.url}}"
                   alt="Image"
                   class="img-fluid rounded-circle w-25 mb-4"
                 />
@@ -207,99 +205,14 @@
                   <span class="icon-star text-warning"></span>
                   <span class="icon-star text-warning"></span>
                 </div>
-                <h3 class="h5 text-primary mb-4">James Smith</h3>
+                <h3 class="h5 text-primary mb-4">{{testimonials.name}}</h3>
                 <blockquote>
-                  <p>
-                    &ldquo;Far far away, behind the word mountains, far from the
-                    countries Vokalia and Consonantia, there live the blind
-                    texts. Separated they live in Bookmarksgrove right at the
-                    coast of the Semantics, a large language ocean.&rdquo;
-                  </p>
+                  <p>&ldquo;{{testimonials.description}}&rdquo;</p>
                 </blockquote>
-                <p class="text-black-50">Designer, Co-founder</p>
+                <p class="text-black-50">{{testimonials.intro}}</p>
               </div>
             </div>
-
-            <div class="item">
-              <div class="testimonial">
-                <img
-                  src="static/images/person_2-min.jpg"
-                  alt="Image"
-                  class="img-fluid rounded-circle w-25 mb-4"
-                />
-                <div class="rate">
-                  <span class="icon-star text-warning"></span>
-                  <span class="icon-star text-warning"></span>
-                  <span class="icon-star text-warning"></span>
-                  <span class="icon-star text-warning"></span>
-                  <span class="icon-star text-warning"></span>
-                </div>
-                <h3 class="h5 text-primary mb-4">Mike Houston</h3>
-                <blockquote>
-                  <p>
-                    &ldquo;Far far away, behind the word mountains, far from the
-                    countries Vokalia and Consonantia, there live the blind
-                    texts. Separated they live in Bookmarksgrove right at the
-                    coast of the Semantics, a large language ocean.&rdquo;
-                  </p>
-                </blockquote>
-                <p class="text-black-50">Designer, Co-founder</p>
-              </div>
-            </div>
-
-            <div class="item">
-              <div class="testimonial">
-                <img
-                  src="static/images/person_3-min.jpg"
-                  alt="Image"
-                  class="img-fluid rounded-circle w-25 mb-4"
-                />
-                <div class="rate">
-                  <span class="icon-star text-warning"></span>
-                  <span class="icon-star text-warning"></span>
-                  <span class="icon-star text-warning"></span>
-                  <span class="icon-star text-warning"></span>
-                  <span class="icon-star text-warning"></span>
-                </div>
-                <h3 class="h5 text-primary mb-4">Cameron Webster</h3>
-                <blockquote>
-                  <p>
-                    &ldquo;Far far away, behind the word mountains, far from the
-                    countries Vokalia and Consonantia, there live the blind
-                    texts. Separated they live in Bookmarksgrove right at the
-                    coast of the Semantics, a large language ocean.&rdquo;
-                  </p>
-                </blockquote>
-                <p class="text-black-50">Designer, Co-founder</p>
-              </div>
-            </div>
-
-            <div class="item">
-              <div class="testimonial">
-                <img
-                  src="static/images/person_4-min.jpg"
-                  alt="Image"
-                  class="img-fluid rounded-circle w-25 mb-4"
-                />
-                <div class="rate">
-                  <span class="icon-star text-warning"></span>
-                  <span class="icon-star text-warning"></span>
-                  <span class="icon-star text-warning"></span>
-                  <span class="icon-star text-warning"></span>
-                  <span class="icon-star text-warning"></span>
-                </div>
-                <h3 class="h5 text-primary mb-4">Dave Smith</h3>
-                <blockquote>
-                  <p>
-                    &ldquo;Far far away, behind the word mountains, far from the
-                    countries Vokalia and Consonantia, there live the blind
-                    texts. Separated they live in Bookmarksgrove right at the
-                    coast of the Semantics, a large language ocean.&rdquo;
-                  </p>
-                </blockquote>
-                <p class="text-black-50">Designer, Co-founder</p>
-              </div>
-            </div>
+            {% endfor %}
           </div>
         </div>
       </div>
@@ -316,7 +229,9 @@
                 <li><a href="tel://11234567890">+977(01)-456-7890</a></li>
                 <li><a href="tel://11234567890">+977(01)-456-7890</a></li>
                 <li>
-                  <a href="mailto:info@mydomain.com">info@gurkhsgatewayrealestate.com</a>
+                  <a href="mailto:info@mydomain.com"
+                    >info@gurkhsgatewayrealestate.com</a
+                  >
                 </li>
               </ul>
             </div>
@@ -381,8 +296,6 @@
           <!-- /.col-lg-4 -->
         </div>
         <!-- /.row -->
-
-
       </div>
       <!-- /.container -->
     </div>
