@@ -1,8 +1,8 @@
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth import authenticate, login
 # from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import authenticate, get_user_model, login
+from django.shortcuts import get_object_or_404, redirect, render
+
 from Auth.models import ContactList, Properties
 
 
@@ -45,10 +45,9 @@ def register(request):
     return render(request, 'register.html')
 
 # @login_required
-
-
 def dashboard(request):
-    return render(request, 'index.html')
+    properties = Properties.objects.all()[:9]
+    return render(request, 'index.html', {'properties': properties})
 
 # @login_required
 
@@ -91,7 +90,12 @@ def services(request):
 
 def properties(request):
     properties = Properties.objects.all()
-    return render(request, 'properties.html', {'properties': properties})
+    featuredProperties = Properties.objects.all()[:9]
+    context = {
+        'properties': properties,
+        'featuredProperties': featuredProperties,
+    }
+    return render(request, 'properties.html', context)
 
 # @login_required
 
