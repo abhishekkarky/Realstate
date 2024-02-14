@@ -81,7 +81,7 @@
                 <!-- .item -->
                 {% for featuredProperties in featuredProperties %}
                 <div class="property-item">
-                  <a href="singleproperty" class="img">
+                  <a  href="/singleproperty/{{ featuredProperties.id }}" class="img">
                     <img
                       src="{{featuredProperties.image.url}}"
                       alt="Image"
@@ -117,7 +117,8 @@
                         </span>
                       </div>
 
-                      <a href="singleproperty" class="btn btn-primary py-2 px-3"
+                      <a                      href="/singleproperty/{{ featuredProperties.id }}"
+                      class="btn btn-primary py-2 px-3"
                         >See details</a
                       >
                     </div>
@@ -160,7 +161,7 @@
           {% for property in properties %}
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
             <div class="property-item mb-30">
-              <a href="singleproperty" class="img">
+              <a href="/singleproperty/{{ property.id }}"  class="img">
                 <img
                   src="{{ property.image.url }}"
                   alt="Image"
