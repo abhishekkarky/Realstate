@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Property Management</title>
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="/static/css/adminpanel.css" />
+
+    <!----===== Iconscout CSS ===== -->
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <!-- Include navbar.html -->
+    {% include 'admin/navbar.html' %}
+
+    <section class="dashboard">
+      <div class="top">
+        <i class="uil uil-bars sidebar-toggle"></i>
+        <div class="search-box">
+          <i class="uil uil-search"></i>
+          <input type="text" placeholder="Search here..." />
+        </div>
+        <img src="/static/images/profile.jpg" alt="" />
+      </div>
+
+      <div class="dash-content p-6">
+        <div class="overview">
+          <div class="title flex items-center justify-between mb-4">
+            <div class="flex items-center">
+              <i class="uil uil-tachometer-fast-alt text-2xl"></i>
+              <span class="text-2xl ml-2">Edit Property</span>
+            </div>
+          </div>
+          <div class="bg-white p-6 w-1/2">
+            <!-- Property Edit Form -->
+            <form
+              id="propertyForm"
+              class="grid grid-cols-2 gap-4"
+              method="post"
+              action="{% url 'edit-property' property_id=details.id %}"
+              enctype="multipart/form-data"
+            >
+              {% csrf_token %}
+              <div class="mb-4">
+                <!-- Add a file input for photos -->
+                <label for="propertyPhotos">Photo one:</label>
+                <input
+                  type="file"
+                  id="propertyPhotos"
+                  name="image"
+                  class="w-full border p-2"
+                  multiple
+                />
+              </div>
+
+              <div class="mb-4">
+                <!-- Add a file input for photos -->
+                <label for="propertyPhotos">Photo two:</label>
+                <input
+                  type="file"
+                  id="propertyPhotos"
+                  name="imageTwo"
+                  class="w-full border p-2"
+                  multiple
+                />
+              </div>
+
+              <div class="mb-4">
+                <!-- Add a file input for photos -->
+                <label for="propertyPhotos">Photo three:</label>
+                <input
+                  type="file"
+                  id="propertyPhotos"
+                  name="imageThree"
+                  class="w-full border p-2"
+                  multiple
+                />
+              </div>
+
+              <div class="mb-4">
+                <label for="propertyName">Property Name:</label>
+                <input
+                  type="text"
+                  id="propertyName"
+                  name="name"
+                  class="w-full border p-2"
+                  value="{{ details.name }}"
+                  required
+                />
+              </div>
+
+              <div class="mb-4">
+                <label for="propertyName">Property Location:</label>
+                <input
+                  type="text"
+                  id="propertyName"
+                  name="location"
+                  class="w-full border p-2"
+                  value="{{ details.location }}"
+                  required
+                />
+              </div>
+
+              <div class="mb-4">
+                <label for="propertyAddress">Beds:</label>
+                <input
+                  type="text"
+                  id="propertyAddress"
+                  name="beds"
+                  class="w-full border p-2"
+                  value="{{ details.beds }}"
+                  required
+                />
+              </div>
+
+              <div class="mb-4">
+                <label for="propertyAddress">Baths:</label>
+                <input
+                  type="text"
+                  id="propertyAddress"
+                  name="baths"
+                  class="w-full border p-2"
+                  value="{{ details.baths }}"
+                  required
+                />
+              </div>
+
+              <div class="mb-4">
+                <label for="propertyToilets">Price:</label>
+                <input
+                  type="number"
+                  id="propertyToilets"
+                  name="price"
+                  class="w-full border p-2"
+                  value="{{ details.price }}"
+                  required
+                />
+              </div>
+
+              <div class="mb-4">
+                <label for="propertyDescription">Property Description:</label>
+                <textarea
+                  id="propertyDescription"
+                  name="description"
+                  class="w-full border p-2"
+                  value="{{ details.description }}"
+                  required
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="col-span-2 bg-[#2d6904] text-white px-4 py-2 rounded"
+              >
+                Edit Property
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Include admin-panel.js -->
+    <script src="/static/js/admin-panel.js"></script>
+  </body>
+</html>
