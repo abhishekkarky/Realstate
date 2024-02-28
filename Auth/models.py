@@ -5,7 +5,7 @@ class CustomUser(AbstractUser):
     image = models.ImageField(upload_to='media/', default='/static/images/realstate-logo.png')
     name = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
-    number = models.CharField(max_length=20)
+    number = models.CharField(max_length=20, unique = True)
     password = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -52,3 +52,8 @@ class Testimonials(models.Model):
     name = models.CharField(max_length = 100)
     description = models.CharField(max_length = 1000)
 
+class Booking(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    property = models.ForeignKey(Properties, on_delete=models.CASCADE)
+    date = models.DateField()
+    note = models.TextField(blank=True, null=True)

@@ -129,9 +129,9 @@
                 </ul>
               </div>
             </div>
-            <button id="openModal" class="btn btn-primary py-2 px-3 m-5">
+            <a href="{% url 'booking' %}?property_id={{ details.id }}&property_name={{ details.name }}" class="btn btn-primary py-2 px-3 m-5">
               Buy Now
-            </button>
+            </a>            
           </div>
         </div>
       </div>
@@ -222,7 +222,7 @@
 
     <div
       id="myModal"
-      class="modal hidden fixed inset-0 bg-gray-300 bg-opacity-75 flex items-center justify-center"
+      class="modal fixed inset-0 bg-gray-300 bg-opacity-75 flex items-center justify-center z-40"
     >
       <div class="modal-content bg-white p-6 w-1/2 relative">
         <span
@@ -297,27 +297,6 @@
       document
         .getElementById("closeModal")
         .addEventListener("click", function () {
-          document.getElementById("myModal").classList.add("hidden");
-        });
-
-      // Handle form submission
-      document
-        .getElementById("propertyForm")
-        .addEventListener("submit", function (event) {
-          event.preventDefault();
-
-          // Here, you can handle the form data submission to your backend or perform any other desired actions.
-          // For demonstration purposes, we'll simply log the form data to the console.
-
-          const formData = new FormData(event.target);
-          const propertyData = {};
-          formData.forEach((value, key) => {
-            propertyData[key] = value;
-          });
-
-          console.log("Property Data:", propertyData);
-
-          event.target.reset();
           document.getElementById("myModal").classList.add("hidden");
         });
     </script>

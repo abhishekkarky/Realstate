@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Untree.co" />
+    <meta name="keywords" content="bootstrap, bootstrap5" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/static/fonts/icomoon/style.css" />
+    <link rel="stylesheet" href="/static/fonts/flaticon/font/flaticon.css" />
+
+    <link rel="stylesheet" href="/static/css/tiny-slider.css" />
+    <link rel="stylesheet" href="/static/css/aos.css" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+
+    <title>Gurkha Gateway: Real estate company &mdash;</title>
+  </head>
+  <body>
+    <div
+      class="fixed inset-0 bg-gray-300 bg-opacity-75 flex items-center justify-center"
+    >
+      <div class="bg-white p-6 w-1/2 relative">
+        <h1 class="mx-auto text-2xl">{{ request.GET.property_name }}</h1>
+        <form
+          id="appointmentForm"
+          class="grid grid-cols-2 gap-4"
+          action="{% url 'booking' %}"
+          method="post"
+        >{% csrf_token %}
+          <input type="text" name="property" hidden value="{{request.GET.property_id}}" />
+          <input type="text" name="user" hidden value="{{ request.user.id }}" />
+          <p></p>
+          <div class="mb-4">
+            <label for="appointmentDate">Date:</label>
+            <input
+              type="date"
+              id="appointmentDate"
+              name="date"
+              class="w-full border p-2"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="appointmentDescription">Additional Notes:</label>
+            <textarea
+              id="appointmentDescription"
+              name="note"
+              class="w-full border p-2"
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="col-span-2 bg-[#E77450] text-white px-4 py-2 rounded"
+          >
+            Buy
+          </button>
+          <a
+            href="/properties"
+            class="col-span-2 bg-[#E77450] text-white px-4 py-2 rounded text-center"
+          >
+            Back to properties
+          </a>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

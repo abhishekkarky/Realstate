@@ -1,10 +1,11 @@
-# from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
-from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from Auth.models import BrokerAccount, ContactList, Properties, Testimonials
+from Auth.models import (Booking, BrokerAccount, ContactList, CustomUser,
+                         Properties, Testimonials)
 
 
 def user_login(request):
@@ -29,7 +30,7 @@ def register(request):
         name = request.POST['name']
         email = request.POST['email']
         number = request.POST['number']
-        password = request.POST['password']
+        password = request.POST['password']           
 
         User = get_user_model()
 
@@ -139,7 +140,7 @@ def agentManagement(request):
             query.save()
             message = "Agent added successfully!!"
             messages.success(request, message)
-            return redirect('/contact')
+            return redirect('/admin-agent-management')
         except Exception as e:
             message = "Couldn't process your request!! Please try again later."
             messages.error(request, message)
@@ -277,3 +278,40 @@ def delete_agent(request, id):
     message = "Agent deleted successfully"
     messages.success(request, message)
     return redirect('/admin-agent-management') 
+
+@login_required
+def booking(request):
+    if request.method == 'POST':
+        # Fetching property details from the request
+        property_id = request.POST.get('property')
+        date = request.POST.get('date')
+        note = request.POST.get('note')
+
+        print(property_id, date, note)
+        
+
+        try:
+            # Check if the user is authenticated
+            if request.user.is_authenticated:
+                # Retrieving the Property instance using the property_id
+                property_instance = get_object_or_404(Properties, id=property_id)
+                
+                # Creating a Booking instance with the fetched Property instance and the user
+                booking = Booking(user=request.user, property=property_instance, date=date, note=note)
+                booking.save()
+                
+                message = "Booking added successfully!!"
+                messages.success(request, message)
+                return redirect('/properties')
+            else:
+                message = "User is not authenticated"
+                messages.error(request, message)
+                return redirect('/login')  # Redirecting to login page if user is not authenticated
+        except Exception as e:
+            message = "Couldn't process your request!! Please try again later."
+            messages.error(request, message)
+            print(e)
+            return redirect('/booking')  # Redirecting to booking page in case of error
+    else:
+        # Render the booking_page.html template if the request method is not POST
+        return render(request, 'booking_page.html')
