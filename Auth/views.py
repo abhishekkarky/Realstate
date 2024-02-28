@@ -45,6 +45,8 @@ def register(request):
     return render(request, 'register.html')
 
 # @login_required
+
+
 def dashboard(request):
     properties = Properties.objects.all()[:9]
     testimonials = Testimonials.objects.all()[:3]
@@ -115,12 +117,78 @@ def about(request):
 def adminPage(request):
     return render(request, 'admin/admin-panel.html')
 
+
 def adminProperty(request):
     return render(request, 'admin/property-management.html')
 
+
 def enquiryProperty(request):
-    return render(request, 'admin/enquiry-management.html')
+    allEnquiries = ContactList.objects.all()
+    context = {
+        'allEnquiries': allEnquiries
+    }
+    return render(request, 'admin/enquiry-management.html', context)
+
+
 def agentManagement(request):
-    return render(request, 'admin/agent-management.html')
+    if request.method == 'POST':
+        photo = request.FILES.get("photo")
+        name = request.POST.get("name")
+        intro = request.POST.get("intro")
+        instagramLink = request.POST.get("instagramLink")
+        facebookLink = request.POST.get("facebookLink")
+        twitterLink = request.POST.get("twitterLink")
+        linkedInLink = request.POST.get("linkedInLink")
+        query = BrokerAccount(photo=photo , name=name, intro=intro, instagramLink=instagramLink,facebookLink=facebookLink, twitterLink=twitterLink, linkedInLink=linkedInLink)   
+        print(photo, name, intro, instagramLink, facebookLink, twitterLink, linkedInLink)
+        try:
+            query.save()
+            message = "Agent added successfully!!"
+            messages.success(request, message)
+            return redirect('/contact')
+        except Exception as e:
+            message = "Couldn't process your request!! Please try again later."
+            messages.error(request, message)
+            print(e)
+            
+           
+    allAgents = BrokerAccount.objects.all()
+    context = {
+        'allAgents': allAgents
+    }
+            
+    return render(request, 'admin/agent-management.html',context)
+
+    
+def edit_agents(request,id):
+    agent = get_object_or_404(BrokerAccount, id=id)
+    context = {
+        'agent': agent
+    }
+    if request.method == 'POST':
+        photo = request.FILES.get("photo")
+        name = request.POST.get("name")
+        intro = request.POST.get("intro")
+        instagramLink = request.POST.get("instagramLink")
+        facebookLink = request.POST.get("facebookLink")
+        twitterLink = request.POST.get("twitterLink")
+        linkedInLink = request.POST.get("linkedInLink")
+            
+        if photo is None:
+            photo = agent.photo
+
+        editQuery = BrokerAccount(id=id, photo=photo, name=name, intro=intro, instagramLink=instagramLink,facebookLink=facebookLink, twitterLink=twitterLink, linkedInLink=linkedInLink)
+        editQuery.save()
+        messages.success(request, "Agent Edited Successfully !!!")
+
+        return redirect("admin-agent-management")
+
+
+    return render(request, 'admin/agent-edit.html', context)
+
+
+
+
+
 def teamsManagement(request):
     return render(request, 'admin/teams-management.html')
