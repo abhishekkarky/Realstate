@@ -15,11 +15,10 @@ urlpatterns = [
     path('admin-property-management', views.adminProperty, name='admin-property-management'),
     path('admin-enquiry-management', views.enquiryProperty, name='admin-enquiry-management'),
     path('admin-agent-management', views.agentManagement, name='admin-agent-management'), 
+    path('admin-teams-management', views.teamsManagement, name='admin-teams-management') ,
+    path('edit_agents/<int:id>/', views.edit_agents, name='edit_agents'),
     path('admin-teams-management', views.teamsManagement, name='admin-teams-management'),
-    
-
-
-
     path('admin-edit-property/<int:property_id>', views.editProperty, name='edit-property'),
     path('admin-property-management/<int:property_id>', views.deleteProperty, name='delete-property'),
+    path('delete-agent<int:id>', views.delete_agent, name='delete-agent'),
 ]

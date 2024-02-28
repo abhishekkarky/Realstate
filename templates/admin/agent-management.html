@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agent Management</title>
     <!----======== CSS ======== -->
     <link rel="stylesheet" href="/static/css/adminpanel.css" />
@@ -13,104 +13,218 @@
       href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
     />
     <script src="https://cdn.tailwindcss.com"></script>
-
-</head>
-<body>
+  </head>
+  <body>
     <!-- Include navbar.html -->
     {% include 'admin/navbar.html' %}
-    
-    <section class="dashboard">
-        <div class="top">
-            <i class="uil uil-bars sidebar-toggle"></i>
-            <div class="search-box">
-                <i class="uil uil-search"></i>
-                <input type="text" placeholder="Search here..." />
-            </div>
-            <img src="/static/images/profile.jpg" alt="" />
-        </div>
 
-        <div class="dash-content p-6">
-            <div class="overview">
-                <div class="title flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <i class="uil uil-tachometer-fast-alt text-2xl"></i>
-                        <span class="text-2xl ml-2">Our Agents</span>
-                    </div>
-                </div>
-        
-                <!-- Table with property data -->
-                <table class="w-full bg-white border border-gray-200">
-                    <thead>
-                        <tr>
-                            <th class="py-2 px-4 border-b">ID</th>
-                            <th class="py-2 px-4 border-b">Name</th>
-                            <th class="py-2 px-4 border-b">Address</th>
-                            <th class="py-2 px-4 border-b">Phone</th>
-                            <th class="py-2 px-4 border-b">Description</th>
-                            <th class="py-2 px-4 border-b">Facebook</th>
-                            <th class="py-2 px-4 border-b">Instagram</th>
-                            <th class="py-2 px-4 border-b">WhatsApp</th>
-                            <th class="py-2 px-4 border-b">Image</th>
-                            <th class="py-2 px-4 border-b">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Example row with additional fields -->
-                        <tr>
-                            <td class="py-2 px-4 border-b">1</td>
-                            <td class="py-2 px-4 border-b">Agent 1</td>
-                            <td class="py-2 px-4 border-b">Address </td>
-                            <td class="py-2 px-4 border-b">9879879879</td>
-                            <td class="py-2 px-4 border-b"> 
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni
-                                saepe, explicabo nihil. Est, autem error cumque ipsum repellendus
-                                veniam sed blanditiis unde ullam maxime veritatis perferendis
-                                cupiditate, at non esse!
-                            </td>
-                            <td class="py-2 px-4 border-b">Facebook</td>
-                            <td class="py-2 px-4 border-b">Insdtagram</td>
-                            <td class="py-2 px-4 border-b">whatsapp</td>
-                            <!-- Add a cell for photos -->
-                            <td class="py-2 px-4 border-b">
-                                <img src="/static/images/profile.jpg" alt="Photo 1" class="w-8 h-8 mr-2">
-                            </td>
-                            <td class="py-2 px-4 border-b">
-                                <i class="uil uil-eye text-blue-500 cursor-pointer hover:text-blue-700"></i>
-                                <i class="uil uil-trash-alt text-red-500 cursor-pointer hover:text-red-700"></i>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-2 px-4 border-b">2</td>
-                            <td class="py-2 px-4 border-b">Agent 2</td>
-                            <td class="py-2 px-4 border-b">Address </td>
-                            <td class="py-2 px-4 border-b">9879879879</td>
-                            <td class="py-2 px-4 border-b"> 
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni
-                                saepe, explicabo nihil. Est, autem error cumque ipsum repellendus
-                                veniam sed blanditiis unde ullam maxime veritatis perferendis
-                                cupiditate, at non esse!
-                            </td>
-                            <td class="py-2 px-4 border-b">Facebook</td>
-                            <td class="py-2 px-4 border-b">Insdtagram</td>
-                            <td class="py-2 px-4 border-b">whatsapp</td>
-                            <!-- Add a cell for photos -->
-                            <td class="py-2 px-4 border-b">
-                                <img src="/static/images/profile.jpg" alt="Photo 1" class="w-8 h-8 mr-2">
-                                <img src="/static/images/profile.jpg" alt="Photo 2" class="w-8 h-8">
-                            </td>
-                            <td class="py-2 px-4 border-b">
-                                <i class="uil uil-eye text-blue-500 cursor-pointer hover:text-blue-700"></i>
-                                <i class="uil uil-trash-alt text-red-500 cursor-pointer hover:text-red-700"></i>
-                            </td>
-                        </tr>
-                        <!-- Add more rows as needed -->
-                    </tbody>
-                </table>
-            </div>
+    <section class="dashboard">
+      <div class="top">
+        <i class="uil uil-bars sidebar-toggle"></i>
+        <div class="search-box">
+          <i class="uil uil-search"></i>
+          <input type="text" placeholder="Search here..." />
         </div>
+        <img src="/static/images/profile.jpg" alt="" />
+      </div>
+
+      <div class="dash-content p-6">
+        <div class="overview">
+          <div class="title flex items-center justify-between mb-4">
+            <div class="flex items-center">
+              <i class="uil uil-tachometer-fast-alt text-2xl"></i>
+              <span class="text-2xl ml-2">Our Agents</span>
+            </div>
+            <button
+              id="openModal"
+              class="bg-[#2d6904] text-white px-4 py-2 rounded"
+            >
+              Add
+            </button>
+          </div>
+
+          <!-- Table with property data -->
+
+          <div class="overflow-scroll">
+            <table class="w-full bg-white border border-gray-200">
+              <thead>
+                <tr>
+                  <th class="py-2 px-4 border-b">ID</th>
+                  <th class="py-2 px-4 border-b">Name</th>
+                  <th class="py-2 px-4 border-b">Address</th>
+                  <th class="py-2 px-4 border-b">Phone</th>
+                  <th class="py-2 px-4 border-b">Description</th>
+                  <th class="py-2 px-4 border-b">Facebook</th>
+                  <th class="py-2 px-4 border-b">Instagram</th>
+                  <th class="py-2 px-4 border-b">Image</th>
+                  <th class="py-2 px-4 border-b">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Example row with additional fields -->
+                {% for agent in allAgents %}
+                <tr>
+                  <td class="py-2 px-4 border-b">{{forloop.counter}}</td>
+                  <td class="py-2 px-4 border-b">{{agent.name}}</td>
+                  <td class="py-2 px-4 border-b">{{agent.intro}}</td>
+                  <td class="py-2 px-4 border-b">{{agent.instagramLink}}</td>
+                  <td class="py-2 px-4 border-b">
+                    <a href="{{agent.facebookLink}}">{{agent.facebookLink}}</a>
+                  </td>
+                  <td class="py-2 px-4 border-b">
+                    <a href="{{agent.twitterLink}}">{{agent.twitterLink}}</a>
+                  </td>
+                  <td class="py-2 px-4 border-b">
+                    <a href="{{agent.linkedInLink}}">{{agent.linkedInLink}}</a>
+                  </td>
+                  <td class="py-2 px-4 border-b">
+                    <img
+                      src="{{ agent.photo.url }}"
+                      alt="Photo 1"
+                      class="w-8 h-8 mr-2"
+                    />
+                  </td>
+                  <td class="py-2 px-4 border-b">
+                    <a href="{% url 'edit_agents' id=agent.id %}">
+                      <i
+                        class="uil uil-eye text-blue-500 cursor-pointer hover:text-blue-700"
+                      ></i>
+                    </a>
+                    <a href="{% url 'delete-agent' agent.id %}">
+                      <i
+                        class="uil uil-trash-alt text-red-500 cursor-pointer hover:text-red-700"
+                      ></i>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </section>
+
+    <!-- Modal -->
+    <div
+      id="myModal"
+      class="modal hidden fixed inset-0 bg-gray-300 bg-opacity-75 flex items-center justify-center"
+    >
+      <div class="modal-content bg-white p-6 w-1/2">
+        <span id="closeModal" class="close">&times;</span>
+
+        <!-- Property Add Form -->
+        <form
+          action="{% url 'admin-agent-management' %}"
+          method="post"
+          id="propertyForm"
+          class="grid grid-cols-2 gap-4"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <div class="mb-4">
+            <label for="propertyName">Agent Name:</label>
+            <input
+              type="text"
+              id="propertyName"
+              name="name"
+              class="w-full border p-2"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="propertyDescription">Agent Short Intro</label>
+            <textarea
+              id="propertyDescription"
+              name="intro"
+              class="w-full border p-2"
+              required
+            ></textarea>
+          </div>
+
+          <div class="mb-4">
+            <label for="propertyAddress">Instragram Link</label>
+            <input
+              type="text"
+              id="propertyAddress"
+              name="instagramLink"
+              class="w-full border p-2"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="propertyRooms">Facebook Link</label>
+            <input
+              type="text"
+              id="propertyRooms"
+              name="facebookLink"
+              class="w-full border p-2"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="propertyBedrooms">Twitter Link</label>
+            <input
+              type="text"
+              id="propertyBedrooms"
+              name="twitterLink"
+              class="w-full border p-2"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="propertyToilets">LinkedIn Link</label>
+            <input
+              type="text"
+              id="propertyToilets"
+              name="linkedInLink"
+              class="w-full border p-2"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <!-- Add a file input for photos -->
+            <label for="propertyPhotos">Photo</label>
+            <input
+              type="file"
+              id="propertyPhotos"
+              name="photo"
+              class="w-full border p-2"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="col-span-2 bg-[#2d6904] text-white px-4 py-2 rounded"
+          >
+            Add Agent
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("openModal")
+        .addEventListener("click", function () {
+          document.getElementById("myModal").classList.remove("hidden");
+        });
+
+      document
+        .getElementById("closeModal")
+        .addEventListener("click", function () {
+          document.getElementById("myModal").classList.add("hidden");
+        });
+
+      // Handle form submission
+    </script>
 
     <!-- Include admin-panel.js -->
     <script src="/static/js/admin-panel.js"></script>
-</body>
+  </body>
 </html>
