@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agent Edit</title>
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="/static/css/adminpanel.css" />
+
+    <!----===== Iconscout CSS ===== -->
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="modal-content bg-white p-6 w-1/2">
+      <span id="closeModal1" class="close">&times;</span>
+
+      <!-- Property Add Form -->
+      <form
+        method="post"
+        id="propertyForm"
+        class="grid grid-cols-2 gap-4"
+        enctype="multipart/form-data"
+      >
+        {% csrf_token %}
+        <div class="mb-4">
+          <label for="propertyName">Agent Name:</label>
+          <input
+            type="text"
+            id="propertyName"
+            name="name"
+            value="{{agent.name}}"
+            class="w-full border p-2"
+            required
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="propertyDescription">Agent Short Intro</label>
+          <textarea
+            id="propertyDescription"
+            name="intro"
+            class="w-full border p-2"
+            required
+          >
+        {{agent.intro}}"
+        </textarea
+          >
+        </div>
+
+        <div class="mb-4">
+          <label for="propertyAddress">Instragram Link</label>
+          <input
+            type="text"
+            id="propertyAddress"
+            name="instagramLink"
+            value="{{agent.instagramLink}}"
+            class="w-full border p-2"
+            required
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="propertyRooms">Facebook Link</label>
+          <input
+            type="text"
+            id="propertyRooms"
+            name="facebookLink"
+            value="{{agent.facebookLink}}"
+            class="w-full border p-2"
+            required
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="propertyBedrooms">Twitter Link</label>
+          <input
+            type="text"
+            id="propertyBedrooms"
+            name="twitterLink"
+            value="{{agent.twitterLink}}"
+            class="w-full border p-2"
+            required
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="propertyToilets">LinkedIn Link</label>
+          <input
+            type="text"
+            id="propertyToilets"
+            name="linkedInLink"
+            value="{{agent.linkedInLink}}"
+            class="w-full border p-2"
+            required
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="profileImage">Image:</label>
+          <label for="profileImageInput" style="width: 18%">
+            <img
+              class="img-preview img1"
+              alt=""
+              src="{{agent.photo.url}}"
+              height="200px"
+              width="200px"
+              style="box-shadow: 0 0 21px 0 black; cursor: pointer"
+            />
+            <input
+              id="profileImageInput"
+              class="img-input"
+              name="photo"
+              accept="image/jpeg, image/png, image/jpg"
+              type="file"
+              style="display: none"
+              onchange="previewFile('profileImageInput')"
+            />
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          class="col-span-2 bg-[#2d6904] text-white px-4 py-2 rounded"
+        >
+          Edit Agent
+        </button>
+      </form>
+    </div>
+    <script>
+          function previewFile(fieldName) {
+              const preview = document.querySelector(".img-preview.img1");
+              const fileInput = document.getElementById(fieldName);
+              const file = fileInput.files[0];
+              const reader = new FileReader();
+
+              reader.addEventListener(
+                "load",
+                function () {
+                  preview.src = reader.result;
+                },
+                false
+              );
+
+              if (file) {
+                reader.readAsDataURL(file);
+              }
+            }
+
+          </script
+
+      <!-- Modal -->
+
+      <!-- Include admin-panel.js -->
+      <script src="/static/js/admin-panel.js">
+    </script>
+  </body>
+</html>
