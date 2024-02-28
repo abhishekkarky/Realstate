@@ -1,6 +1,6 @@
 from django.urls import path
-from Auth import views
 
+from Auth import views
 
 urlpatterns = [
     path('login', views.user_login, name='login'),
@@ -17,5 +17,7 @@ urlpatterns = [
     path('admin-agent-management', views.agentManagement, name='admin-agent-management'), 
     path('admin-teams-management', views.teamsManagement, name='admin-teams-management') ,
     path('edit_agents/<int:id>/', views.edit_agents, name='edit_agents'),
-
+    path('admin-teams-management', views.teamsManagement, name='admin-teams-management'),
+    path('admin-edit-property/<int:property_id>', views.editProperty, name='edit-property'),
+    path('admin-property-management/<int:property_id>', views.deleteProperty, name='delete-property'),
 ]
