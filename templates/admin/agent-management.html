@@ -90,9 +90,11 @@
                         class="uil uil-eye text-blue-500 cursor-pointer hover:text-blue-700"
                       ></i>
                     </a>
-                    <i
-                      class="uil uil-trash-alt text-red-500 cursor-pointer hover:text-red-700"
-                    ></i>
+                    <a href="{% url 'delete-agent' agent.id %}">
+                      <i
+                        class="uil uil-trash-alt text-red-500 cursor-pointer hover:text-red-700"
+                      ></i>
+                    </a>
                   </td>
                 </tr>
                 {% endfor %}
@@ -205,7 +207,7 @@
         </form>
       </div>
     </div>
-    
+
     <script>
       document
         .getElementById("openModal")

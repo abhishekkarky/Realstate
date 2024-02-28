@@ -269,3 +269,11 @@ def deleteProperty(request, property_id):
     message = "Property deleted successfully"
     messages.success(request, message)
     return redirect('/admin-property-management') 
+
+
+def delete_agent(request, id):
+    agent_delete = get_object_or_404(BrokerAccount, pk=id)
+    agent_delete.delete()
+    message = "Agent deleted successfully"
+    messages.success(request, message)
+    return redirect('/admin-agent-management') 
