@@ -279,6 +279,9 @@ def delete_agent(request, id):
     messages.success(request, message)
     return redirect('/admin-agent-management') 
 
+def bookinglist(request):
+    return render(request, 'bookings.html')
+
 @login_required
 def booking(request):
     if request.method == 'POST':
@@ -315,3 +318,5 @@ def booking(request):
     else:
         # Render the booking_page.html template if the request method is not POST
         return render(request, 'booking_page.html')
+    
+    
