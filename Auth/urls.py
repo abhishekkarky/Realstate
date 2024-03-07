@@ -22,5 +22,8 @@ urlpatterns = [
     path('admin-edit-property/<int:property_id>', views.editProperty, name='edit-property'),
     path('admin-property-management/<int:property_id>', views.deleteProperty, name='delete-property'),
     path('delete-agent<int:id>', views.delete_agent, name='delete-agent'),
+    path('delete-booking<int:id>', views.user_delete_booking, name='delete-booking'),
+    path('admin_delete-booking<int:id>', views.admin_delete_booking, name='admin-delete-booking'),
     path('booking', views.booking, name='booking'),
+    path('logout', views.user_logout, name='logout'),
 ]

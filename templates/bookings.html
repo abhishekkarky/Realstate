@@ -12,6 +12,7 @@
   </head>
 
   <body class="bg-gray-100">
+    <!-- {% include 'navbar.html' %} -->
     <div class="container mx-auto px-4 md:px-10 py-4 md:py-7">
       <div class="flex items-center justify-between">
         <p
@@ -34,12 +35,6 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th
-                scope="col"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                User
-              </th>
               <th
                 scope="col"
                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -67,15 +62,20 @@
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
+            {% for booking in bookings %}
             <tr>
-              <td class="px-6 py-4 whitespace-nowrap">John Doe</td>
-              <td class="px-6 py-4 whitespace-nowrap">House</td>
-              <td class="px-6 py-4 whitespace-nowrap">2024-06-07</td>
-              <td class="px-6 py-4 whitespace-nowrap">Note</td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <i class="fa-solid fa-trash text-red-500"></i>
+                {{ booking.property.name }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ booking.date }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ booking.note }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <!-- Add delete button here if needed -->
+                <!-- Example: -->
+                <a href="{% url 'delete-booking' booking.id %}">Delete</a>
               </td>
             </tr>
+            {% endfor %}
             <!-- Add more rows here if needed -->
           </tbody>
         </table>

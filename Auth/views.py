@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -9,20 +9,23 @@ from Auth.models import (Booking, BrokerAccount, ContactList, CustomUser,
 
 def user_login(request):
     if request.method == 'POST':
-        number = request.POST['number']
-        password = request.POST['password']
+        number = request.POST.get('number')
+        password = request.POST.get('password')
 
         user = authenticate(request, username=number, password=password)
 
         if user is not None:
             login(request, user)
             messages.success(request, 'Login successful.')
-            return redirect('/')
+
+            if user.is_admin:
+                return redirect('/admin-page')
+            else:
+                return redirect('/')
         else:
             messages.error(request, 'Invalid login credentials.')
 
     return render(request, 'login.html')
-
 
 def register(request):
     if request.method == 'POST':
@@ -181,7 +184,11 @@ def edit_agents(request,id):
     return render(request, 'admin/agent-edit.html', context)
 
 def teamsManagement(request):
-    return render(request, 'admin/teams-management.html')
+    bookings = Booking.objects.all()
+    context = {
+        'bookings': bookings
+    }
+    return render(request, 'admin/teams-management.html', context)
 
 def adminProperty(request):
     brokers = BrokerAccount.objects.all()
@@ -278,8 +285,27 @@ def delete_agent(request, id):
     messages.success(request, message)
     return redirect('/admin-agent-management') 
 
+def user_delete_booking(request, id):
+    booking_delete = get_object_or_404(Booking, pk=id)
+    booking_delete.delete()
+    message = "Booking deleted successfully"
+    messages.success(request, message)
+    return redirect('/bookinglist') 
+
+def admin_delete_booking(request, id):
+    booking_delete = get_object_or_404(Booking, pk=id)
+    booking_delete.delete()
+    message = "Booking deleted successfully"
+    messages.success(request, message)
+    return redirect('/admin-teams-management') 
+
 def bookinglist(request):
-    return render(request, 'bookings.html')
+    user = request.user.id
+    user_bookings = Booking.objects.filter(user = user)
+    context = {
+        'bookings': user_bookings
+    }
+    return render(request, 'bookings.html', context)
 
 @login_required
 def booking(request):
@@ -308,14 +334,17 @@ def booking(request):
             else:
                 message = "User is not authenticated"
                 messages.error(request, message)
-                return redirect('/login')  # Redirecting to login page if user is not authenticated
+                return redirect('/login')
         except Exception as e:
             message = "Couldn't process your request!! Please try again later."
             messages.error(request, message)
             print(e)
-            return redirect('/booking')  # Redirecting to booking page in case of error
+            return redirect('/booking')  
     else:
-        # Render the booking_page.html template if the request method is not POST
         return render(request, 'booking_page.html')
     
     
+
+def user_logout(request):
+    logout(request)
+    return redirect('/login')
