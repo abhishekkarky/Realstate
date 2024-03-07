@@ -7,7 +7,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from Auth.models import (Booking, BrokerAccount, ContactList, CustomUser,
                          Properties, Testimonials)
 
-
 def user_login(request):
     if request.method == 'POST':
         number = request.POST['number']
