@@ -348,3 +348,10 @@ def booking(request):
 def user_logout(request):
     logout(request)
     return redirect('/login')
+
+def profile(request):
+    return render(request, 'profile.html')
+
+
+def changepassword(request):
+    return render(request, 'changepassword.html')
