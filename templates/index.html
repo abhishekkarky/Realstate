@@ -27,6 +27,21 @@
     <title>Gurkha Gateway: Real estate company &mdash;</title>
   </head>
   <body>
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+      style="position: fixed; top: 0; right: 0; z-index: 9999"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %}
     <div class="site-mobile-menu site-navbar-target">
       <div class="site-mobile-menu-header">
         <div class="site-mobile-menu-close">
@@ -177,7 +192,7 @@
     </div>
     <!-- end -->
     {% else %}
-    <p style="text-align: center; margin-top: 20px;">No results were found.</p>
+    <p style="text-align: center; margin-top: 20px">No results were found.</p>
     {% endif %}
 
     <div class="section">
@@ -658,6 +673,16 @@
       </div>
     </div>
 
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        var alert = document.querySelector(".alert");
+        if (alert) {
+          setTimeout(function () {
+            alert.style.display = "none";
+          }, 3000);
+        }
+      });
+    </script>
     <script src="/static/js/bootstrap.bundle.min.js"></script>
     <script src="/static/js/tiny-slider.js"></script>
     <script src="/static/js/aos.js"></script>

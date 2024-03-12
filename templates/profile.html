@@ -10,6 +10,21 @@
     />
   </head>
   <body class="bg-gray-100 flex justify-center items-center h-screen">
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+      style="position: fixed; top: 0; right: 0; z-index: 9999"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %}
     <div
       class="container mx-auto max-w-lg bg-white p-8 rounded-lg shadow-md relative"
     >
@@ -65,7 +80,7 @@
       >
       <a href= 'logout'>
         Logout
-        <a/>
+      </a>
        
       </button>
       <a

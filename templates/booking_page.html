@@ -24,7 +24,21 @@
     <title>Gurkha Gateway: Real estate company &mdash;</title>
   </head>
   <body>
-    <!-- {% include 'navbar.html' %} -->
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+      style="position: fixed; top: 0; right: 0; z-index: 9999"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %}
     <div
       class="fixed inset-0 bg-gray-300 bg-opacity-75 flex items-center justify-center"
     >
@@ -35,8 +49,14 @@
           class="grid grid-cols-2 gap-4"
           action="{% url 'booking' %}"
           method="post"
-        >{% csrf_token %}
-          <input type="text" name="property" hidden value="{{request.GET.property_id}}" />
+        >
+          {% csrf_token %}
+          <input
+            type="text"
+            name="property"
+            hidden
+            value="{{request.GET.property_id}}"
+          />
           <input type="text" name="user" hidden value="{{ request.user.id }}" />
           <p></p>
           <div class="mb-4">
@@ -74,5 +94,16 @@
         </form>
       </div>
     </div>
+    <script>
+      // Function to hide the alert after a delay
+      window.addEventListener("DOMContentLoaded", function () {
+        var alert = document.querySelector(".alert");
+        if (alert) {
+          setTimeout(function () {
+            alert.style.display = "none";
+          }, 3000);
+        }
+      });
+    </script>
   </body>
 </html>

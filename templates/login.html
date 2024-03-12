@@ -1,26 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-    <main class="md:flex justify-center items-center w-[100%] h-screen mx-auto my-auto">
-        <form class="flex flex-col justify-center items-center px-10 w-full md:w-[400px] py-20 shadow-lg rounded-md" method="post" action="{% url 'login' %}">
-            {% csrf_token %}
-            <img class="w-20 h-20 rounded-full" src="/static/images/realstate-logo.png" alt="">
-            <h1 class="font-bold text-3xl mt-20">Login here...</h1>
-            <!-- {% if error %}
+  </head>
+  <body>
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+      style="position: fixed; top: 0; right: 0; z-index: 9999"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %}
+    <main
+      class="md:flex justify-center items-center w-[100%] h-screen mx-auto my-auto"
+    >
+      <form
+        class="flex flex-col justify-center items-center px-10 w-full md:w-[400px] py-20 shadow-lg rounded-md"
+        method="post"
+        action="{% url 'login' %}"
+      >
+        {% csrf_token %}
+        <img
+          class="w-20 h-20 rounded-full"
+          src="/static/images/realstate-logo.png"
+          alt=""
+        />
+        <h1 class="font-bold text-3xl mt-20">Login here...</h1>
+        <!-- {% if error %}
                 <p class="text-red-500">{{ error }}</p>
             {% endif %} -->
-            <input class="w-full h-[50px] mt-10 border-2 px-5 rounded-md" type="number" id="number" name="number" placeholder="Enter your number..." required>
-            <input class="w-full h-[50px] mt-3 mb-8 border-2 px-5 rounded-md" type="password" id="password" name="password" placeholder="Enter your password..." required>
-            <button class="bg-black text-white py-3 px-10" type="submit">Login</button>
-            <a class=" text-black-500 py-3 px-10" href="signup">New Member ? <span> Click here</span></a>
-
-        </form>
+        <input
+          class="w-full h-[50px] mt-10 border-2 px-5 rounded-md"
+          type="number"
+          id="number"
+          name="number"
+          placeholder="Enter your number..."
+          required
+        />
+        <input
+          class="w-full h-[50px] mt-3 mb-8 border-2 px-5 rounded-md"
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your password..."
+          required
+        />
+        <button class="bg-black text-white py-3 px-10" type="submit">
+          Login
+        </button>
+        <a class="text-black-500 py-3 px-10" href="signup"
+          >New Member ? <span> Click here</span></a
+        >
+      </form>
     </main>
-</body>
+    <script>
+      // Function to hide the alert after a delay
+      window.addEventListener("DOMContentLoaded", function () {
+        var alert = document.querySelector(".alert");
+        if (alert) {
+          setTimeout(function () {
+            alert.style.display = "none";
+          }, 3000); // Adjust the delay time as needed (3000 milliseconds = 3 seconds)
+        }
+      });
+    </script>
+  </body>
 </html>

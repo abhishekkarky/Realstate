@@ -28,4 +28,5 @@ urlpatterns = [
     path('logout', views.user_logout, name='logout'),
     path('profile', views.profile, name='profile'),
     path('changepassword', views.changepassword, name='changepassword'),
+    path('review_property<int:property_id>', views.review_property, name='review_property'),
 ]

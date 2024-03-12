@@ -59,3 +59,14 @@ class Booking(models.Model):
     property = models.ForeignKey(Properties, on_delete=models.CASCADE)
     date = models.DateField()
     note = models.TextField(blank=True, null=True)
+    status = models.CharField(max_length=50, default='Pending')
+
+class Review(models.Model):
+    property = models.ForeignKey(Properties, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    rating = models.IntegerField()
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review by {self.user.username} for {self.property.name}"

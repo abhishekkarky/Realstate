@@ -8,7 +8,6 @@
 
     <meta name="description" content="" />
     <meta name="keywords" content="bootstrap, bootstrap5" />
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,6 +25,22 @@
     <title>Gurkha Gateway: Real estate company &mdash;</title>
   </head>
   <body>
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+      style="position: fixed; top: 0; right: 0; z-index: 9999"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %}
+
     <div class="site-mobile-menu site-navbar-target">
       <div class="site-mobile-menu-header">
         <div class="site-mobile-menu-close">
@@ -81,7 +96,10 @@
                 <!-- .item -->
                 {% for featuredProperties in featuredProperties %}
                 <div class="property-item">
-                  <a  href="/singleproperty/{{ featuredProperties.id }}" class="img">
+                  <a
+                    href="/singleproperty/{{ featuredProperties.id }}"
+                    class="img"
+                  >
                     <img
                       src="{{featuredProperties.image.url}}"
                       alt="Image"
@@ -117,8 +135,9 @@
                         </span>
                       </div>
 
-                      <a href="/singleproperty/{{ featuredProperties.id }}"
-                      class="btn btn-primary py-2 px-3"
+                      <a
+                        href="/singleproperty/{{ featuredProperties.id }}"
+                        class="btn btn-primary py-2 px-3"
                         >See details</a
                       >
                     </div>
@@ -161,7 +180,7 @@
           {% for property in properties %}
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
             <div class="property-item mb-30">
-              <a href="/singleproperty/{{ property.id }}"  class="img">
+              <a href="/singleproperty/{{ property.id }}" class="img">
                 <img
                   src="{{ property.image.url }}"
                   alt="Image"
@@ -308,6 +327,18 @@
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
+
+    <script>
+      // Function to hide the alert after a delay
+      window.addEventListener("DOMContentLoaded", function () {
+        var alert = document.querySelector(".alert");
+        if (alert) {
+          setTimeout(function () {
+            alert.style.display = "none";
+          }, 3000); // Adjust the delay time as needed (3000 milliseconds = 3 seconds)
+        }
+      });
+    </script>
 
     <script src="static/js/bootstrap.bundle.min.js"></script>
     <script src="static/js/tiny-slider.js"></script>

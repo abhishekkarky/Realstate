@@ -12,6 +12,21 @@
   </head>
 
   <body class="bg-gray-100">
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-{{ message.tags }} alert-dismissible fade show"
+      role="alert"
+      style="position: fixed; top: 0; right: 0; z-index: 9999"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %}
     <!-- {% include 'navbar.html' %} -->
     <div class="container mx-auto px-4 md:px-10 py-4 md:py-7">
       <div class="flex items-center justify-between">
@@ -81,5 +96,16 @@
         </table>
       </div>
     </div>
+    <script>
+      // Function to hide the alert after a delay
+      window.addEventListener("DOMContentLoaded", function () {
+        var alert = document.querySelector(".alert");
+        if (alert) {
+          setTimeout(function () {
+            alert.style.display = "none";
+          }, 3000); // Adjust the delay time as needed (3000 milliseconds = 3 seconds)
+        }
+      });
+    </script>
   </body>
 </html>
