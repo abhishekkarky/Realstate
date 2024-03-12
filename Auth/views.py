@@ -1,11 +1,14 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth import (authenticate, get_user_model, login, logout,
+                                 update_session_auth_hash)
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from Auth.models import (Booking, BrokerAccount, ContactList, CustomUser,
                          Properties, Testimonials)
+
 
 def user_login(request):
     if request.method == 'POST':
@@ -55,10 +58,17 @@ def dashboard(request):
     properties = Properties.objects.all()[:9]
     testimonials = Testimonials.objects.all()[:3]
     broker = BrokerAccount.objects.all()[:3]
+    location = ''
+    searchDetails = None
+    if request.method == 'POST':
+        location = request.POST['location']
+        searchDetails = Properties.objects.filter(location__contains = location)
     context = {
         'properties': properties,
         'testimonials': testimonials,
-        'broker': broker
+        'broker': broker,
+        'location': location,
+        'searchDetails': searchDetails
     }
     return render(request, 'index.html', context)
 
@@ -350,8 +360,64 @@ def user_logout(request):
     return redirect('/login')
 
 def profile(request):
-    return render(request, 'profile.html')
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            user = request.user
+            image = request.FILES.get("image")
+            name = request.POST.get('name')
+            email = request.POST.get('email')
+            number = request.POST.get('number')
+            user.name = name
+            user.email = email
+            user.number = number
+            user.image = image
+            user.save()
+            print(user)
+            return JsonResponse({'message': 'User details updated successfully'})
+        else:
+            return JsonResponse({'error': 'User not authenticated'}, status=401)
+    if request.user.is_authenticated:
+        user = request.user
+        if hasattr(user, 'image'):
+            image = user.image
+        else:
+            image = None  
+        name = user.name
+        email = user.email
+        number = user.number
+        context = {
+            'image': image, 
+            'name': name, 
+            'email': email,
+            'number': number
+        }
+        return render(request, 'profile.html', context)
+    return render(request, 'profile.html', context)
 
 
 def changepassword(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            current_password = request.POST.get('current_password')
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+
+            if not request.user.check_password(current_password):
+                return render(request, 'changepassword.html', {'error_message': 'Current password is incorrect'})
+
+            if new_password != confirm_password:
+                return render(request, 'changepassword.html', {'error_message': 'New password and confirm password do not match'})
+
+            # Set the new password for the user
+            request.user.set_password(new_password)
+            request.user.save()
+
+            # Update session to prevent user from being logged out due to password change
+            update_session_auth_hash(request, request.user)
+
+            return redirect('profile')
+
     return render(request, 'changepassword.html')
+
+
+    

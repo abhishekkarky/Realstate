@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+
 import pymysql
 
 pymysql.version_info = (1,4,6, 'final', 0)
@@ -99,7 +100,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'realstate',
         'USER': 'root',
-        'PASSWORD': 'password',
+        'PASSWORD': 'abhishek',
         'HOST': 'localhost', 
         'PORT': '3306',  
         'OPTIONS': {
