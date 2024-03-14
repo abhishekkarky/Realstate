@@ -8,9 +8,32 @@
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap5" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="static/fonts/icomoon/style.css" />
+    <link rel="stylesheet" href="static/fonts/flaticon/font/flaticon.css" />
+
+    <link rel="stylesheet" href="static/css/tiny-slider.css" />
+    <link rel="stylesheet" href="static/css/aos.css" />
+    <link rel="stylesheet" href="static/css/style.css" />
+    <style>
+      .img{
+        max-width: "100%";
+      /* height: 20px; */
+      object-fit: cover;
+      }
+    </style>
   </head>
-  <body class="bg-gray-100 flex justify-center items-center h-screen">
-    {% if messages %} {% for message in messages %}
+
+  <body class="bg-gray-100 h-screen">
+    {% include "navbar.html" %} {% if messages %} {% for message in messages %}
     <div
       class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
       style="position: fixed; top: 0; right: 0; z-index: 9999"
@@ -28,8 +51,14 @@
     <div
       class="container mx-auto max-w-lg bg-white p-8 rounded-lg shadow-md relative"
     >
-      
-      <form id="profileForm" class="flex flex-wrap" method="post" action="{% url 'profile' %}" enctype="multipart/form-data">{% csrf_token %}
+      <form
+        id="profileForm"
+        class="flex flex-wrap"
+        method="post"
+        action="{% url 'profile' %}"
+        enctype="multipart/form-data"
+      >
+        {% csrf_token %}
         <label for="imageUpload">
           <img
             id="profileImage"
@@ -38,7 +67,12 @@
             alt="Profile Image"
             class="mx-auto rounded-full w-32 h-32 mb-8 cursor-pointer"
           />
-          <input type="file" name="image" id="imageUpload" style="display: none" />
+          <input
+            type="file"
+            name="image"
+            id="imageUpload"
+            style="display: none"
+          />
         </label>
         <input
           type="text"
@@ -75,23 +109,16 @@
         </button>
       </form>
       <button
-        
         class="w-full bg-blue-500 mt-4 text-white font-bold py-2 px-4 rounded focus:outline-none focus:bg-blue-600"
       >
-      <a href= 'logout'>
-        Logout
-      </a>
-       
+        <a href="logout"> Logout </a>
       </button>
       <a
         href="changepassword"
-        class="block text-center mt-4 text-blue-500 font-semibold  right-4"
+        class="block text-center mt-4 text-blue-500 font-semibold right-4"
         >Change Password??</a
       >
     </div>
-
-   
-   
 
     <script>
       document
@@ -104,8 +131,6 @@
           };
           reader.readAsDataURL(file);
         });
-
-      
     </script>
   </body>
 </html>

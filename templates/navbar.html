@@ -16,17 +16,17 @@
           <li><a href="/">Home</a></li>
           <li><a href="properties">Properties</a></li>
           <li><a href="services">Services</a></li>
+          {% if user.is_authenticated %}
           <li><a href="bookinglist">Bookings</a></li>
+          {% endif %}
           <li><a href="about">About</a></li>
           <li><a href="contact">Contact Us</a></li>
           {% if user.is_authenticated %}
-            <li><a href="profile">Profile</a></li>
+          <li><a href="profile">Profile</a></li>
           {% else %}
-            <li><a href="login">Login</a></li>
+          <li><a href="login">Login</a></li>
           {% endif %}
-          
         </ul>
-
         <a
           href="#"
           class="burger light me-auto float-end mt-1 site-menu-toggle js-menu-toggle d-inline-block d-lg-none"

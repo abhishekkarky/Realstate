@@ -22,71 +22,43 @@
 
     <title>Gurkha Gateway: Real estate company &mdash;</title>
     <style>
-      form {
-        margin-bottom: 20px;
+      .rating-list li {
+        float: right;
+        color: #ddd;
+        padding: 10px 5px;
       }
 
-      .review-section {
-        background-color: #f9f9f9;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        padding: 20px;
+      .rating-list li:hover,
+      .rating-list li:hover ~ li {
+        color: orange;
       }
 
-      .star-rating {
-        font-size: 24px;
-        cursor: pointer;
-        margin-bottom: 10px;
+      .rating-list {
+        display: inline-block;
+        list-style: none;
       }
-
-      .star-rating .star {
-        color: #ccc;
-        transition: color 0.3s;
-      }
-
-      .star-rating .star:hover {
-        color: #ffcc00;
-      }
-
-      .star-rating .star.rated {
-        color: #ffcc00;
-      }
-
-      #comment {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        resize: vertical;
-      }
-
-      #submit-review-btn {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      #submit-review-btn:hover {
-        background-color: #0056b3;
+      .checked {
+        color: orange;
       }
     </style>
   </head>
 
   <body>
-    {% if messages %}
-    <div class="messages">
-      {% for message in messages %} {% if message.tags == 'success' %}
-      <div class="alert alert-success">{{ message }}</div>
-      {% elif message.tags == 'error' %}
-      <div class="alert alert-danger">{{ message }}</div>
-      {% endif %} {% endfor %}
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+      style="position: static; top: 0; right: 0; z-index: 9999"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
     </div>
-    {% endif %}
+    {% endfor %} {% endif %}
     <div class="site-mobile-menu site-navbar-target">
       <div class="site-mobile-menu-header">
         <div class="site-mobile-menu-close">
@@ -209,14 +181,15 @@
           <!-- Your property details content -->
           <div class="col-lg-7">
             <h3 class="heading mb-4">Reviews</h3>
-            <!-- Iterate over each review and display it -->
-            {% for review in reviews %}
+            {% if reviews %} {% for review in reviews %}
             <div class="review-section mb-3">
               <p>Rating: {{ review.rating }}</p>
               <p>Comment: {{ review.comment }}</p>
               <p>User: {{ review.user }}</p>
             </div>
-            {% endfor %}
+            {% endfor %} {% else %}
+            <p>No reviews yet</p>
+            {% endif %}
           </div>
 
           <!-- Review form section -->

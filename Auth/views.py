@@ -261,10 +261,13 @@ def editProperty(request, property_id):
         # Retrieve existing property instance
         property_obj = Properties.objects.get(pk=property_id)
 
-        # Update fields with new values
-        property_obj.image = request.FILES.get("image")
-        property_obj.imageTwo = request.FILES.get("imageTwo")
-        property_obj.imageThree = request.FILES.get("imageThree")
+        if 'image' in request.FILES:
+            property_obj.image = request.FILES.get("image")
+        if 'imageTwo' in request.FILES:
+            property_obj.imageTwo = request.FILES.get("imageTwo")
+        if 'imageThree' in request.FILES:
+            property_obj.imageThree = request.FILES.get("imageThree")
+
         property_obj.name = request.POST.get("name")
         property_obj.location = request.POST.get("location")
         property_obj.beds = request.POST.get("beds")
@@ -377,14 +380,15 @@ def profile(request):
         if request.user.is_authenticated:
             user = request.user
             image = request.FILES.get("image")
+            if (request.FILES.get("image") != None):
+                image = request.FILES.get("image")
             name = request.POST.get('name')
             email = request.POST.get('email')
             number = request.POST.get('number')
             user.name = name
             user.email = email
             user.number = number
-            if image:
-                user.image = image
+
             user.save()
             print(user)
             return JsonResponse({'message': 'User details updated successfully'})
@@ -433,6 +437,7 @@ def changepassword(request):
 
     return render(request, 'changepassword.html')
 
+
 def review_property(request, property_id):
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -442,19 +447,16 @@ def review_property(request, property_id):
                 rating = request.POST.get('rating')
                 comment = request.POST.get('comment')
 
-                # Check if the user has already submitted a review for this property in this session
-                if 'review_submitted' not in request.session:
-                    # Save the review
-                    review = Review(property_id=property_id,
-                                    user=request.user, rating=rating, comment=comment)
-                    review.save()
-
-                    # Set a flag in the session to indicate that the review has been submitted
-                    request.session['review_submitted'] = True
-
-                    messages.success(request, 'Review submitted successfully.')
+                # Check if the user has already submitted a review for this property
+                if Review.objects.filter(user=request.user, property_id=property_id).exists():
+                    messages.error(
+                        request, 'You have already submitted a review for this property.')
                 else:
-                    messages.error(request, 'You have already submitted a review for this property in this session.')
+                    # Save the review
+                    review = Review(
+                        property_id=property_id, user=request.user, rating=rating, comment=comment)
+                    review.save()
+                    messages.success(request, 'Review submitted successfully.')
             else:
                 # User doesn't have a confirmed booking, display an error message
                 messages.error(request, 'You must book this property first.')
@@ -463,8 +465,8 @@ def review_property(request, property_id):
             messages.error(request, 'You must log in first.')
             return redirect('/login')
 
-        return redirect('/properties')
+        return redirect('/singleproperty/' + str(property_id))
     else:
         # Handle GET request for rendering the review form
         property = Properties.objects.get(id=property_id)
-        return render(request, 'singleproperty.html', {'property': property})
+        return render(request, 'property.html', {'property': property})
