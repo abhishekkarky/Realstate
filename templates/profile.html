@@ -24,8 +24,8 @@
     <link rel="stylesheet" href="static/css/aos.css" />
     <link rel="stylesheet" href="static/css/style.css" />
     <style>
-      img{
-        height : 50px;
+      img {
+        height: 50px;
         max-width: "100%";
         object-fit: cover;
       }
@@ -49,75 +49,79 @@
     </div>
     {% endfor %} {% endif %}
     <div
-      class="container mx-auto max-w-lg bg-white p-8 rounded-lg shadow-md relative"
+      class="container flex flex-column items-center mx-auto max-w-lg bg-white p-8 rounded-lg shadow-md relative"
     >
-      <form
-        id="profileForm"
-        class="flex flex-wrap"
-        method="post"
-        action="{% url 'profile' %}"
-        enctype="multipart/form-data"
-      >
-        {% csrf_token %}
-        <label for="imageUpload">
-          <img
-            id="profileImage"
-            src="{{image.url}}"
-            name="image"
-            alt="Profile Image"
-            class="mx-auto rounded-full w-32 h-32 mb-8 cursor-pointer"
+      <div class="flex flex-wrap justify-center items-center w-2/3 pt-36">
+        <form
+          id="profileForm"
+          class="flex flex-column items-center w-2/3"
+          method="post"
+          action="{% url 'profile' %}"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <label for="imageUpload">
+            <img
+              id="profileImage"
+              src="{{ image.url }}"
+              name="image"
+              alt="Profile Image"
+              class="mx-auto rounded-full w-32 h-32 mb-8 cursor-pointer"
+            />
+            <input
+              type="file"
+              name="image"
+              id="imageUpload"
+              style="display: none"
+            />
+          </label>
+          <input
+            type="text"
+            id="name"
+            placeholder="Name"
+            name="name"
+            value="{{name}}"
+            required
+            class="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:border-#d53f8c;"
           />
           <input
-            type="file"
-            name="image"
-            id="imageUpload"
-            style="display: none"
+            type="email"
+            id="email"
+            placeholder="Email"
+            name="email"
+            value="{{email}}"
+            required
+            class="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:border-[#2d6904]"
           />
-        </label>
-        <input
-          type="text"
-          id="name"
-          placeholder="Name"
-          name="name"
-          value="{{name}}"
-          required
-          class="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-        />
-        <input
-          type="email"
-          id="email"
-          placeholder="Email"
-          name="email"
-          value="{{email}}"
-          required
-          class="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:border--green-500"
-        />
-        <input
-          type="tel"
-          id="number"
-          placeholder="Phone Number"
-          name="number"
-          value="{{number}}"
-          required
-          class="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500"
-        />
-        <button
-          type="submit"
-          class="w-full bg-green-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:bg-blue-600"
-        >
-          Save Changes
-        </button>
-      </form>
-      <button
-        class="w-full bg-green-500 mt-4 text-white font-bold py-2 px-4 rounded focus:outline-none focus:bg-green-500"
-      >
-        <a href="logout"> Logout </a>
-      </button>
-      <a
-        href="changepassword"
-        class="block text-center mt-4 text-blue-500 font-semibold right-4"
-        >Change Password??</a
-      >
+          <input
+            type="tel"
+            id="number"
+            placeholder="Phone Number"
+            name="number"
+            value="{{number}}"
+            required
+            class="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:border-[#2d6904]"
+          />
+          <button
+            type="submit"
+            class="w-2/3 text-white font-bold py-2 px-4 rounded focus:outline-none"
+            style="background-color: #2d6904"
+          >
+            Save Changes
+          </button>
+          <button
+            class="w-2/3 mt-4 text-white font-bold py-2 px-4 rounded focus:outline-none focus:bg-[#2d6904]"
+            style="background-color: #2d6904"
+          >
+            <a href="logout" style="color: white"> Logout </a>
+          </button>
+          <a
+            href="changepassword"
+            class="block text-center mt-4 text-[#2d6904] font-semibold right-4"
+            >Change Password??</a
+          >
+        </form>
+      </div>
     </div>
 
     <script>
