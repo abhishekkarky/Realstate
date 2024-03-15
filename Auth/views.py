@@ -1,3 +1,5 @@
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 from django.contrib import messages
 from django.contrib.auth import (authenticate, get_user_model, login, logout,
                                  update_session_auth_hash)
@@ -22,7 +24,7 @@ def user_login(request):
             messages.success(request, 'Login successful.')
 
             if user.is_admin:
-                return redirect('/admin-page')
+                return redirect('admin-page')
             else:
                 return redirect('/')
         else:
@@ -128,8 +130,17 @@ def about(request):
     return render(request, 'about.html')
 
 
+@login_required
 def adminPage(request):
-    return render(request, 'admin/admin-panel.html')
+    if request.user.is_admin:
+        return render(request, 'admin/admin-panel.html')
+    else:
+        messages.error(request, "You do not have permission to access this page.")
+        return redirect('dashboard')
+
+
+def csrf_failure_view(request, reason=""):
+    return render(request, 'csrf_failure.html', {'reason': reason})
 
 
 def enquiryProperty(request):
@@ -380,8 +391,6 @@ def profile(request):
         if request.user.is_authenticated:
             user = request.user
             image = request.FILES.get("image")
-            if (request.FILES.get("image") != None):
-                image = request.FILES.get("image")
             name = request.POST.get('name')
             email = request.POST.get('email')
             number = request.POST.get('number')
@@ -389,17 +398,22 @@ def profile(request):
             user.email = email
             user.number = number
 
+            # Check if an image was uploaded
+            if image:
+                # If user already has an image, delete it first
+                if user.image:
+                    default_storage.delete(user.image.name)
+                # Save the new image
+                user.image = image
+
             user.save()
             print(user)
-            return JsonResponse({'message': 'User details updated successfully'})
+            return redirect('/profile_page')
         else:
-            return JsonResponse({'error': 'User not authenticated'}, status=401)
+            return redirect('/login')
     if request.user.is_authenticated:
         user = request.user
-        if hasattr(user, 'image'):
-            image = user.image
-        else:
-            image = None
+        image = user.image
         name = user.name
         email = user.email
         number = user.number
@@ -433,7 +447,7 @@ def changepassword(request):
             # Update session to prevent user from being logged out due to password change
             update_session_auth_hash(request, request.user)
 
-            return redirect('profile')
+            return redirect('/profile_page')
 
     return render(request, 'changepassword.html')
 
@@ -470,3 +484,8 @@ def review_property(request, property_id):
         # Handle GET request for rendering the review form
         property = Properties.objects.get(id=property_id)
         return render(request, 'property.html', {'property': property})
+
+
+def error_view(request, exception=None):
+    error_message = str(exception) if exception else "An error occurred."
+    return render(request, 'error.html', {'error_message': error_message}, status=404)

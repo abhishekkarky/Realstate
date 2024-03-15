@@ -2,6 +2,9 @@ from django.urls import path
 
 from Auth import views
 
+handler404 = 'Auth.views.error_view'
+handler500 = 'Auth.views.error_view'
+
 urlpatterns = [
     path('login', views.user_login, name='login'),
     path('signup', views.register, name='register'),
@@ -26,7 +29,7 @@ urlpatterns = [
     path('admin_delete-booking<int:id>', views.admin_delete_booking, name='admin-delete-booking'),
     path('booking', views.booking, name='booking'),
     path('logout', views.user_logout, name='logout'),
-    path('profile', views.profile, name='profile'),
+    path('profile_page', views.profile, name='profile_page'),
     path('changepassword', views.changepassword, name='changepassword'),
     path('review_property<int:property_id>', views.review_property, name='review_property'),
 ]

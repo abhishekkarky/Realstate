@@ -100,7 +100,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'realstate',
         'USER': 'root',
-        'PASSWORD': 'password',
+        'PASSWORD': 'user',
         'HOST': 'localhost', 
         'PORT': '3306',  
         'OPTIONS': {
@@ -151,6 +151,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS=[
     BASE_DIR,"static"
 ]
+
+CSRF_FAILURE_VIEW = 'Auth.views.csrf_failure_view'
 
 
 # Default primary key field type
