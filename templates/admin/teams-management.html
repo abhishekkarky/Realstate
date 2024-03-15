@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Teams Management</title>
     <!----======== CSS ======== -->
+    <link rel="stylesheet" href="/static/css/alert.css" />
     <link rel="stylesheet" href="/static/css/adminpanel.css" />
 
     <!----===== Iconscout CSS ===== -->
@@ -16,7 +17,23 @@
   </head>
   <body>
     <!-- Include navbar.html -->
-    {% include 'admin/navbar.html' %}
+    {% include 'admin/navbar.html' %} 
+    {% if messages %} 
+    {% for message in messages %}
+    <div
+      class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+      style="position: fixed; top: 0; right: 0; z-index: 9999"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %}
 
     <section class="dashboard">
       <div class="top">
@@ -60,15 +77,18 @@
               {% for booking in bookings %}
               <tr>
                 <td class="py-2 px-8 border-b">{{booking.user}}</td>
-                <td class="py-2 px-8 border-b">{{booking.property.broker.name}}</td>
+                <td class="py-2 px-8 border-b">
+                  {{booking.property.broker.name}}
+                </td>
                 <td class="py-2 px-8 border-b">{{booking.property.name}}</td>
                 <td class="py-2 px-8 border-b">{{booking.date}}</td>
                 <td class="py-2 px-8 border-b">{{booking.note}}</td>
-                <td><a href="{% url 'admin-delete-booking' booking.id %}">
-                  <i
-                    class="uil uil-trash-alt text-red-500 cursor-pointer hover:text-red-700"
-                  ></i>
-                </a>
+                <td>
+                  <a href="{% url 'admin-delete-booking' booking.id %}">
+                    <i
+                      class="uil uil-trash-alt text-red-500 cursor-pointer hover:text-red-700"
+                    ></i>
+                  </a>
                 </td>
               </tr>
               {% endfor %}
@@ -202,6 +222,17 @@
       document
         .getElementById("closeModal")
         .addEventListener("click", closeModal);
+    </script>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        var alert = document.querySelector(".alert");
+        if (alert) {
+          setTimeout(function () {
+            alert.style.display = "none";
+          }, 3000);
+        }
+      });
     </script>
 
     <!-- Include admin-panel.js -->

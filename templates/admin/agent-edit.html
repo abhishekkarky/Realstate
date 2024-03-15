@@ -13,8 +13,24 @@
       href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
     />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/alert.css" />
   </head>
   <body>
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+      style="position: fixed; top: 0; right: 0; z-index: 9999"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %} {% include 'admin/navbar.html' %}
     <div class="bg-white p-6 h-screen">
       <span id="closeModal1" class="close">&times;</span>
 
@@ -130,6 +146,17 @@
         </button>
       </form>
     </div>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        var alert = document.querySelector(".alert");
+        if (alert) {
+          setTimeout(function () {
+            alert.style.display = "none";
+          }, 3000);
+        }
+      });
+    </script>
     <script>
           function previewFile(fieldName) {
               const preview = document.querySelector(".img-preview.img1");

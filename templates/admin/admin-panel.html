@@ -8,6 +8,9 @@
 
     <!----======== CSS ======== -->
     <link rel="stylesheet" href="/static/css/adminpanel.css" />
+    <link rel="stylesheet" href="/static/fonts/icomoon/style.css" />
+    <link rel="stylesheet" href="/static/fonts/flaticon/font/flaticon.css" />
+    <link rel="stylesheet" href="/static/css/alert.css" />
 
     <!----===== Iconscout CSS ===== -->
     <link
@@ -98,6 +101,17 @@
             stars[i].classList.add("rated");
           }
         });
+      });
+    </script>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        var alert = document.querySelector(".alert");
+        if (alert) {
+          setTimeout(function () {
+            alert.style.display = "none";
+          }, 3000);
+        }
       });
     </script>
 
