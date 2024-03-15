@@ -111,12 +111,14 @@
           >
             Save Changes
           </button>
-          <button
-            class="w-1/3 mt-4 text-white font-bold py-2 px-4 rounded focus:outline-none focus:bg-[#2d6904]"
+          <a
+            class="w-1/3 mt-4 text-white text-center font-bold py-2 px-4 rounded focus:outline-none focus:bg-[#2d6904]"
             style="background-color: #2d6904"
+            href="logout"
+            style="color: white"
           >
-            <a href="logout" style="color: white"> Logout </a>
-          </button>
+            Logout
+          </a>
           <a
             href="changepassword"
             class="block text-center mt-4 text-[#2d6904] font-semibold right-4"
@@ -125,6 +127,17 @@
         </form>
       </div>
     </div>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        var alert = document.querySelector(".alert");
+        if (alert) {
+          setTimeout(function () {
+            alert.style.display = "none";
+          }, 3000);
+        }
+      });
+    </script>
 
     <script>
       document

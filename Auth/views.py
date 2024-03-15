@@ -59,8 +59,13 @@ def register(request):
 
 def dashboard(request):
     properties = Properties.objects.all()[:9]
+    prpocount = Properties.objects.all().count()
     testimonials = Testimonials.objects.all()[:3]
+    userCount = CustomUser.objects.all().count()
     broker = BrokerAccount.objects.all()[:3]
+    agentcount = BrokerAccount.objects.all().count()
+    boughtprpo = Booking.objects.all().count()
+
     location = ''
     searchDetails = None
     if request.method == 'POST':
@@ -71,7 +76,11 @@ def dashboard(request):
         'testimonials': testimonials,
         'broker': broker,
         'location': location,
-        'searchDetails': searchDetails
+        'searchDetails': searchDetails,
+        "prpocount": prpocount,
+        "userCount": userCount,
+        "agentcount": agentcount,
+        "boughtprpo": boughtprpo
     }
     return render(request, 'index.html', context)
 
@@ -135,7 +144,8 @@ def adminPage(request):
     if request.user.is_admin:
         return render(request, 'admin/admin-panel.html')
     else:
-        messages.error(request, "You do not have permission to access this page.")
+        messages.error(
+            request, "You do not have permission to access this page.")
         return redirect('dashboard')
 
 
@@ -152,61 +162,72 @@ def enquiryProperty(request):
 
 
 def agentManagement(request):
-    if request.method == 'POST':
-        photo = request.FILES.get("photo")
-        name = request.POST.get("name")
-        intro = request.POST.get("intro")
-        instagramLink = request.POST.get("instagramLink")
-        facebookLink = request.POST.get("facebookLink")
-        twitterLink = request.POST.get("twitterLink")
-        linkedInLink = request.POST.get("linkedInLink")
-        query = BrokerAccount(photo=photo, name=name, intro=intro, instagramLink=instagramLink,
-                              facebookLink=facebookLink, twitterLink=twitterLink, linkedInLink=linkedInLink)
-        print(photo, name, intro, instagramLink,
-              facebookLink, twitterLink, linkedInLink)
-        try:
-            query.save()
-            message = "Agent added successfully!!"
-            messages.success(request, message)
-            return redirect('/admin-agent-management')
-        except Exception as e:
-            message = "Couldn't process your request!! Please try again later."
-            messages.error(request, message)
-            print(e)
+    if request.user.is_admin:
+        if request.method == 'POST':
+            photo = request.FILES.get("photo")
+            name = request.POST.get("name")
+            intro = request.POST.get("intro")
+            instagramLink = request.POST.get("instagramLink")
+            facebookLink = request.POST.get("facebookLink")
+            twitterLink = request.POST.get("twitterLink")
+            linkedInLink = request.POST.get("linkedInLink")
+            query = BrokerAccount(photo=photo, name=name, intro=intro, instagramLink=instagramLink,
+                                  facebookLink=facebookLink, twitterLink=twitterLink, linkedInLink=linkedInLink)
+            print(photo, name, intro, instagramLink,
+                  facebookLink, twitterLink, linkedInLink)
+            try:
+                query.save()
+                message = "Agent added successfully!!"
+                messages.success(request, message)
+                return redirect('/admin-agent-management')
+            except Exception as e:
+                message = "Couldn't process your request!! Please try again later."
+                messages.error(request, message)
+                print(e)
 
-    allAgents = BrokerAccount.objects.all()
-    context = {
-        'allAgents': allAgents
-    }
+        allAgents = BrokerAccount.objects.all()
+        context = {
+            'allAgents': allAgents
+        }
 
-    return render(request, 'admin/agent-management.html', context)
+        return render(request, 'admin/agent-management.html', context)
+
+    else:
+        messages.error(
+            request, "You do not have permission to access this page.")
+        return redirect('dashboard')
 
 
 def edit_agents(request, id):
-    agent = get_object_or_404(BrokerAccount, id=id)
-    context = {
-        'agent': agent
-    }
-    if request.method == 'POST':
-        photo = request.FILES.get("photo")
-        name = request.POST.get("name")
-        intro = request.POST.get("intro")
-        instagramLink = request.POST.get("instagramLink")
-        facebookLink = request.POST.get("facebookLink")
-        twitterLink = request.POST.get("twitterLink")
-        linkedInLink = request.POST.get("linkedInLink")
+    if request.user.is_admin:
+        agent = get_object_or_404(BrokerAccount, id=id)
+        context = {
+            'agent': agent
+        }
+        if request.method == 'POST':
+            photo = request.FILES.get("photo")
+            name = request.POST.get("name")
+            intro = request.POST.get("intro")
+            instagramLink = request.POST.get("instagramLink")
+            facebookLink = request.POST.get("facebookLink")
+            twitterLink = request.POST.get("twitterLink")
+            linkedInLink = request.POST.get("linkedInLink")
 
-        if photo is None:
-            photo = agent.photo
+            if photo is None:
+                photo = agent.photo
 
-        editQuery = BrokerAccount(id=id, photo=photo, name=name, intro=intro, instagramLink=instagramLink,
-                                  facebookLink=facebookLink, twitterLink=twitterLink, linkedInLink=linkedInLink)
-        editQuery.save()
-        messages.success(request, "Agent Edited Successfully !!!")
+            editQuery = BrokerAccount(id=id, photo=photo, name=name, intro=intro, instagramLink=instagramLink,
+                                      facebookLink=facebookLink, twitterLink=twitterLink, linkedInLink=linkedInLink)
+            editQuery.save()
+            messages.success(request, "Agent Edited Successfully !!!")
 
-        return redirect("admin-agent-management")
+            return redirect("admin-agent-management")
 
-    return render(request, 'admin/agent-edit.html', context)
+        return render(request, 'admin/agent-edit.html', context)
+    else:
+        messages.error(
+            request, "You do not have permission to access this page.")
+        return redirect('dashboard')
 
 
 def teamsManagement(request):
@@ -218,103 +239,123 @@ def teamsManagement(request):
 
 
 def adminProperty(request):
-    brokers = BrokerAccount.objects.all()
-    properties = Properties.objects.all()
-    context = {
-        'properties': properties,
-        'brokers': brokers,
-    }
+    if request.user.is_admin:
+        brokers = BrokerAccount.objects.all()
+        properties = Properties.objects.all()
+        context = {
+            'properties': properties,
+            'brokers': brokers,
+        }
 
-    if request.method == 'POST':
-        image = request.FILES.get("image")
-        imageTwo = request.FILES.get("imageTwo")
-        imageThree = request.FILES.get("imageThree")
-        broker_id = request.POST.get("broker")
-        name = request.POST.get("name")
-        location = request.POST.get("location")
-        beds = request.POST.get("beds")
-        baths = request.POST.get("baths")
-        price = request.POST.get("price")
-        description = request.POST.get("description")
+        if request.method == 'POST':
+            image = request.FILES.get("image")
+            imageTwo = request.FILES.get("imageTwo")
+            imageThree = request.FILES.get("imageThree")
+            broker_id = request.POST.get("broker")
+            name = request.POST.get("name")
+            location = request.POST.get("location")
+            beds = request.POST.get("beds")
+            baths = request.POST.get("baths")
+            price = request.POST.get("price")
+            description = request.POST.get("description")
 
-        broker = BrokerAccount.objects.get(pk=broker_id)
+            broker = BrokerAccount.objects.get(pk=broker_id)
 
-        property_obj = Properties(
-            image=image,
-            imageTwo=imageTwo,
-            imageThree=imageThree,
-            broker=broker,
-            name=name,
-            location=location,
-            beds=beds,
-            baths=baths,
-            price=price,
-            description=description
-        )
+            property_obj = Properties(
+                image=image,
+                imageTwo=imageTwo,
+                imageThree=imageThree,
+                broker=broker,
+                name=name,
+                location=location,
+                beds=beds,
+                baths=baths,
+                price=price,
+                description=description
+            )
 
-        try:
-            property_obj.save()
-            message = "Property added successfully"
-            messages.success(request, message)
-            return redirect('/admin-property-management')
-        except Exception as e:
-            message = "Couldn't add property. Please try again later."
-            messages.error(request, message)
-            print(e)
+            try:
+                property_obj.save()
+                message = "Property added successfully"
+                messages.success(request, message)
+                return redirect('/admin-property-management')
+            except Exception as e:
+                message = "Couldn't add property. Please try again later."
+                messages.error(request, message)
+                print(e)
 
-    return render(request, 'admin/property-management.html', context)
+        return render(request, 'admin/property-management.html', context)
+    else:
+        messages.error(
+            request, "You do not have permission to access this page.")
+        return redirect('dashboard')
 
 
 def editProperty(request, property_id):
-    details = get_object_or_404(Properties, id=property_id)
+    if request.user.is_admin:
+        details = get_object_or_404(Properties, id=property_id)
 
-    if request.method == 'POST':
-        # Retrieve existing property instance
-        property_obj = Properties.objects.get(pk=property_id)
+        if request.method == 'POST':
+            # Retrieve existing property instance
+            property_obj = Properties.objects.get(pk=property_id)
 
-        if 'image' in request.FILES:
-            property_obj.image = request.FILES.get("image")
-        if 'imageTwo' in request.FILES:
-            property_obj.imageTwo = request.FILES.get("imageTwo")
-        if 'imageThree' in request.FILES:
-            property_obj.imageThree = request.FILES.get("imageThree")
+            if 'image' in request.FILES:
+                property_obj.image = request.FILES.get("image")
+            if 'imageTwo' in request.FILES:
+                property_obj.imageTwo = request.FILES.get("imageTwo")
+            if 'imageThree' in request.FILES:
+                property_obj.imageThree = request.FILES.get("imageThree")
 
-        property_obj.name = request.POST.get("name")
-        property_obj.location = request.POST.get("location")
-        property_obj.beds = request.POST.get("beds")
-        property_obj.baths = request.POST.get("baths")
-        property_obj.price = request.POST.get("price")
-        property_obj.description = request.POST.get("description")
+            property_obj.name = request.POST.get("name")
+            property_obj.location = request.POST.get("location")
+            property_obj.beds = request.POST.get("beds")
+            property_obj.baths = request.POST.get("baths")
+            property_obj.price = request.POST.get("price")
+            property_obj.description = request.POST.get("description")
 
-        try:
-            # Save the updated property
-            property_obj.save()
+            try:
+                # Save the updated property
+                property_obj.save()
 
-            message = "Property edited successfully"
-            messages.success(request, message)
-            return redirect('/admin-property-management')
-        except Exception as e:
-            message = "Couldn't edit property. Please try again later."
-            messages.error(request, message)
-            print(e)
+                message = "Property edited successfully"
+                messages.success(request, message)
+                return redirect('/admin-property-management')
+            except Exception as e:
+                message = "Couldn't edit property. Please try again later."
+                messages.error(request, message)
+                print(e)
 
-    return render(request, 'admin/edit-property.html', {'details': details})
+        return render(request, 'admin/edit-property.html', {'details': details})
+    else:
+        messages.error(
+            request, "You do not have permission to access this page.")
+        return redirect('dashboard')
 
 
 def deleteProperty(request, property_id):
-    property_obj = get_object_or_404(Properties, pk=property_id)
-    property_obj.delete()
-    message = "Property deleted successfully"
-    messages.success(request, message)
-    return redirect('/admin-property-management')
+    if request.user.is_admin:
+        property_obj = get_object_or_404(Properties, pk=property_id)
+        property_obj.delete()
+        message = "Property deleted successfully"
+        messages.success(request, message)
+        return redirect('/admin-property-management')
+    else:
+        messages.error(
+            request, "You do not have permission to access this page.")
+        return redirect('dashboard')
 
 
 def delete_agent(request, id):
-    agent_delete = get_object_or_404(BrokerAccount, pk=id)
-    agent_delete.delete()
-    message = "Agent deleted successfully"
-    messages.success(request, message)
-    return redirect('/admin-agent-management')
+    if request.user.is_admin:
+        agent_delete = get_object_or_404(BrokerAccount, pk=id)
+        agent_delete.delete()
+        message = "Agent deleted successfully"
+        messages.success(request, message)
+        return redirect('/admin-agent-management')
+    else:
+        messages.error(
+            request, "You do not have permission to access this page.")
+        return redirect('dashboard')
 
 
 def user_delete_booking(request, id):
@@ -326,11 +367,16 @@ def user_delete_booking(request, id):
 
 
 def admin_delete_booking(request, id):
-    booking_delete = get_object_or_404(Booking, pk=id)
-    booking_delete.delete()
-    message = "Booking deleted successfully"
-    messages.success(request, message)
-    return redirect('/admin-teams-management')
+    if request.user.is_admin:
+        booking_delete = get_object_or_404(Booking, pk=id)
+        booking_delete.delete()
+        message = "Booking deleted successfully"
+        messages.success(request, message)
+        return redirect('/admin-teams-management')
+    else:
+        messages.error(
+            request, "You do not have permission to access this page.")
+        return redirect('dashboard')
 
 
 def bookinglist(request):
@@ -398,18 +444,17 @@ def profile(request):
             user.email = email
             user.number = number
 
-            # Check if an image was uploaded
             if image:
-                # If user already has an image, delete it first
                 if user.image:
                     default_storage.delete(user.image.name)
-                # Save the new image
                 user.image = image
-
             user.save()
+            messages.success(
+                request, "Your Profile has been updated successfully")
             print(user)
             return redirect('/profile_page')
         else:
+            messages.error(request, "Something Went wrong")
             return redirect('/login')
     if request.user.is_authenticated:
         user = request.user
@@ -455,33 +500,26 @@ def changepassword(request):
 def review_property(request, property_id):
     if request.method == 'POST':
         if request.user.is_authenticated:
-            # Check if the user has a confirmed booking for this property
             if Booking.objects.filter(user=request.user, property_id=property_id, status='Confirmed').exists():
-                # User has a confirmed booking, allow them to submit a review
                 rating = request.POST.get('rating')
                 comment = request.POST.get('comment')
 
-                # Check if the user has already submitted a review for this property
                 if Review.objects.filter(user=request.user, property_id=property_id).exists():
                     messages.error(
                         request, 'You have already submitted a review for this property.')
                 else:
-                    # Save the review
                     review = Review(
                         property_id=property_id, user=request.user, rating=rating, comment=comment)
                     review.save()
                     messages.success(request, 'Review submitted successfully.')
             else:
-                # User doesn't have a confirmed booking, display an error message
                 messages.error(request, 'You must book this property first.')
         else:
-            # User is not authenticated, redirect to login page
             messages.error(request, 'You must log in first.')
             return redirect('/login')
 
         return redirect('/singleproperty/' + str(property_id))
     else:
-        # Handle GET request for rendering the review form
         property = Properties.objects.get(id=property_id)
         return render(request, 'property.html', {'property': property})
 
