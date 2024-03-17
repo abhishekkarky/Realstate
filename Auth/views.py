@@ -11,8 +11,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from Auth.models import (Booking, BrokerAccount, ContactList,
                          CustomUser, Review, Properties, Testimonials)
 
-
 def user_login(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+        
     if request.method == 'POST':
         number = request.POST.get('number')
         password = request.POST.get('password')
@@ -31,7 +33,6 @@ def user_login(request):
             messages.error(request, 'Invalid login credentials.')
 
     return render(request, 'login.html')
-
 
 def register(request):
     if request.method == 'POST':
