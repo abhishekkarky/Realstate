@@ -9,6 +9,7 @@ class CustomUser(AbstractUser):
     number = models.CharField(max_length=20, unique = True)
     password = models.CharField(max_length=255)
     is_admin = models.BooleanField(default=False)
+    is_agent = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'number'
@@ -30,6 +31,7 @@ class BrokerAccount(models.Model):
     photo = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
     name = models.CharField(max_length = 20)
     intro = models.CharField(max_length = 50)
+    number = models.CharField(max_length=20, unique = True)
     instagramLink = models.CharField(max_length = 1000, default='https://instagram.com')
     facebookLink = models.CharField(max_length = 1000, default='https://facebook.com')
     twitterLink = models.CharField(max_length = 1000, default = 'https://twitter.com')

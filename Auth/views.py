@@ -3,21 +3,22 @@ from django.core.files.base import ContentFile
 from django.contrib import messages
 from django.contrib.auth import (authenticate, get_user_model, login, logout,
                                  update_session_auth_hash)
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import make_password
-from django.http import HttpResponse, JsonResponse
+import random
 from django.shortcuts import get_object_or_404, redirect, render
 
 from Auth.models import (Booking, BrokerAccount, ContactList,
                          CustomUser, Review, Properties, Testimonials)
 
+
 def user_login(request):
     if request.user.is_authenticated:
         return redirect('/')
-        
+
     if request.method == 'POST':
         number = request.POST.get('number')
         password = request.POST.get('password')
+
+        print(number, password)
 
         user = authenticate(request, username=number, password=password)
 
@@ -27,12 +28,15 @@ def user_login(request):
 
             if user.is_admin:
                 return redirect('admin-page')
+            elif user.is_agent:
+                return redirect('agent-dashboard')
             else:
                 return redirect('/')
         else:
             messages.error(request, 'Invalid login credentials.')
 
     return render(request, 'login.html')
+
 
 def register(request):
     if request.method == 'POST':
@@ -84,6 +88,34 @@ def dashboard(request):
     return render(request, 'index.html', context)
 
 
+def agentDash(request):
+    properties = Properties.objects.all()[:9]
+    prpocount = Properties.objects.all().count()
+    testimonials = Testimonials.objects.all()[:3]
+    userCount = CustomUser.objects.all().count()
+    broker = BrokerAccount.objects.all()[:3]
+    agentcount = BrokerAccount.objects.all().count()
+    boughtprpo = Booking.objects.all().count()
+
+    location = ''
+    searchDetails = None
+    if request.method == 'POST':
+        location = request.POST['location']
+        searchDetails = Properties.objects.filter(location__contains=location)
+    context = {
+        'properties': properties,
+        'testimonials': testimonials,
+        'broker': broker,
+        'location': location,
+        'searchDetails': searchDetails,
+        "prpocount": prpocount,
+        "userCount": userCount,
+        "agentcount": agentcount,
+        "boughtprpo": boughtprpo
+    }
+    return render(request, 'agent/agent_dashboard.html', context)
+
+
 def contact(request):
     if request.method == 'POST':
         name = request.POST.get("name")
@@ -115,6 +147,7 @@ def services(request):
     testimonials = Testimonials.objects.all()[:6]
     return render(request, 'services.html', {'testimonials': testimonials})
 
+
 def properties(request):
     properties = Properties.objects.all()
     featuredProperties = Properties.objects.all()[:9]
@@ -123,6 +156,7 @@ def properties(request):
         'featuredProperties': featuredProperties,
     }
     return render(request, 'properties.html', context)
+
 
 def about(request):
     return render(request, 'about.html')
@@ -150,40 +184,66 @@ def enquiryProperty(request):
 
 
 def agentManagement(request):
-    if (request.user.is_authenticated and request.user.is_admin):
+    if request.user.is_authenticated:
         if request.method == 'POST':
-            photo = request.FILES.get("photo")
-            name = request.POST.get("name")
-            intro = request.POST.get("intro")
-            instagramLink = request.POST.get("instagramLink")
-            facebookLink = request.POST.get("facebookLink")
-            twitterLink = request.POST.get("twitterLink")
-            linkedInLink = request.POST.get("linkedInLink")
-            query = BrokerAccount(photo=photo, name=name, intro=intro, instagramLink=instagramLink,
-                                  facebookLink=facebookLink, twitterLink=twitterLink, linkedInLink=linkedInLink)
-            print(photo, name, intro, instagramLink,
-                  facebookLink, twitterLink, linkedInLink)
-            try:
-                query.save()
-                message = "Agent added successfully!!"
-                messages.success(request, message)
-                return redirect('/admin-agent-management')
-            except Exception as e:
-                message = "Couldn't process your request!! Please try again later."
-                messages.error(request, message)
-                print(e)
+            if request.user.is_admin:
+                photo = request.FILES.get("photo")
+                name = request.POST.get("name")
+                number = request.POST.get("number")
+                print(number)
+                intro = request.POST.get("intro")
+                instagramLink = request.POST.get("instagramLink")
+                facebookLink = request.POST.get("facebookLink")
+                twitterLink = request.POST.get("twitterLink")
+                linkedInLink = request.POST.get("linkedInLink")
+                agent_email = f"{name.lower()}{random.randint(1000, 9999)}@gmail.com"
+                agent_password = "password123"
 
+                User = get_user_model()
+                try:
+                    if User.objects.filter(number=number).exists():
+                        messages.error(request,
+                                       "User with this number already exists")
+
+                    new_user = User.objects.create_user(
+                        username=number,
+                        number=number,
+                        email=agent_email,
+                        password=agent_password,
+                        name=name,
+                        is_admin=False,
+                        is_agent=True
+                    )
+
+                    # Create a BrokerAccount for the agent
+                    agent = BrokerAccount.objects.create(
+                        photo=photo,
+                        name=name,
+                        number=number,
+                        intro=intro,
+                        instagramLink=instagramLink,
+                        facebookLink=facebookLink,
+                        twitterLink=twitterLink,
+                        linkedInLink=linkedInLink
+                    )
+                    message = "Agent added successfully!!"
+                    messages.success(request, message)
+                    return redirect('/admin-agent-management')
+                except Exception as e:
+                    message = "Couldn't process your request!! Please try again later."
+                    messages.error(request, message)
+                    print(e)
+            else:
+                messages.error(
+                    request, "You do not have permission to add agents.")
+                return redirect('dashboard')
         allAgents = BrokerAccount.objects.all()
-        context = {
-            'allAgents': allAgents
-        }
-
+        context = {'allAgents': allAgents}
         return render(request, 'admin/agent-management.html', context)
-
     else:
         messages.error(
-            request, "You do not have permission to access this page.")
-        return redirect('dashboard')
+            request, "You need to be logged in to access this page.")
+        return redirect('login')
 
 
 def edit_agents(request, id):
@@ -375,6 +435,7 @@ def bookinglist(request):
     }
     return render(request, 'bookings.html', context)
 
+
 def booking(request):
     if request.method == 'POST':
         # Fetching property details from the request
@@ -417,6 +478,7 @@ def user_logout(request):
     logout(request)
     return redirect('/login')
 
+
 def profile(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -427,15 +489,16 @@ def profile(request):
             user.name = name
             user.email = email
             user.number = number
-            if request.FILES.get("image"): 
+            if request.FILES.get("image"):
                 user.image = request.FILES.get("image")
             user.save()
-            messages.success(request, "Your Profile has been updated successfully")
+            messages.success(
+                request, "Your Profile has been updated successfully")
             return redirect('/profile_page')
         else:
             messages.error(request, "Something went wrong")
             return redirect('/login')
-    
+
     if request.user.is_authenticated:
         user = request.user
         image = user.image
@@ -450,6 +513,7 @@ def profile(request):
         }
         return render(request, 'profile.html', context)
     return render(request, 'profile.html')
+
 
 def changepassword(request):
     if request.user.is_authenticated:
