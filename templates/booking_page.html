@@ -43,7 +43,7 @@
       class="fixed inset-0 bg-gray-300 bg-opacity-75 flex items-center justify-center"
     >
       <div class="bg-white p-6 w-1/2 relative">
-        <h1 class="mx-auto text-2xl">{{ request.GET.property_name }}</h1>
+        <h1 class="mx-auto text-2xl text-center">{{ request.GET.property_name }}</h1>
         <form
           id="appointmentForm"
           class="grid grid-cols-2 gap-4"
@@ -58,7 +58,6 @@
             value="{{request.GET.property_id}}"
           />
           <input type="text" name="user" hidden value="{{ request.user.id }}" />
-          <p></p>
           <div class="mb-4">
             <label for="appointmentDate">Date:</label>
             <input
@@ -81,13 +80,13 @@
 
           <button
             type="submit"
-            class="col-span-2 bg-[#E77450] text-white px-4 py-2 rounded"
+            class="col-span-2 bg-[#2d6904] text-white px-4 py-2 rounded"
           >
             Buy
           </button>
           <a
             href="/properties"
-            class="col-span-2 bg-[#E77450] text-white px-4 py-2 rounded text-center"
+            class="col-span-2 bg-[#2d6904] text-white px-4 py-2 rounded text-center"
           >
             Back to properties
           </a>

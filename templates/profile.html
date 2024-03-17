@@ -63,6 +63,7 @@
         >
           {% csrf_token %}
           <label for="imageUpload">
+            {% if image.url != NONE %}
             <img
               id="profileImage"
               src="{{ image.url }}"
@@ -70,6 +71,15 @@
               alt="Profile Image"
               class="mx-auto rounded-full w-32 h-32 mb-8 cursor-pointer shadow-lg"
             />
+            {% else %}
+            <img
+              id="profileImage"
+              src="static/images/profile.jpg"
+              name="image"
+              alt="Profile Image"
+              class="mx-auto rounded-full w-32 h-32 mb-8 cursor-pointer shadow-lg"
+            />
+            {% endif %}
             <input
               type="file"
               name="image"

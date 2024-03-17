@@ -54,8 +54,6 @@ def register(request):
 
     return render(request, 'register.html')
 
-# @login_required
-
 
 def dashboard(request):
     properties = Properties.objects.all()[:9]
@@ -84,8 +82,6 @@ def dashboard(request):
     }
     return render(request, 'index.html', context)
 
-# @login_required
-
 
 def contact(request):
     if request.method == 'POST':
@@ -107,8 +103,6 @@ def contact(request):
             print(e)
     return render(request, 'contact.html')
 
-# @login_required
-
 
 def singleProperty(request, id):
     details = get_object_or_404(Properties, id=id)
@@ -120,9 +114,6 @@ def services(request):
     testimonials = Testimonials.objects.all()[:6]
     return render(request, 'services.html', {'testimonials': testimonials})
 
-# @login_required
-
-
 def properties(request):
     properties = Properties.objects.all()
     featuredProperties = Properties.objects.all()[:9]
@@ -132,16 +123,12 @@ def properties(request):
     }
     return render(request, 'properties.html', context)
 
-# @login_required
-
-
 def about(request):
     return render(request, 'about.html')
 
 
-@login_required
 def adminPage(request):
-    if request.user.is_admin:
+    if (request.user.is_authenticated and request.user.is_admin):
         return render(request, 'admin/admin-panel.html')
     else:
         messages.error(
@@ -162,7 +149,7 @@ def enquiryProperty(request):
 
 
 def agentManagement(request):
-    if request.user.is_admin:
+    if (request.user.is_authenticated and request.user.is_admin):
         if request.method == 'POST':
             photo = request.FILES.get("photo")
             name = request.POST.get("name")
@@ -199,7 +186,7 @@ def agentManagement(request):
 
 
 def edit_agents(request, id):
-    if request.user.is_admin:
+    if (request.user.is_authenticated and request.user.is_admin):
         agent = get_object_or_404(BrokerAccount, id=id)
         context = {
             'agent': agent
@@ -239,7 +226,7 @@ def teamsManagement(request):
 
 
 def adminProperty(request):
-    if request.user.is_admin:
+    if (request.user.is_authenticated and request.user.is_admin):
         brokers = BrokerAccount.objects.all()
         properties = Properties.objects.all()
         context = {
@@ -292,7 +279,7 @@ def adminProperty(request):
 
 
 def editProperty(request, property_id):
-    if request.user.is_admin:
+    if (request.user.is_authenticated and request.user.is_admin):
         details = get_object_or_404(Properties, id=property_id)
 
         if request.method == 'POST':
@@ -333,7 +320,7 @@ def editProperty(request, property_id):
 
 
 def deleteProperty(request, property_id):
-    if request.user.is_admin:
+    if (request.user.is_authenticated and request.user.is_admin):
         property_obj = get_object_or_404(Properties, pk=property_id)
         property_obj.delete()
         message = "Property deleted successfully"
@@ -346,7 +333,7 @@ def deleteProperty(request, property_id):
 
 
 def delete_agent(request, id):
-    if request.user.is_admin:
+    if (request.user.is_authenticated and request.user.is_admin):
         agent_delete = get_object_or_404(BrokerAccount, pk=id)
         agent_delete.delete()
         message = "Agent deleted successfully"
@@ -367,7 +354,7 @@ def user_delete_booking(request, id):
 
 
 def admin_delete_booking(request, id):
-    if request.user.is_admin:
+    if (request.user.is_authenticated and request.user.is_admin):
         booking_delete = get_object_or_404(Booking, pk=id)
         booking_delete.delete()
         message = "Booking deleted successfully"
@@ -387,8 +374,6 @@ def bookinglist(request):
     }
     return render(request, 'bookings.html', context)
 
-
-@login_required
 def booking(request):
     if request.method == 'POST':
         # Fetching property details from the request
@@ -431,31 +416,25 @@ def user_logout(request):
     logout(request)
     return redirect('/login')
 
-
 def profile(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
             user = request.user
-            image = request.FILES.get("image")
             name = request.POST.get('name')
             email = request.POST.get('email')
             number = request.POST.get('number')
             user.name = name
             user.email = email
             user.number = number
-
-            if image:
-                if user.image:
-                    default_storage.delete(user.image.name)
-                user.image = image
+            if request.FILES.get("image"): 
+                user.image = request.FILES.get("image")
             user.save()
-            messages.success(
-                request, "Your Profile has been updated successfully")
-            print(user)
+            messages.success(request, "Your Profile has been updated successfully")
             return redirect('/profile_page')
         else:
-            messages.error(request, "Something Went wrong")
+            messages.error(request, "Something went wrong")
             return redirect('/login')
+    
     if request.user.is_authenticated:
         user = request.user
         image = user.image
@@ -469,8 +448,7 @@ def profile(request):
             'number': number
         }
         return render(request, 'profile.html', context)
-    return render(request, 'profile.html', context)
-
+    return render(request, 'profile.html')
 
 def changepassword(request):
     if request.user.is_authenticated:
