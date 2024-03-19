@@ -12,7 +12,11 @@ from Auth.models import (Booking, BrokerAccount, ContactList,
 
 def user_login(request):
     if request.user.is_authenticated:
-        return redirect('/')
+        messages.error(request, 'You are already logged in.')
+        if request.user.is_admin:
+            return redirect('/admin-page')
+        else:
+            return redirect('/')
 
     if request.method == 'POST':
         number = request.POST.get('number')
@@ -29,7 +33,7 @@ def user_login(request):
             if user.is_admin:
                 return redirect('admin-page')
             elif user.is_agent:
-                return redirect('agent-dashboard')
+                return redirect('/')
             else:
                 return redirect('/')
         else:
@@ -39,6 +43,12 @@ def user_login(request):
 
 
 def register(request):
+    if request.user.is_authenticated:
+        messages.error(request, 'You are already logged in.')
+        if request.user.is_admin:
+            return redirect('/admin-page')
+        return redirect('/')
+
     if request.method == 'POST':
         name = request.POST['name']
         email = request.POST['email']
@@ -61,6 +71,11 @@ def register(request):
 
 
 def dashboard(request):
+    if request.user.is_authenticated:
+        if request.user.is_admin:
+            messages.error(
+                request, "You do not have permission to access this page.")
+            return redirect('admin-page')
     properties = Properties.objects.all()[:9]
     prpocount = Properties.objects.all().count()
     testimonials = Testimonials.objects.all()[:3]
@@ -117,6 +132,12 @@ def agentDash(request):
 
 
 def contact(request):
+    if request.user.is_authenticated:
+        if request.user.is_admin:
+            messages.error(
+                request, "You do not have permission to access this page.")
+            return redirect('admin-page')
+
     if request.method == 'POST':
         name = request.POST.get("name")
         email = request.POST.get("email")
@@ -138,17 +159,32 @@ def contact(request):
 
 
 def singleProperty(request, id):
+    if request.user.is_authenticated:
+        if request.user.is_admin:
+            messages.error(
+                request, "You do not have permission to access this page.")
+            return redirect('admin-page')
     details = get_object_or_404(Properties, id=id)
     reviews = Review.objects.filter(property_id=id)
     return render(request, 'property-single.html', {'details': details, 'reviews': reviews})
 
 
 def services(request):
+    if request.user.is_authenticated:
+        if request.user.is_admin:
+            messages.error(
+                request, "You do not have permission to access this page.")
+            return redirect('admin-page')
     testimonials = Testimonials.objects.all()[:6]
     return render(request, 'services.html', {'testimonials': testimonials})
 
 
 def properties(request):
+    if request.user.is_authenticated:
+        if request.user.is_admin:
+            messages.error(
+                request, "You do not have permission to access this page.")
+            return redirect('admin-page')
     properties = Properties.objects.all()
     featuredProperties = Properties.objects.all()[:9]
     context = {
@@ -159,12 +195,19 @@ def properties(request):
 
 
 def about(request):
+    if request.user.is_authenticated:
+        if request.user.is_admin:
+            messages.error(
+                request, "You do not have permission to access this page.")
+            return redirect('admin-page')
+
     return render(request, 'about.html')
 
 
 def adminPage(request):
-    if (request.user.is_authenticated and request.user.is_admin):
-        return render(request, 'admin/admin-panel.html')
+    if (request.user.is_authenticated):
+        if request.user.is_admin:
+            return render(request, 'admin/admin-panel.html')
     else:
         messages.error(
             request, "You do not have permission to access this page.")
@@ -176,74 +219,76 @@ def csrf_failure_view(request, reason=""):
 
 
 def enquiryProperty(request):
-    allEnquiries = ContactList.objects.all()
-    context = {
-        'allEnquiries': allEnquiries
-    }
-    return render(request, 'admin/enquiry-management.html', context)
+    if request.user.is_authenticated:
+        if request.user.is_admin:
+            allEnquiries = ContactList.objects.all()
+            context = {
+                'allEnquiries': allEnquiries
+            }
+            return render(request, 'admin/enquiry-management.html', context)
+        else:
+            messages.error(
+                request, "You do not have permission to access this page.")
+            return redirect('/')
 
 
 def agentManagement(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            if request.user.is_admin:
-                photo = request.FILES.get("photo")
-                name = request.POST.get("name")
-                number = request.POST.get("number")
-                print(number)
-                intro = request.POST.get("intro")
-                instagramLink = request.POST.get("instagramLink")
-                facebookLink = request.POST.get("facebookLink")
-                twitterLink = request.POST.get("twitterLink")
-                linkedInLink = request.POST.get("linkedInLink")
-                agent_email = f"{name.lower()}{random.randint(1000, 9999)}@gmail.com"
-                agent_password = "password123"
+            photo = request.FILES.get("photo")
+            name = request.POST.get("name")
+            number = request.POST.get("number")
+            print(number)
+            intro = request.POST.get("intro")
+            instagramLink = request.POST.get("instagramLink")
+            facebookLink = request.POST.get("facebookLink")
+            twitterLink = request.POST.get("twitterLink")
+            linkedInLink = request.POST.get("linkedInLink")
+            agent_email = f"{name.lower()}{random.randint(1000, 9999)}@gmail.com"
+            agent_password = "password123"
 
-                User = get_user_model()
-                try:
-                    if User.objects.filter(number=number).exists():
-                        messages.error(request,
-                                       "User with this number already exists")
+            # Create a BrokerAccount for the agent
+            agent = BrokerAccount.objects.create(
+                photo=photo,
+                name=name,
+                number=number,
+                intro=intro,
+                instagramLink=instagramLink,
+                facebookLink=facebookLink,
+                twitterLink=twitterLink,
+                linkedInLink=linkedInLink
+            )
+            message = "Agent added successfully!!"
+            messages.success(request, message)
 
-                    new_user = User.objects.create_user(
-                        username=number,
-                        number=number,
-                        email=agent_email,
-                        password=agent_password,
-                        name=name,
-                        is_admin=False,
-                        is_agent=True
-                    )
+            User = get_user_model()
+            try:
+                if User.objects.filter(number=number).exists():
+                    messages.error(request,
+                                   "User with this number already exists")
 
-                    # Create a BrokerAccount for the agent
-                    agent = BrokerAccount.objects.create(
-                        photo=photo,
-                        name=name,
-                        number=number,
-                        intro=intro,
-                        instagramLink=instagramLink,
-                        facebookLink=facebookLink,
-                        twitterLink=twitterLink,
-                        linkedInLink=linkedInLink
-                    )
-                    message = "Agent added successfully!!"
-                    messages.success(request, message)
-                    return redirect('/admin-agent-management')
-                except Exception as e:
-                    message = "Couldn't process your request!! Please try again later."
-                    messages.error(request, message)
-                    print(e)
-            else:
-                messages.error(
-                    request, "You do not have permission to add agents.")
-                return redirect('dashboard')
+                new_user = User.objects.create_user(
+                    username=number,
+                    number=number,
+                    email=agent_email,
+                    password=agent_password,
+                    name=name,
+                    is_admin=False,
+                    is_agent=True,
+                    agentId=agent.id
+                )
+                return redirect('/admin-agent-management')
+            except Exception as e:
+                message = "Couldn't process your request!! Please try again later."
+                messages.error(request, message)
+                print(e)
         allAgents = BrokerAccount.objects.all()
         context = {'allAgents': allAgents}
         return render(request, 'admin/agent-management.html', context)
     else:
         messages.error(
-            request, "You need to be logged in to access this page.")
-        return redirect('login')
+            request, "You are not authorized to access this page.")
+        return redirect('/')
 
 
 def edit_agents(request, id):
@@ -276,6 +321,27 @@ def edit_agents(request, id):
         messages.error(
             request, "You do not have permission to access this page.")
         return redirect('dashboard')
+
+
+def assignedToagent(request):
+    if request.user.is_authenticated:
+        if request.user.is_agent:
+            properties = Properties.objects.filter(broker_id=request.user.agentId)
+            for property in properties:
+                print(property.name)
+            context = {"properties": properties}
+            return render(request, 'agent/assigned-properties.html', context)
+        else:
+            messages.error(
+                request, "You do not have permission to access this page.")
+            if request.user.is_admin:
+                return redirect('/')
+            else:
+                return redirect('.admin-page')
+    else:
+        messages.error(
+            request, "You must be logged in to access this page.")
+        return redirect('/login')
 
 
 def teamsManagement(request):

@@ -165,14 +165,14 @@
                 </ul>
               </div>
             </div>
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and not user.is_agent %}
             <a
               href="{% url 'booking' %}?property_id={{ details.id }}&property_name={{ details.name }}"
               class="btn btn-primary py-2 px-3 m-5"
             >
               Buy Now
             </a>
-            {% else %}
+            {% elif user.is_agent %} {% else %}
             <a href="{% url 'login' %}" class="btn btn-primary py-2 px-3 m-5">
               Log In to Buy Now
             </a>
@@ -198,6 +198,7 @@
             {% endif %}
           </div>
 
+          {% if not user.is_agent %}
           <!-- Review form section -->
           <div class="col-lg-4">
             <h3 class="heading mb-4">Submit a Review</h3>
@@ -234,6 +235,7 @@
               </button>
             </form>
           </div>
+          {% endif %}
 
           <div class="section">
             <div class="container">

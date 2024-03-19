@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bookings</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <style>
+    img {
+      height: 50px !important;
+      max-width: "100%";
+      object-fit: cover;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  {% include 'navbar.html' %} {% if messages %} {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert"
+    style="position: fixed; top: 0; right: 0; z-index: 9999">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %} {% endif %}
+  <!-- {% include 'navbar.html' %} -->
+  <div class="container mx-auto px-4 md:px-10 md:py-[40px] lg:py-[28px] xl:py-[28px] 2xl:py-[28px] sm:py-[20px]">
+    <div class="container mx-auto px-4 md:px-10 py-[20px] md:py-[28px]">
+      <div class="flex items-center justify-between">
+        <p class="text-base sm:text-lg md:text-xl lg:text-2xl font-bold leading-normal text-gray-800">
+          Assigned Properties
+        </p>
+        <div class="relative">
+          <input type="text" placeholder="Search Bookings..."
+            class="px-4 py-2 pr-10 border border-solid border-gray-700 rounded-lg" />
+        </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 md:px-10 py-4">
+      <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Image
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Property Name
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Location
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Price
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Beds
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Bath Rooms
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {% for pro in properties %}
+            <tr>
+              <td>
+                <img src= "{{ pro.image.url }}" class="ms-[12px] my-1 whitespace-nowrap" width="100">
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {{ pro.name }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ pro.location }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ pro.price }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ pro.beds }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ pro.baths }}</td>
+            </tr>
+            {% endfor %}
+            <!-- Add more rows here if needed -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <script>
+      // Function to hide the alert after a delay
+      window.addEventListener("DOMContentLoaded", function () {
+        var alert = document.querySelector(".alert");
+        if (alert) {
+          setTimeout(function () {
+            alert.style.display = "none";
+          }, 3000); // Adjust the delay time as needed (3000 milliseconds = 3 seconds)
+        }
+      });
+    </script>
+</body>
+
+</html>

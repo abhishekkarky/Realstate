@@ -10,6 +10,7 @@ class CustomUser(AbstractUser):
     password = models.CharField(max_length=255)
     is_admin = models.BooleanField(default=False)
     is_agent = models.BooleanField(default=False)
+    agentId = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'number'

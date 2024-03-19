@@ -34,7 +34,21 @@
       </div>
       <div class="site-mobile-menu-body"></div>
     </div>
-    {% include 'navbar.html' %}
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+      style="position: fixed; top: 0; right: 0; z-index: 9999"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %} {% include 'navbar.html' %}
     <div
       class="hero page-inner overlay"
       style="background-image: url('static/images/hero_bg_1.jpg')"
@@ -245,6 +259,18 @@
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
+
+    <script>
+      // Function to hide the alert after a delay
+      window.addEventListener("DOMContentLoaded", function () {
+        var alert = document.querySelector(".alert");
+        if (alert) {
+          setTimeout(function () {
+            alert.style.display = "none";
+          }, 3000); // Adjust the delay time as needed (3000 milliseconds = 3 seconds)
+        }
+      });
+    </script>
 
     <script src="static/js/bootstrap.bundle.min.js"></script>
     <script src="static/js/tiny-slider.js"></script>

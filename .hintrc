@@ -43,6 +43,7 @@
       {
         "duplicate-id": "off"
       }
-    ]
+    ],
+    "meta-viewport": "off"
   }
 }
