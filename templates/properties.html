@@ -100,12 +100,20 @@
                     href="/singleproperty/{{ featuredProperties.id }}"
                     class="img"
                   >
+                    {% if featuredProperties.image.url != null %}
                     <img
                       src="{{featuredProperties.image.url}}"
                       alt="Image"
                       class="img-fluid"
                       style="height: 415px"
                     />
+                    {% else %}
+                    <img
+                      src="static/images/noimage.jpg"
+                      alt="Image"
+                      class="img-fluid"
+                      style="height: 415px"
+                    {% endif %}
                   </a>
 
                   <div class="property-content">

@@ -217,6 +217,9 @@ def adminPage(request):
 def csrf_failure_view(request, reason=""):
     return render(request, 'csrf_failure.html', {'reason': reason})
 
+def remove(string):
+    return string.replace(" ", "")
+
 
 def enquiryProperty(request):
     if request.user.is_authenticated:
@@ -238,13 +241,14 @@ def agentManagement(request):
             photo = request.FILES.get("photo")
             name = request.POST.get("name")
             number = request.POST.get("number")
-            print(number)
             intro = request.POST.get("intro")
             instagramLink = request.POST.get("instagramLink")
             facebookLink = request.POST.get("facebookLink")
             twitterLink = request.POST.get("twitterLink")
             linkedInLink = request.POST.get("linkedInLink")
-            agent_email = f"{name.lower()}{random.randint(1000, 9999)}@gmail.com"
+            email = f"{name.lower()}{random.randint(1000, 9999)}@gmail.com"
+            agent_email = remove(email)
+            
             agent_password = "password123"
 
             # Create a BrokerAccount for the agent
@@ -326,7 +330,10 @@ def edit_agents(request, id):
 def assignedToagent(request):
     if request.user.is_authenticated:
         if request.user.is_agent:
-            properties = Properties.objects.filter(broker_id=request.user.agentId)
+            properties = Properties.objects.filter(
+                broker_id=request.user.agentId)
+            print(request.user)
+            print(properties)
             for property in properties:
                 print(property.name)
             context = {"properties": properties}
@@ -519,6 +526,10 @@ def booking(request):
                     Properties, id=property_id)
 
                 # Creating a Booking instance with the fetched Property instance and the user
+                if (Booking.objects.filter(date=date).exists()):
+                    message = "This property has been booked for this date"
+                    messages.error(request, message)
+                    return redirect('/singleproperty/' + str(property_id))
                 booking = Booking(
                     user=request.user, property=property_instance, date=date, note=note)
                 booking.status = 'Confirmed'
@@ -636,3 +647,21 @@ def review_property(request, property_id):
 def error_view(request, exception=None):
     error_message = str(exception) if exception else "An error occurred."
     return render(request, 'error.html', {'error_message': error_message}, status=404)
+
+
+def properties_booked(request, id):
+    if request.user.is_authenticated:
+        if request.user.is_agent:
+            details = get_object_or_404(Properties, id=id)
+            print(details.id)
+            bookings = Booking.objects.filter(property_id=details.id)
+            return render(request, 'agent/agent-single-property.html', {'details': details, "bookings": bookings})
+        else:
+            messages.error(
+                request, "You do not have permission to access this page.")
+            if request.user.is_admin:
+                return redirect('admin-page')
+            else:
+                return redirect('/')
+    else:
+        return redirect('/login')

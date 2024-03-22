@@ -121,12 +121,21 @@
                 {% for property in searchDetails %}
                 <div class="property-item">
                   <a href="/singleproperty/{{ property.id }}" class="img">
+                    {% if property.image != null %}
                     <img
                       src="{{ property.image.url }}"
                       alt="Image"
                       class="img-fluid"
                       style="height: 415px"
                     />
+                    {% else %}
+                    <img
+                      src="static/images/noimage.jpg"
+                      alt="Image"
+                      class="img-fluid"
+                      style="height: 415px"
+                    />
+                    {% endif %}
                   </a>
 
                   <div class="property-content">

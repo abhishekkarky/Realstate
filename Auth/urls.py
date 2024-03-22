@@ -12,6 +12,7 @@ urlpatterns = [
     path('agent-dashboard', views.agentDash, name='agent-dashboard'),
     path('contact', views.contact, name='contact'),
     path('singleproperty/<str:id>', views.singleProperty, name='singleproperty'),
+    path('agentsingle/<str:id>', views.properties_booked, name='agentsingle'),
     path('services', views.services, name='services'),
     path('bookinglist', views.bookinglist, name='bookinglist'),
     path('about', views.about, name='about'),

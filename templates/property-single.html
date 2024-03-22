@@ -106,21 +106,43 @@
           <div class="col-lg-7">
             <div class="img-property-slide-wrap">
               <div class="img-property-slide">
+                {% if details.image.url != null %}
                 <img
                   src="{{ details.image.url }}"
                   alt="Image"
                   class="img-fluid"
                 />
+                {% else %}
+                <img
+                  src="static/images/noimage.jpg"
+                  alt="Image"
+                  class="img-fluid"
+                />
+                {% endif %} {% if details.imageTwo.url != null %}
                 <img
                   src="{{ details.imageTwo.url }}"
                   alt="Image"
                   class="img-fluid"
                 />
+                {% else %}
+                <img
+                  src="static/images/noimage.jpg"
+                  alt="Image"
+                  class="img-fluid"
+                />
+                {% endif %} {% if details.imageThree.url != null %}
                 <img
                   src="{{ details.imageThree.url }}"
                   alt="Image"
                   class="img-fluid"
                 />
+                {% else %}
+                <img
+                  src="static/images/noimage.jpg"
+                  alt="Image"
+                  class="img-fluid"
+                />
+                {% endif %}
               </div>
             </div>
           </div>
