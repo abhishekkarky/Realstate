@@ -379,6 +379,8 @@ def adminProperty(request):
             baths = request.POST.get("baths")
             price = request.POST.get("price")
             description = request.POST.get("description")
+            latitude = request.POST.get("latitude")
+            longitude = request.POST.get("longitude")
 
             broker = BrokerAccount.objects.get(pk=broker_id)
 
@@ -392,7 +394,10 @@ def adminProperty(request):
                 beds=beds,
                 baths=baths,
                 price=price,
-                description=description
+                description=description,
+                latitude=latitude,
+                longitude=longitude
+                
             )
 
             try:
@@ -433,6 +438,8 @@ def editProperty(request, property_id):
             property_obj.baths = request.POST.get("baths")
             property_obj.price = request.POST.get("price")
             property_obj.description = request.POST.get("description")
+            property_obj.latitude = request.POST.get("latitude")
+            property_obj.longitude = request.POST.get("longitude")
 
             try:
                 # Save the updated property

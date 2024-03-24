@@ -172,22 +172,24 @@
               </div> -->
               <div class="text">
                 <h2 class="mb-2 text-center">Users Who Booked</h2>
-                <table class="table">
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Date</th>
-                  </tr>
-                  {% if bookings %} {% for booking in bookings %}
-                  <tr>
-                    <td>{{ booking.user.name }}</td>
-                    <td>{{ booking.user.email }}</td>
-                    <td>{{ booking.date }}</td>
-                  </tr>
-                  {% endfor %} {% else %}
-                  <p>No bookings yet</p>
-                  {% endif %}
-                </table>
+                <div class="overflow-auto">
+                  <table class="table">
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Date</th>
+                    </tr>
+                    {% if bookings %} {% for booking in bookings %}
+                    <tr>
+                      <td>{{ booking.user.name }}</td>
+                      <td>{{ booking.user.email }}</td>
+                      <td>{{ booking.date }}</td>
+                    </tr>
+                    {% endfor %} {% else %}
+                    <p>No bookings yet</p>
+                    {% endif %}
+                  </table>
+                </div>
               </div>
             </div>
             {% if user.is_authenticated and not user.is_agent %}

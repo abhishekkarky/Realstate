@@ -12,6 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
     <link rel="stylesheet" href="/static/fonts/icomoon/style.css" />
     <link rel="stylesheet" href="/static/fonts/flaticon/font/flaticon.css" />
@@ -39,6 +40,17 @@
       }
       .checked {
         color: orange;
+      }
+      #map {
+        width: 100%;
+        height: 400px;
+        margin-top: 20px;
+      }
+      .custom-tooltip-class {
+        background-color: #2d6904;
+        color: white;
+        padding: 5px 10px;
+        font-size: 14px;
       }
     </style>
   </head>
@@ -75,7 +87,9 @@
       <div class="container">
         <div class="row justify-content-center align-items-center">
           <div class="col-lg-9 text-center mt-5">
-            <h1 class="heading" data-aos="fade-up">{{details.name}}</h1>
+            <h1 id="prpName" class="heading" data-aos="fade-up">
+              {{details.name}}
+            </h1>
 
             <nav
               aria-label="breadcrumb"
@@ -203,10 +217,33 @@
         </div>
       </div>
     </div>
+    <div class="section m-5">
+      <h2 class="text-center">Location of {{details.name}}</h2>
+      <div>
+        <label hidden for="latitude">Latitude:</label>
+        <input
+          hidden
+          value="{{ details.latitude }}"
+          type="number"
+          id="latitude"
+          placeholder="Enter Latitude"
+        />
+      </div>
+      <div>
+        <label hidden for="longitude">Longitude:</label>
+        <input
+          hidden
+          value="{{ details.longitude }}"
+          type="number"
+          id="longitude"
+          placeholder="Enter Longitude"
+        />
+      </div>
+      <div id="map"></div>
+    </div>
     <div class="section">
       <div class="container">
         <div class="row justify-content-between">
-          <!-- Your property details content -->
           <div class="col-lg-7">
             <h3 class="heading mb-4">Reviews</h3>
             {% if reviews %} {% for review in reviews %}
@@ -464,7 +501,32 @@
         });
       });
     </script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+      var map;
+      window.onload = generateMap;
 
+      function generateMap() {
+        var latitude = parseFloat(document.getElementById("latitude").value);
+        var longitude = parseFloat(document.getElementById("longitude").value);
+        var propertyName = document.getElementById("prpName").innerText;
+        console.log(propertyName);
+        console.log(latitude, longitude);
+        map = L.map("map").setView([latitude, longitude], 25);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(map);
+        var marker = L.marker([latitude, longitude]).addTo(map);
+        // Add tooltip to the marker
+        marker
+          .bindTooltip(propertyName, {
+            className: "custom-tooltip-class", // Add your custom tooltip class here
+            direction: "top",
+          })
+          .openTooltip();
+      }
+    </script>
     <script src="/static/js/bootstrap.bundle.min.js"></script>
     <script src="/static/js/tiny-slider.js"></script>
     <script src="/static/js/aos.js"></script>
