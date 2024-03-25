@@ -34,5 +34,5 @@ urlpatterns = [
     path('logout', views.user_logout, name='logout'),
     path('profile_page', views.profile, name='profile_page'),
     path('changepassword', views.changepassword, name='changepassword'),
-    path('review_property<int:property_id>', views.review_property, name='review_property'),
+    path('review_agent<int:property_id>', views.review_agent, name='review_agent'),
 ]

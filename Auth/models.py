@@ -67,7 +67,7 @@ class Booking(models.Model):
     status = models.CharField(max_length=50, default='Pending')
 
 class Review(models.Model):
-    property = models.ForeignKey(Properties, on_delete=models.CASCADE)
+    broker = models.ForeignKey(BrokerAccount,on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     rating = models.IntegerField()
     comment = models.TextField()

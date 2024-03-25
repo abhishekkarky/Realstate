@@ -165,7 +165,7 @@ def singleProperty(request, id):
                 request, "You do not have permission to access this page.")
             return redirect('admin-page')
     details = get_object_or_404(Properties, id=id)
-    reviews = Review.objects.filter(property_id=id)
+    reviews = Review.objects.filter(broker=id)
     return render(request, 'property-single.html', {'details': details, 'reviews': reviews})
 
 
@@ -217,6 +217,7 @@ def adminPage(request):
 def csrf_failure_view(request, reason=""):
     return render(request, 'csrf_failure.html', {'reason': reason})
 
+
 def remove(string):
     return string.replace(" ", "")
 
@@ -248,7 +249,7 @@ def agentManagement(request):
             linkedInLink = request.POST.get("linkedInLink")
             email = f"{name.lower()}{random.randint(1000, 9999)}@gmail.com"
             agent_email = remove(email)
-            
+
             agent_password = "password123"
 
             # Create a BrokerAccount for the agent
@@ -397,7 +398,7 @@ def adminProperty(request):
                 description=description,
                 latitude=latitude,
                 longitude=longitude
-                
+
             )
 
             try:
@@ -624,19 +625,22 @@ def changepassword(request):
     return render(request, 'changepassword.html')
 
 
-def review_property(request, property_id):
+def review_agent(request, property_id):
     if request.method == 'POST':
         if request.user.is_authenticated:
+            property = Properties.objects.get(id=property_id)
+            agentId = property.broker_id
+            print(agentId)
             if Booking.objects.filter(user=request.user, property_id=property_id, status='Confirmed').exists():
                 rating = request.POST.get('rating')
                 comment = request.POST.get('comment')
 
-                if Review.objects.filter(user=request.user, property_id=property_id).exists():
+                if Review.objects.filter(user=request.user, broker=agentId).exists():
                     messages.error(
-                        request, 'You have already submitted a review for this property.')
+                        request, 'You have already submitted a review for this broker.')
                 else:
                     review = Review(
-                        property_id=property_id, user=request.user, rating=rating, comment=comment)
+                        broker_id=agentId, user=request.user, rating=rating, comment=comment)
                     review.save()
                     messages.success(request, 'Review submitted successfully.')
             else:

@@ -245,7 +245,7 @@
       <div class="container">
         <div class="row justify-content-between">
           <div class="col-lg-7">
-            <h3 class="heading mb-4">Reviews</h3>
+            <h3 class="heading mb-4">Review For {{ details.broker.name }}</h3>
             {% if reviews %} {% for review in reviews %}
             <div class="review-section mb-3">
               <p>Rating: {{ review.rating }}</p>
@@ -262,7 +262,7 @@
           <div class="col-lg-4">
             <h3 class="heading mb-4">Submit a Review</h3>
             <!-- Review submission form -->
-            <form method="POST" action="{% url 'review_property' details.id %}">
+            <form method="POST" action="{% url 'review_agent' details.broker_id %}">
               {% csrf_token %}
               <!-- Rating input -->
               <div class="mb-3">
