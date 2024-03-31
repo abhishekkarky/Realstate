@@ -14,8 +14,14 @@
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/css/alert.css" />
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    rel="stylesheet"
+  />
   </head>
   <body>
+        <!-- Include navbar.html -->
+        {% include 'admin/navbar.html' %}
     {% if messages %} {% for message in messages %}
     <div
       class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
@@ -31,8 +37,26 @@
       ></button>
     </div>
     {% endfor %} {% endif %} {% include 'admin/navbar.html' %}
+
+
+    <section class="dashboard">
+      <div class="top">
+        <i class="uil uil-bars sidebar-toggle"></i>
+        {% comment %} <div class="search-box">
+          <i class="uil uil-search"></i>
+          <input type="text" placeholder="Search here..." />
+        </div> {% endcomment %}
+        <img src="/static/images/profile.jpg" alt="" />
+      </div>
+      <div class="dash-content p-6">
+        <div class="overview">
+<div class="title flex items-center justify-between mb-4">
+            <div class="flex items-center">
+              <i class="uil uil-tachometer-fast-alt text-2xl" style="background-color: #0291dd;"></i>
+              <span class="text-2xl ml-2">Edit Agent</span>
+            </div>
+          </div>
     <div class="bg-white p-6 h-screen">
-      <span id="closeModal1" class="close">&times;</span>
 
       <!-- Property Add Form -->
       <form
@@ -146,6 +170,10 @@
         </button>
       </form>
     </div>
+    </div>
+    </div>
+
+  </section>
 
     <script>
       window.addEventListener("DOMContentLoaded", function () {

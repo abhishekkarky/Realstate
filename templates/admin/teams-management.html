@@ -14,6 +14,10 @@
       href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
     />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    rel="stylesheet"
+  />
   </head>
   <body>
     <!-- Include navbar.html -->
@@ -38,10 +42,10 @@
     <section class="dashboard">
       <div class="top">
         <i class="uil uil-bars sidebar-toggle"></i>
-        <div class="search-box">
+        {% comment %} <div class="search-box">
           <i class="uil uil-search"></i>
           <input type="text" placeholder="Search here..." />
-        </div>
+        </div> {% endcomment %}
         <img src="/static/images/profile.jpg" alt="" />
       </div>
 
@@ -49,7 +53,7 @@
         <div class="overview">
           <div class="title flex items-center justify-between mb-4">
             <div class="flex items-center">
-              <i class="uil uil-tachometer-fast-alt text-2xl"></i>
+              <i class="uil uil-tachometer-fast-alt text-2xl" style="background-color: #0291dd;"></i>
               <span class="text-2xl ml-2">Booking List</span>
             </div>
             {% comment %} <button

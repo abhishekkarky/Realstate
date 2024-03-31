@@ -311,7 +311,8 @@ nav.close ~ .dashboard .top{
     border-radius: 12px;
     width: calc(100% / 3 - 15px);
     padding: 15px 20px;
-    background-color: #2d6904;
+    /* background-color: #2d6904; */
+    background-color: #0291dd;
     transition: var(--tran-05);
 }
 .boxes .box i{

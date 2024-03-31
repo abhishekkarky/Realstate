@@ -17,6 +17,10 @@
       rel="stylesheet"
       href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
     />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
 
     <title>Admin Dashboard Panel</title>
   </head>
@@ -41,10 +45,12 @@
       <div class="top">
         <i class="uil uil-bars sidebar-toggle"></i>
 
-        {% comment %} <div class="search-box">
+        {% comment %}
+        <div class="search-box">
           <i class="uil uil-search"></i>
           <input type="text" placeholder="Search here..." />
-        </div> {% endcomment %}
+        </div>
+        {% endcomment %}
 
         <img src="/static/images/profile.jpg" alt="" />
       </div>
@@ -52,36 +58,56 @@
       <div class="dash-content">
         <div class="overview">
           <div class="title">
-            <i class="uil uil-tachometer-fast-alt"></i>
+            <i class="uil uil-tachometer-fast-alt text-2xl" style="background-color: #0291dd;"></i>
             <span class="text">Dashboard</span>
           </div>
 
           <div class="boxes">
             <div class="box box1">
-              <i class="uil uil-thumbs-up"></i>
-              <span class="text">Total Likes</span>
-              <span class="number">50,120</span>
+              <i class="fa-solid fa-house"></i>
+              <span class="text">Total Properties</span>
+              <span class="number">{{prpocount}}</span>
             </div>
             <div class="box box2">
-              <i class="uil uil-comments"></i>
-              <span class="text">Comments</span>
-              <span class="number">20,120</span>
+              <i class="fa-solid fa-briefcase"></i>
+              <span class="text">Total Agents</span>
+              <span class="number">{{agentcount}}</span>
             </div>
             <div class="box box3">
-              <i class="uil uil-share"></i>
-              <span class="text">Total Share</span>
-              <span class="number">10,120</span>
+              <i class="fa-solid fa-users"></i>
+              <span class="text">Total Users</span>
+              <span class="number">{{userCount}}</span>
+            </div>
+            <div class="box box3" style="margin-top: 10px">
+              <i class="fa-solid fa-cart-shopping"></i>
+              <span class="text">Total Bookings</span>
+              <span class="number">{{boughtprpo}}</span>
             </div>
           </div>
         </div>
 
         <div class="activity">
           <div class="title">
-            <i class="uil uil-clock-three"></i>
+            <i class="uil uil-clock-three" style="background-color: #0291dd;"></i>
             <span class="text">Recent Activity</span>
           </div>
 
+          <div class="boxes">
+            <div class="box box1">
+              <i class="fa-solid fa-user-plus"></i>
+              <span class="text">New Users</span>
+              <span class="number">{{user_count_last_7_days}}</span>
+            </div>
+            <div class="box box2">
+              <i class="fa-solid fa-user-tag"></i>
+              <span class="text">Active Users</span>
+              <span class="number">{{active_user_count}}</span>
+            </div>
+          </div>
+
+          {% comment %}
           <div class="activity-data"></div>
+          {% endcomment %}
         </div>
       </div>
     </section>

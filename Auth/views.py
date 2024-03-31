@@ -9,6 +9,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from Auth.models import (Booking, BrokerAccount, ContactList,
                          CustomUser, Review, Properties, Testimonials)
 
+from datetime import datetime, timedelta
+
 
 def user_login(request):
     if request.user.is_authenticated:
@@ -207,7 +209,35 @@ def about(request):
 def adminPage(request):
     if (request.user.is_authenticated):
         if request.user.is_admin:
-            return render(request, 'admin/admin-panel.html')
+            properties = Properties.objects.all()[:9]
+            prpocount = Properties.objects.all().count()
+            testimonials = Testimonials.objects.all()[:3]
+            userCount = CustomUser.objects.all().count()
+            broker = BrokerAccount.objects.all()[:3]
+            agentcount = BrokerAccount.objects.all().count()
+            boughtprpo = Booking.objects.all().count()
+            seven_days_ago = datetime.now() - timedelta(days=7)
+            user_count_last_7_days = CustomUser.objects.filter(created_at=seven_days_ago).count()
+
+            # Get active users based on login activities in the last 7 days
+            # active_users = CustomUser.objects.filter(last_login=seven_days_ago).distinct()
+            # active_user_count = active_users.count()
+            active_user_count = CustomUser.objects.filter(is_active=True).count()
+
+
+            context = {
+         'properties': properties,
+        'testimonials': testimonials,
+        'broker': broker,
+        "prpocount": prpocount,
+        "userCount": userCount,
+        "agentcount": agentcount,
+        "boughtprpo": boughtprpo,
+        "active_user_count": active_user_count,
+        "user_count_last_7_days": user_count_last_7_days
+        }
+
+            return render(request, 'admin/admin-panel.html',context)
     else:
         messages.error(
             request, "You do not have permission to access this page.")

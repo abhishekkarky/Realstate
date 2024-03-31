@@ -13,6 +13,10 @@
       rel="stylesheet"
       href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
     />
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    rel="stylesheet"
+  />
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body>
@@ -37,10 +41,10 @@
     <section class="dashboard">
       <div class="top">
         <i class="uil uil-bars sidebar-toggle"></i>
-        <div class="search-box">
+        {% comment %} <div class="search-box">
           <i class="uil uil-search"></i>
           <input type="text" placeholder="Search here..." />
-        </div>
+        </div> {% endcomment %}
         <img src="/static/images/profile.jpg" alt="" />
       </div>
 
@@ -48,12 +52,12 @@
         <div class="overview">
           <div class="title flex items-center justify-between mb-4">
             <div class="flex items-center">
-              <i class="uil uil-tachometer-fast-alt text-2xl"></i>
+              <i class="uil uil-tachometer-fast-alt text-2xl" style="background-color: #0291dd;"></i>
               <span class="text-2xl ml-2">Property</span>
             </div>
             <button
               id="openModal"
-              class="bg-[#2d6904] text-white px-4 py-2 rounded"
+              class="bg-[#0291dd] text-white px-4 py-2 rounded"
             >
               Add
             </button>
@@ -162,7 +166,7 @@
     <!-- Modal -->
     <div
       id="myModal"
-      class="modal hidden fixed inset-0 bg-gray-300 bg-opacity-75 flex items-center justify-center"
+      class="modal hidden fixed inset-0 bg-gray-300 bg-opacity-75 flex items-center justify-center z-20"
     >
       <div class="modal-content bg-white p-6 w-1/2">
         <span id="closeModal" class="close">&times;</span>
