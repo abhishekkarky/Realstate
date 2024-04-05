@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Land Value Converter</title>
+{% comment %} <script src="https://cdn.tailwindcss.com"></script> {% endcomment %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="/static/css/style.css" />
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.custom-container {
+    text-align: center;
+}
+
+.custom-input, .custom-select, .custom-button {
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.custom-button {
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    width: 100%;
+}
+
+.custom-button:hover {
+    background-color: #0056b3;
+}
+
+.custom-heading {
+    padding-bottom: 10px;
+}
+</style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+<div class="custom-container">
+    <h2>Land Area Converter</h2>
+    <div>
+        <label for="from" class="custom-heading">From</label>
+        <select id="from" class="custom-select">
+            <option value="khetmuri">Khetmuri</option>
+            <option value="bigha">Bigha</option>
+            <option value="kattha">Kattha</option>
+            <option value="dhur">Dhur</option>
+            <option value="ropani">Ropani</option>
+            <option value="aana">Aana</option>
+            <option value="paisa">Paisa</option>
+            <option value="dam">Dam</option>
+            <option value="sq.feet">Sq. Feet</option>
+            <option value="sq.meter">Sq. Meter</option>
+        </select>
+    </div>
+    <div>
+        <label for="to" class="custom-heading">To</label>
+        <select id="to" class="custom-select">
+            <option value="khetmuri">Khetmuri</option>
+            <option value="bigha">Bigha</option>
+            <option value="kattha">Kattha</option>
+            <option value="dhur">Dhur</option>
+            <option value="ropani">Ropani</option>
+            <option value="aana">Aana</option>
+            <option value="paisa">Paisa</option>
+            <option value="dam">Dam</option>
+            <option value="sq.feet">Sq. Feet</option>
+            <option value="sq.meter">Sq. Meter</option>
+        </select>
+    </div>
+    <div>
+        <label for="valueInput" class="custom-heading">Enter Value</label>
+        <input type="number" id="valueInput" class="custom-input" placeholder="Enter Value">
+    </div>
+    <div>
+        <button onclick="convert()" class="custom-button">Convert</button>
+    </div>
+    <div id="result"></div>
+</div>
+
+<script>
+function convert() {
+    var fromUnit = document.getElementById("from").value;
+    var toUnit = document.getElementById("to").value;
+    var value = parseFloat(document.getElementById("valueInput").value);
+    var result;
+
+    // Conversion factors
+    var factors = {
+        khetmuri: { bigha: 1.877914952, kattha: 37.55829904, dhur: 751.1659808, ropani: 25, aana: 400, paisa: 1600, dam: 6400, "sq.feet": 136900, "sq.meter": 12718.42618 },
+        bigha: { khetmuri: 0.532505478, kattha: 20, dhur: 400, ropani: 13.31263696, aana: 213.0021914, paisa: 852.0087655, dam: 3408.035062, "sq.feet": 72900, "sq.meter": 6772.631616 },
+        kattha: { khetmuri: 0.026625274, bigha: 0.05, dhur: 20, ropani: 0.665631848, aana: 10.65010957, paisa: 42.60043828, dam: 170.4017531, "sq.feet": 3645, "sq.meter": 338.6315808 },
+        dhur: { khetmuri: 0.001331264, bigha: 0.0025, kattha: 0.05, ropani: 0.033281592, aana: 0.532505478, paisa: 2.130021914, dam: 8.520087655, "sq.feet": 182.25, "sq.meter": 16.93157904 },
+        ropani: { khetmuri: 0.04, bigha: 0.075116598, kattha: 1.502331962, dhur: 30.04663923, aana: 16, paisa: 64, dam: 256, "sq.feet": 5476, "sq.meter": 508.737047 },
+        aana: { khetmuri: 0.0025, bigha: 0.004694787, kattha: 0.093895748, dhur: 1.877914952, ropani: 0.0625, paisa: 4, dam: 16, "sq.feet": 342.25,
+        "sq.meter": 31.79606544 },
+        paisa: { khetmuri: 0.000625, bigha: 0.001173697, kattha: 0.023473937, dhur: 0.469478738, ropani: 0.015625, aana: 0.25, dam: 4, "sq.feet": 85.5625, "sq.meter": 7.94901636 },
+        dam: { khetmuri: 0.00015625, bigha: 0.000293424, kattha: 0.005868484, dhur: 0.117369684, ropani: 0.00390625, aana: 0.0625, paisa: 0.25, "sq.feet": 21.390625, "sq.meter": 1.98725409 },
+        "sq.feet": { khetmuri: 7.3046E-06, bigha: 1.37174E-05, kattha: 0.000274348, dhur: 0.005486968, ropani: 0.000182615, aana: 0.002921841, paisa: 0.011687363, dam: 0.046749452, "sq.meter": 0.09290304 },
+        "sq.meter": { khetmuri: 7.86261E-05, bigha: 0.000147653, kattha: 0.002953062, dhur: 0.059061237, ropani: 0.001965652, aana: 0.031450432, paisa: 0.125801729, dam: 0.503206915, "sq.feet": 10.76391042 }
+    };
+
+    // Perform conversion
+    if (fromUnit in factors && toUnit in factors[fromUnit]) {
+        result = value * factors[fromUnit][toUnit];
+        document.getElementById("result").innerHTML = `${value} ${fromUnit} is equal to ${result} ${toUnit}.`;
+    } else {
+        document.getElementById("result").innerHTML = "Invalid conversion.";
+    }
+}
+</script>
+
+</body>
+</html>

@@ -33,6 +33,7 @@ urlpatterns = [
     path('booking', views.booking, name='booking'),
     path('logout', views.user_logout, name='logout'),
     path('profile_page', views.profile, name='profile_page'),
+    path('calculate_land_area', views.calculate_land_area, name='calculate_land_area'),
     path('changepassword', views.changepassword, name='changepassword'),
     path('review_agent<int:property_id>', views.review_agent, name='review_agent'),
 ]

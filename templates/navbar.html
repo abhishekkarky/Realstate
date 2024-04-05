@@ -16,9 +16,13 @@
           <li><a href="/">Home</a></li>
           <li><a href="properties">Properties</a></li>
           <li><a href="services">Services</a></li>
+          {% if user.is_authenticated %}
           <li><a href="bookinglist">Bookings</a></li>
+          {% else %}
+          {% endif %}
           <li><a href="about">About</a></li>
           <li><a href="contact">Contact Us</a></li>
+          <li><a href="calculate_land_area">Land Calculator</a></li>
           {% if user.is_authenticated %}
             <li><a href="profile_page"><i class="fa-solid fa-user"></i></a></li>
           {% else %}

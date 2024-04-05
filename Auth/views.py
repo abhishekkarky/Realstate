@@ -180,6 +180,15 @@ def services(request):
     testimonials = Testimonials.objects.all()[:6]
     return render(request, 'services.html', {'testimonials': testimonials})
 
+def calculate_land_area(request):
+    if request.user.is_authenticated:
+        if request.user.is_admin:
+            messages.error(
+                request, "You do not have permission to access this page.")
+            return redirect('admin-page')
+    testimonials = Testimonials.objects.all()[:6]
+    return render(request, 'calculator.html',)
+
 
 def properties(request):
     if request.user.is_authenticated:
@@ -661,7 +670,7 @@ def review_agent(request, property_id):
             property = Properties.objects.get(id=property_id)
             agentId = property.broker_id
             print(agentId)
-            if Booking.objects.filter(user=request.user, property_id=property_id, status='Confirmed').exists():
+            if Booking.objects.filter(user=request.user, property_id=property_id, statsus='Confirmed').exists():
                 rating = request.POST.get('rating')
                 comment = request.POST.get('comment')
 
