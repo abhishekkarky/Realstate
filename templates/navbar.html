@@ -14,7 +14,11 @@
           class="js-clone-nav d-none d-lg-inline-block text-start site-menu float-end"
         >
           <li><a href="/">Home</a></li>
-          <li><a href="properties">Properties</a></li>
+          {% if user.is_authenticated and not user.is_agent %}
+          <li><a href="bookinglist">My Properties</a></li>
+          {% elif user.is_authenticated and user.is_agent %}
+          <li><a href="assigned-properties">My Assigned Properties</a></li>
+          {% endif %}
           <li><a href="services">Services</a></li>
           {% if user.is_authenticated %}
           <li><a href="bookinglist">Bookings</a></li>
