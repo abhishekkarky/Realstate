@@ -3,9 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Teams Management</title>
+    <title>Agent Management</title>
     <!----======== CSS ======== -->
-    <link rel="stylesheet" href="/static/css/alert.css" />
     <link rel="stylesheet" href="/static/css/adminpanel.css" />
 
     <!----===== Iconscout CSS ===== -->
@@ -13,17 +12,15 @@
       rel="stylesheet"
       href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
     />
+    <link rel="stylesheet" href="/static/css/alert.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    rel="stylesheet"
-  />
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <!-- Include navbar.html -->
-    {% include 'admin/navbar.html' %} 
-    {% if messages %} 
-    {% for message in messages %}
+    {% if messages %} {% for message in messages %}
     <div
       class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
       style="position: fixed; top: 0; right: 0; z-index: 9999"
@@ -37,15 +34,11 @@
         aria-label="Close"
       ></button>
     </div>
-    {% endfor %} {% endif %}
+    {% endfor %} {% endif %} {% include 'admin/navbar.html' %}
 
     <section class="dashboard">
       <div class="top">
         <i class="uil uil-bars sidebar-toggle"></i>
-        {% comment %} <div class="search-box">
-          <i class="uil uil-search"></i>
-          <input type="text" placeholder="Search here..." />
-        </div> {% endcomment %}
         <img src="/static/images/profile.jpg" alt="" />
       </div>
 
@@ -53,52 +46,79 @@
         <div class="overview">
           <div class="title flex items-center justify-between mb-4">
             <div class="flex items-center">
-              <i class="uil uil-tachometer-fast-alt text-2xl" style="background-color: #0291dd;"></i>
-              <span class="text-2xl ml-2">Booking List</span>
+              <i
+                class="uil uil-tachometer-fast-alt text-2xl"
+                style="background-color: #0291dd"
+              ></i>
+              <span class="text-2xl ml-2">Testimonials</span>
             </div>
-            {% comment %} <button
+            <button
               id="openModal"
-              class="bg-[#2d6904] text-white px-4 py-2 rounded"
+              class="bg-[#0291dd] text-white px-4 py-2 rounded"
             >
               Add
-            </button> {% endcomment %}
+            </button>
           </div>
 
           <!-- Table with property data -->
-          <table class="min-w-full bg-white border border-gray-200">
-            <thead>
-              <tr>
-                <th class="py-2 px-8 border-b">User number</th>
-                <th class="py-2 px-8 border-b">Broker Name</th>
-                <th class="py-2 px-8 border-b">Property</th>
-                <th class="py-2 px-8 border-b">Date</th>
-                <th class="py-2 px-8 border-b">Notes</th>
-                <th class="py-2 px-8 border-b">Action</th>
-              </tr>
-            </thead>
-            <tbody class='text-center'>
-              <!-- Example row with additional fields -->
-              {% for booking in bookings %}
-              <tr>
-                <td class="py-2 px-8 border-b">{{booking.user}}</td>
-                <td class="py-2 px-8 border-b">
-                  {{booking.property.broker.name}}
-                </td>
-                <td class="py-2 px-8 border-b">{{booking.property.name}}</td>
-                <td class="py-2 px-8 border-b">{{booking.date}}</td>
-                <td class="py-2 px-8 border-b">{{booking.note}}</td>
-                <td>
-                  <a href="{% url 'admin-delete-booking' booking.id %}">
-                    <i
-                      class="uil uil-trash-alt text-red-500 cursor-pointer hover:text-red-700"
-                    ></i>
-                  </a>
-                </td>
-              </tr>
-              {% endfor %}
-              <!-- Add more rows as needed -->
-            </tbody>
-          </table>
+
+          <div class="overflow-scroll">
+            <table class="w-full bg-white border border-gray-200">
+              <thead>
+                <tr>
+                  <th class="py-2 px-8 border-b">Image</th>
+                  <th class="py-2 px-8 border-b">Intro</th>
+                  <th class="py-2 px-8 border-b">Name</th>
+                  <th class="py-2 px-8 border-b">Description</th>
+                  <th class="py-2 px-8 border-b">Action</th>
+                </tr>
+              </thead>
+              <tbody class="text-center">
+                <!-- Example row with additional fields -->
+                {% for testimonial in testimonials %}
+                <tr class="text-center">
+                  <td class="py-2 px-4 border-b">
+                    {% if testimonial.image.url != null %}
+                    <img
+                      src="{{ testimonial.image.url }}"
+                      alt="testimonial Image"
+                      class="w-8 h-8 mr-2"
+                    />
+                    {% else %}
+                    <img
+                      src="static/images/noimage.jpg"
+                      alt="testimonial Image"
+                      class="w-8 h-8 mr-2"
+                    />
+                    {% endif %}
+                  </td>
+                  <td class="py-2 px-8 border-b">{{testimonial.intro}}</td>
+                  <td class="py-2 px-8 border-b">{{testimonial.name}}</td>
+                  <td class="py-2 px-8 border-b">
+                    {{testimonial.description}}
+                  </td>
+                  <td class="py-2 px-4 border-b">
+                    <a href="/admin-edit-testimonial/{{ testimonial.id }}">
+                      <i
+                        id="openEditModal"
+                        class="uil uil-edit text-green-500 cursor-pointer hover:text-green-700"
+                      ></i>
+                    </a>
+                    <a
+                      href="{% url 'delete-testimonial' testimonial.id %}"
+                      type="submit"
+                      ><i
+                        class="uil uil-trash-alt text-red-500 cursor-pointer hover:text-red-700"
+                        data-property-id="{{ property.id }}"
+                      ></i>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+                <!-- Add more rows as needed -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
@@ -106,95 +126,57 @@
     <!-- Modal -->
     <div
       id="myModal"
-      class="modal hidden fixed inset-0 bg-gray-300 bg-opacity-75 flex items-center justify-center"
+      class="modal hidden fixed inset-0 bg-gray-300 bg-opacity-75 flex items-center justify-center z-20"
     >
       <div class="modal-content bg-white p-6 w-1/2">
         <span id="closeModal" class="close">&times;</span>
 
         <!-- Property Add Form -->
-        <form id="propertyForm" class="grid grid-cols-2 gap-4">
+        <form
+          action="{% url 'admin-testimonial' %}"
+          method="post"
+          id="propertyForm"
+          class="grid grid-cols-2 gap-4"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
           <div class="mb-4">
-            <label for="propertyName">Name:</label>
+            <label for="name">Name:</label>
             <input
               type="text"
-              id="propertyName"
-              name="propertyName"
+              id="name"
+              name="name"
               class="w-full border p-2"
               required
             />
           </div>
-
           <div class="mb-4">
-            <label for="propertyAddress">Address:</label>
+            <label for="intro">Intro:</label>
             <input
               type="text"
-              id="propertyAddress"
-              name="propertyAddress"
+              id="intro"
+              name="intro"
               class="w-full border p-2"
               required
             />
           </div>
-
           <div class="mb-4">
-            <label for="propertyRooms">Phone:</label>
-            <input
-              type="number"
-              id="phone"
-              name="phone"
-              class="w-full border p-2"
-              required
-            />
-          </div>
-
-          <div class="mb-4">
-            <label for="propertyDescription">Description:</label>
-            <textarea
-              id="propertyDescription"
-              name="propertyDescription"
-              class="w-full border p-2"
-              required
-            ></textarea>
-          </div>
-
-          <div class="mb-4">
-            <label for="propertyBedrooms">Facebook:</label>
+            <label for="description">Description:</label>
             <input
               type="text"
-              id="Facebook"
-              name="Facebook"
+              id="description"
+              name="description"
               class="w-full border p-2"
               required
             />
           </div>
 
           <div class="mb-4">
-            <label for="propertyToilets">Instagram:</label>
-            <input
-              type="text"
-              id="instagram"
-              name="instagram"
-              class="w-full border p-2"
-              required
-            />
-          </div>
-          <div class="mb-4">
-            <label for="propertyToilets">whatsApp:</label>
-            <input
-              type="text"
-              id="whatsapp"
-              name="whatsApp"
-              class="w-full border p-2"
-              required
-            />
-          </div>
-
-          <div class="mb-4">
-            <!-- Add a file input for photos -->
-            <label for="propertyPhotos">Photos:</label>
+            <label for="image">Photos:</label>
             <input
               type="file"
-              id="propertyPhotos"
-              name="propertyPhotos"
+              id="image"
+              name="image"
               class="w-full border p-2"
               multiple
             />
@@ -204,29 +186,11 @@
             type="submit"
             class="col-span-2 bg-[#2d6904] text-white px-4 py-2 rounded"
           >
-            Add Teams
+            Add Testimonial
           </button>
         </form>
       </div>
     </div>
-
-    <script>
-      // Function to open the modal
-      function openModal() {
-        document.getElementById("myModal").classList.remove("hidden");
-      }
-
-      // Function to close the modal
-      function closeModal() {
-        document.getElementById("myModal").classList.add("hidden");
-      }
-
-      // Attach event listeners to the open and close buttons
-      document.getElementById("openModal").addEventListener("click", openModal);
-      document
-        .getElementById("closeModal")
-        .addEventListener("click", closeModal);
-    </script>
 
     <script>
       window.addEventListener("DOMContentLoaded", function () {
@@ -237,6 +201,22 @@
           }, 3000);
         }
       });
+    </script>
+
+    <script>
+      document
+        .getElementById("openModal")
+        .addEventListener("click", function () {
+          document.getElementById("myModal").classList.remove("hidden");
+        });
+
+      document
+        .getElementById("closeModal")
+        .addEventListener("click", function () {
+          document.getElementById("myModal").classList.add("hidden");
+        });
+
+      // Handle form submission
     </script>
 
     <!-- Include admin-panel.js -->
