@@ -19,7 +19,7 @@
           {% elif user.is_authenticated and user.is_agent %}
           <li><a href="assigned-properties">My Assigned Properties</a></li>
           {% endif %}
-          <li><a href="services">Services</a></li>
+          {% comment %} <li><a href="services">Services</a></li> {% endcomment %}
           {% if user.is_authenticated %}
           <li><a href="bookinglist">Bookings</a></li>
           {% else %}
