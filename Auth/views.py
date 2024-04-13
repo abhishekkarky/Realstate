@@ -10,6 +10,9 @@ from Auth.models import (Booking, BrokerAccount, ContactList,
                          CustomUser, Review, Properties, Testimonials)
 
 from datetime import datetime, timedelta
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 
 def user_login(request):
@@ -180,6 +183,7 @@ def services(request):
     testimonials = Testimonials.objects.all()[:6]
     return render(request, 'services.html', {'testimonials': testimonials})
 
+
 def calculate_land_area(request):
     if request.user.is_authenticated:
         if request.user.is_admin:
@@ -226,27 +230,28 @@ def adminPage(request):
             agentcount = BrokerAccount.objects.all().count()
             boughtprpo = Booking.objects.all().count()
             seven_days_ago = datetime.now() - timedelta(days=7)
-            user_count_last_7_days = CustomUser.objects.filter(created_at=seven_days_ago).count()
+            user_count_last_7_days = CustomUser.objects.filter(
+                created_at=seven_days_ago).count()
 
             # Get active users based on login activities in the last 7 days
             # active_users = CustomUser.objects.filter(last_login=seven_days_ago).distinct()
             # active_user_count = active_users.count()
-            active_user_count = CustomUser.objects.filter(is_active=True).count()
-
+            active_user_count = CustomUser.objects.filter(
+                is_active=True).count()
 
             context = {
-         'properties': properties,
-        'testimonials': testimonials,
-        'broker': broker,
-        "prpocount": prpocount,
-        "userCount": userCount,
-        "agentcount": agentcount,
-        "boughtprpo": boughtprpo,
-        "active_user_count": active_user_count,
-        "user_count_last_7_days": user_count_last_7_days
-        }
+                'properties': properties,
+                'testimonials': testimonials,
+                'broker': broker,
+                "prpocount": prpocount,
+                "userCount": userCount,
+                "agentcount": agentcount,
+                "boughtprpo": boughtprpo,
+                "active_user_count": active_user_count,
+                "user_count_last_7_days": user_count_last_7_days
+            }
 
-            return render(request, 'admin/admin-panel.html',context)
+            return render(request, 'admin/admin-panel.html', context)
     else:
         messages.error(
             request, "You do not have permission to access this page.")
@@ -715,3 +720,19 @@ def properties_booked(request, id):
                 return redirect('/')
     else:
         return redirect('/login')
+
+
+@csrf_exempt
+def update_is_archived(request, property_id):
+    if request.method == 'POST':
+        try:
+            request_data = json.loads(request.body)
+            is_archived = request_data.get('is_archived', False)
+            property = get_object_or_404(Properties, id=property_id)
+            property.is_archived = is_archived
+            property.save()
+            return JsonResponse({'success': True, 'is_archived': property.is_archived})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)

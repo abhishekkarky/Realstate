@@ -52,6 +52,7 @@ class Properties(models.Model):
     description = models.CharField(max_length = 1000)
     latitude = models.FloatField(default=27.707)
     longitude = models.FloatField(default=85.34238)
+    is_archived= models.BooleanField(default=False)
 
 class Testimonials(models.Model):
     image = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')

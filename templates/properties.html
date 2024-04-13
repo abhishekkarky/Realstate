@@ -13,8 +13,11 @@
     <link
       href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
-    />  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
-
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
 
     <link rel="stylesheet" href="static/fonts/icomoon/style.css" />
     <link rel="stylesheet" href="static/fonts/flaticon/font/flaticon.css" />
@@ -96,6 +99,7 @@
               <div class="property-slider">
                 <!-- .item -->
                 {% for featuredProperties in featuredProperties %}
+                {% if not featuredProperties.is_archived %}
                 <div class="property-item">
                   <a
                     href="/singleproperty/{{ featuredProperties.id }}"
@@ -108,13 +112,8 @@
                       class="img-fluid"
                       style="height: 415px"
                     />
-                    {% else %}
-                    <img
-                      src="static/images/noimage.jpg"
-                      alt="Image"
-                      class="img-fluid"
-                      style="height: 415px"
-                    {% endif %}
+                    {% else %} <img src="static/images/noimage.jpg" alt="Image"
+                    class="img-fluid" style="height: 415px" {% endif %}
                   </a>
 
                   <div class="property-content">
@@ -152,7 +151,7 @@
                     </div>
                   </div>
                 </div>
-                {% endfor %}
+                {% endif %} {% endfor %}
                 <!-- .item -->
               </div>
 
@@ -186,7 +185,7 @@
     <div class="section section-properties">
       <div class="container">
         <div class="row">
-          {% for property in properties %}
+          {% for property in properties %} {% if not property.is_archived %}
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
             <div class="property-item mb-30">
               <a href="/singleproperty/{{ property.id }}" class="img">
@@ -229,7 +228,7 @@
             </div>
             <!-- .item -->
           </div>
-          {% endfor %}
+          {% endif %} {% endfor %}
         </div>
         <!-- <div class="row align-items-center py-5">
           <div class="col-lg-3">Pagination (1 of 10)</div>

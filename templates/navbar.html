@@ -20,7 +20,7 @@
           <li><a href="assigned-properties">My Assigned Properties</a></li>
           {% endif %}
           <li><a href="services">Services</a></li>
-          {% if user.is_authenticated %}
+          {% if user.is_authenticated and not user.is_agent  %}
           <li><a href="bookinglist">Bookings</a></li>
           {% else %}
           {% endif %}

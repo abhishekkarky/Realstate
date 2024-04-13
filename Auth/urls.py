@@ -36,4 +36,6 @@ urlpatterns = [
     path('calculate_land_area', views.calculate_land_area, name='calculate_land_area'),
     path('changepassword', views.changepassword, name='changepassword'),
     path('review_agent<int:property_id>', views.review_agent, name='review_agent'),
+    path('update-is-archived/<int:property_id>/', views.update_is_archived, name='update_is_archived'),
+
 ]
