@@ -124,8 +124,7 @@
           <div class="col-12">
             <div class="property-slider-wrap">
               <div class="property-slider">
-                {% for property in searchDetails %} {% if not
-                property.is_archived %}
+                {% for property in searchDetails %} {% if not property.is_archived %}
                 <div class="property-item">
                   <a href="/singleproperty/{{ property.id }}" class="img">
                     {% if property.image != null %}
@@ -176,7 +175,8 @@
                     </div>
                   </div>
                 </div>
-                {% endif %} {% endfor %}
+                {% endif %}
+                {% endfor %}
                 <!-- .item -->
               </div>
 
@@ -234,8 +234,7 @@
           <div class="col-12">
             <div class="property-slider-wrap">
               <div class="property-slider">
-                {% for property in properties %} {% if not property.is_archived
-                %}
+                {% for property in properties %} {% if not property.is_archived %}
                 <div class="property-item">
                   <a href="/singleproperty/{{ property.id }}" class="img">
                     <img
