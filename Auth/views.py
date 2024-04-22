@@ -760,7 +760,7 @@ def review_agent(request, property_id):
             property = Properties.objects.get(id=property_id)
             agentId = property.broker_id
             print(agentId)
-            if Booking.objects.filter(user=request.user, property_id=property_id, statsus='Confirmed').exists():
+            if Booking.objects.filter(user=request.user, property_id=property_id, status='Confirmed').exists():
                 rating = request.POST.get('rating')
                 comment = request.POST.get('comment')
 

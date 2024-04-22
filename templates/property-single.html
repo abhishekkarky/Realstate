@@ -13,7 +13,10 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
 
     <link rel="stylesheet" href="/static/fonts/icomoon/style.css" />
     <link rel="stylesheet" href="/static/fonts/flaticon/font/flaticon.css" />
@@ -251,7 +254,7 @@
             <div class="review-section mb-3">
               <p>Rating: {{ review.rating }}</p>
               <p>Comment: {{ review.comment }}</p>
-              <p>User: {{ review.user }}</p>
+              <!-- <p>User: {{ review.user }}</p> -->
             </div>
             {% endfor %} {% else %}
             <p>No reviews yet</p>
@@ -263,7 +266,10 @@
           <div class="col-lg-4">
             <h3 class="heading mb-4">Submit a Review</h3>
             <!-- Review submission form -->
-            <form method="POST" action="{% url 'review_agent' details.broker_id %}">
+            <form
+              method="POST"
+              action="{% url 'review_agent' details.broker_id %}"
+            >
               {% csrf_token %}
               <!-- Rating input -->
               <div class="mb-3">
@@ -314,7 +320,7 @@
           <div class="col-lg-4">
             <div class="widget">
               <h3>Contact</h3>
-              <address>Nakshal, Hattisar Near Police Headquater</address>
+              <address>Naxal, Hattisar Near Police Headquater</address>
               <ul class="list-unstyled links">
                 <li><a href="tel://11234567890">+977(01)-456-7890</a></li>
                 <li><a href="tel://11234567890">+977(01)-456-7890</a></li>
@@ -390,74 +396,6 @@
       <!-- /.container -->
     </div>
     <!-- /.site-footer -->
-
-    <div
-      id="myModal"
-      class="modal fixed inset-0 bg-gray-300 bg-opacity-75 flex items-center justify-center z-40"
-    >
-      <div class="modal-content bg-white p-6 w-1/2 relative">
-        <span
-          id="closeModal"
-          class="close absolute top-2 right-5 cursor-pointer"
-          >&times;</span
-        >
-
-        <!-- Appointment Booking Form -->
-        <form id="appointmentForm" class="grid grid-cols-2 gap-4">
-          <div class="mb-4">
-            <label for="appointmentDate">Date:</label>
-            <input
-              type="date"
-              id="appointmentDate"
-              name="appointmentDate"
-              class="w-full border p-2"
-              required
-            />
-          </div>
-
-          <div class="mb-4">
-            <label for="appointmentTime">Time:</label>
-            <input
-              type="time"
-              id="appointmentTime"
-              name="appointmentTime"
-              class="w-full border p-2"
-              required
-            />
-          </div>
-
-          <div class="mb-4">
-            <label for="appointmentType">Appointment Type:</label>
-            <select
-              id="appointmentType"
-              name="appointmentType"
-              class="w-full border p-2"
-              required
-            >
-              <option value="physical">Physical</option>
-              <option value="virtual">Virtual</option>
-            </select>
-          </div>
-
-          <div class="mb-4">
-            <label for="appointmentDescription">Additional Notes:</label>
-            <textarea
-              id="appointmentDescription"
-              name="appointmentDescription"
-              class="w-full border p-2"
-            ></textarea>
-          </div>
-
-          <button
-            type="submit"
-            class="col-span-2 bg-[#E77450] text-white px-4 py-2 rounded"
-          >
-            Book Appointment
-          </button>
-        </form>
-      </div>
-    </div>
-
     <script>
       document
         .getElementById("openModal")
