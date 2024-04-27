@@ -21,7 +21,8 @@
   </head>
   <body>
     <!-- Include navbar.html -->
-    {% include 'admin/navbar.html' %} {% if messages %} {% for message in messages %}
+    {% include 'admin/navbar.html' %}
+    {% if messages %} {% for message in messages %}
     <div
       class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
       style="position: fixed; top: 0; right: 0; z-index: 9999"
@@ -35,7 +36,7 @@
         aria-label="Close"
       ></button>
     </div>
-    {% endfor %} {% endif %} {% include 'admin/navbar.html' %}
+    {% endfor %} {% endif %}
 
     <section class="dashboard">
       <div class="top">

@@ -59,6 +59,16 @@ def register(request):
         email = request.POST['email']
         number = request.POST['number']
         password = request.POST['password']
+        
+        isUser = CustomUser.objects.filter(number=number).exists()
+        isEmail = CustomUser.objects.filter(email=email).exists()
+        
+        if (isUser):
+            messages.error(request, 'User already exists.')
+            return redirect('register')
+        if (isEmail):
+            messages.error(request, 'Email already exists.')
+            return redirect('register')
 
         User = get_user_model()
 
@@ -300,8 +310,11 @@ def agentManagement(request):
             agent_email = remove(email)
 
             agent_password = "password123"
-
-            # Create a BrokerAccount for the agent
+            
+            if BrokerAccount.objects.filter(number=number).exists():
+                messages.error(request, "Number already exists")
+                return redirect('/admin-agent-management')
+            
             agent = BrokerAccount.objects.create(
                 photo=photo,
                 name=name,
@@ -319,7 +332,7 @@ def agentManagement(request):
             try:
                 if User.objects.filter(number=number).exists():
                     messages.error(request,
-                                   "User with this number already exists")
+                                   "User already exists")
 
                 new_user = User.objects.create_user(
                     username=number,
@@ -327,6 +340,11 @@ def agentManagement(request):
                     email=agent_email,
                     password=agent_password,
                     name=name,
+                    intro=intro,
+                    instagramLink=instagramLink,
+                    facebookLink=facebookLink,
+                    twitterLink=twitterLink,
+                    linkedInLink=linkedInLink,
                     is_admin=False,
                     is_agent=True,
                     agentId=agent.id
@@ -336,6 +354,7 @@ def agentManagement(request):
                 message = "Couldn't process your request!! Please try again later."
                 messages.error(request, message)
                 print(e)
+                
         allAgents = BrokerAccount.objects.all()
         context = {'allAgents': allAgents}
         return render(request, 'admin/agent-management.html', context)

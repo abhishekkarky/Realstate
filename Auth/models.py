@@ -11,6 +11,11 @@ class CustomUser(AbstractUser):
     is_admin = models.BooleanField(default=False)
     is_agent = models.BooleanField(default=False)
     agentId = models.IntegerField(default=0)
+    intro = models.CharField(max_length = 50, null = False)
+    instagramLink = models.CharField(max_length = 1000, blank=True, null = False )
+    facebookLink = models.CharField(max_length = 1000, blank=True, null = False)
+    twitterLink = models.CharField(max_length = 1000, blank=True, null = False )
+    linkedInLink = models.CharField(max_length = 1000, blank=True, null = False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'number'
