@@ -13,11 +13,8 @@
     <link
       href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
-    />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-      rel="stylesheet"
-    />
+    />  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+
 
     <link rel="stylesheet" href="static/fonts/icomoon/style.css" />
     <link rel="stylesheet" href="static/fonts/flaticon/font/flaticon.css" />
@@ -98,8 +95,7 @@
             <div class="property-slider-wrap">
               <div class="property-slider">
                 <!-- .item -->
-                {% for featuredProperties in featuredProperties %} {% if not
-                featuredProperties.is_archived %}
+                {% for featuredProperties in featuredProperties %}
                 <div class="property-item">
                   <a
                     href="/singleproperty/{{ featuredProperties.id }}"
@@ -112,8 +108,13 @@
                       class="img-fluid"
                       style="height: 415px"
                     />
-                    {% else %} <img src="static/images/noimage.jpg" alt="Image"
-                    class="img-fluid" style="height: 415px" {% endif %}
+                    {% else %}
+                    <img
+                      src="static/images/noimage.jpg"
+                      alt="Image"
+                      class="img-fluid"
+                      style="height: 415px"
+                    {% endif %}
                   </a>
 
                   <div class="property-content">
@@ -151,7 +152,7 @@
                     </div>
                   </div>
                 </div>
-                {% endif %} {% endfor %}
+                {% endfor %}
                 <!-- .item -->
               </div>
 
@@ -185,7 +186,7 @@
     <div class="section section-properties">
       <div class="container">
         <div class="row">
-          {% for property in properties %} {% if not property.is_archived %}
+          {% for property in properties %}
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
             <div class="property-item mb-30">
               <a href="/singleproperty/{{ property.id }}" class="img">
@@ -228,7 +229,7 @@
             </div>
             <!-- .item -->
           </div>
-          {% endif %} {% endfor %}
+          {% endfor %}
         </div>
         <!-- <div class="row align-items-center py-5">
           <div class="col-lg-3">Pagination (1 of 10)</div>
@@ -251,7 +252,7 @@
           <div class="col-lg-4">
             <div class="widget">
               <h3>Contact</h3>
-              <address>Naxal, Hattisar Near Police Headquater</address>
+              <address>Nakshal, Hattisar Near Police Headquater</address>
               <ul class="list-unstyled links">
                 <li><a href="tel://11234567890">+977(01)-456-7890</a></li>
                 <li><a href="tel://11234567890">+977(01)-456-7890</a></li>

@@ -92,6 +92,7 @@ def dashboard(request):
                 request, "You do not have permission to access this page.")
             return redirect('admin-page')
     properties = Properties.objects.all()[:9]
+    properties = Properties.objects.filter(is_rent=False)
     prpocount = Properties.objects.all().count()
     testimonials = Testimonials.objects.all()[:3]
     userCount = CustomUser.objects.all().count()
@@ -210,7 +211,7 @@ def properties(request):
             messages.error(
                 request, "You do not have permission to access this page.")
             return redirect('admin-page')
-    properties = Properties.objects.filter(is_rent=True)
+    properties = Properties.objects.filter(is_rent=True, is_archived=False)
     # featuredProperties = Properties.objects.all()[:9]
     context = {
         'properties': properties,
