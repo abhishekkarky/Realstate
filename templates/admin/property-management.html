@@ -232,6 +232,21 @@
           </div>
 
           <div class="mb-4">
+            <label for="propertyName">Sell/Rent</label>
+            <select
+              id="brokerSelect"
+              name="rent"
+              class="w-full border p-2"
+              required
+            >
+              <option value="" disabled selected>Select Broker</option>
+              <option value="0"  selected>Sell</option>
+              <option value="1"  selected>Rent</option>
+             
+            </select>
+          </div>
+
+          <div class="mb-4">
             <label for="propertyName">Property Name:</label>
             <input
               type="text"

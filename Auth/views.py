@@ -196,11 +196,11 @@ def properties(request):
             messages.error(
                 request, "You do not have permission to access this page.")
             return redirect('admin-page')
-    properties = Properties.objects.all()
-    featuredProperties = Properties.objects.all()[:9]
+    properties = Properties.objects.filter(is_rent=True)
+    # featuredProperties = Properties.objects.all()[:9]
     context = {
         'properties': properties,
-        'featuredProperties': featuredProperties,
+        # 'featuredProperties': featuredProperties,
     }
     return render(request, 'properties.html', context)
 
@@ -413,6 +413,9 @@ def adminProperty(request):
             imageTwo = request.FILES.get("imageTwo")
             imageThree = request.FILES.get("imageThree")
             broker_id = request.POST.get("broker")
+            is_rent = request.POST.get("rent")
+            if(is_rent==1):
+                is_rent=True
             name = request.POST.get("name")
             location = request.POST.get("location")
             beds = request.POST.get("beds")
@@ -473,6 +476,12 @@ def editProperty(request, property_id):
                 property_obj.imageThree = request.FILES.get("imageThree")
 
             property_obj.name = request.POST.get("name")
+            property_obj.is_rent = request.POST.get("rent")
+            print(property_obj.is_rent)
+            if(property_obj.is_rent ==1):
+                property_obj.is_rent=True
+
+            
             property_obj.location = request.POST.get("location")
             property_obj.beds = request.POST.get("beds")
             property_obj.baths = request.POST.get("baths")

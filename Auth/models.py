@@ -44,6 +44,7 @@ class Properties(models.Model):
     imageTwo = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
     imageThree = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
     broker = models.ForeignKey(BrokerAccount, on_delete=models.CASCADE)
+    is_rent = models.BooleanField(default=False)
     name = models.CharField(max_length = 20)
     location = models.CharField(max_length = 50)
     beds = models.CharField(max_length = 10)
