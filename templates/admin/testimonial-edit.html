@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Testimonial Edit</title>
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="/static/css/adminpanel.css" />
+
+    <!----===== Iconscout CSS ===== -->
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/alert.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Include navbar.html -->
+    {% include 'admin/navbar.html' %}
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+      style="position: fixed; top: 0; right: 0; z-index: 9999"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %}
+
+    <section class="dashboard">
+      <div class="top">
+        <i class="uil uil-bars sidebar-toggle"></i>
+        {% comment %}
+        <div class="search-box">
+          <i class="uil uil-search"></i>
+          <input type="text" placeholder="Search here..." />
+        </div>
+        {% endcomment %}
+        <img src="/static/images/profile.jpg" alt="" />
+      </div>
+      <div class="dash-content p-6">
+        <div class="overview">
+          <div class="title flex items-center justify-between mb-4">
+            <div class="flex items-center">
+              <i
+                class="uil uil-tachometer-fast-alt text-2xl"
+                style="background-color: #0291dd"
+              ></i>
+              <span class="text-2xl ml-2">Edit Testimonial</span>
+            </div>
+          </div>
+          <div class="bg-white p-6 h-screen">
+            <form
+              method="post"
+              id="propertyForm"
+              class="grid grid-cols-2 gap-4 mt-10"
+              enctype="multipart/form-data"
+            >
+              {% csrf_token %}
+              <div class="mb-4">
+                <label for="Name">Name:</label>
+                <input
+                  type="text"
+                  id="Name"
+                  name="name"
+                  value="{{testi.name}}"
+                  class="w-full border p-2"
+                  required
+                />
+              </div>
+              <div class="mb-4">
+                <label for="intro">Intro:</label>
+                <input
+                  type="text"
+                  id="intro"
+                  name="intro"
+                  value="{{testi.intro}}"
+                  class="w-full border p-2"
+                  required
+                />
+              </div>
+              <div class="mb-4">
+                <label for="description">Description</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  class="w-full border p-2"
+                  required
+                >{{testi.description}} </textarea
+                >
+              </div>
+              <br />
+              <div class="mb-4">
+                <label for="profileImage">Image:</label>
+                <label for="profileImageInput" style="width: 18%">
+                  <img
+                    class="img-preview img1"
+                    alt=""
+                    src="{{testi.image.url}}"
+                    height="200px"
+                    width="200px"
+                    style="box-shadow: 0 0 21px 0 black; cursor: pointer"
+                  />
+                  <input
+                    id="profileImageInput"
+                    class="img-input"
+                    name="image"
+                    accept="image/jpeg, image/png, image/jpg"
+                    type="file"
+                    style="display: none"
+                    onchange="previewFile('profileImageInput')"
+                  />
+                </label>
+              </div>
+              <button
+                type="submit"
+                class="col-span-2 bg-[#2d6904] text-white px-4 py-2 rounded"
+              >
+                Edit Testimonial
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        var alert = document.querySelector(".alert");
+        if (alert) {
+          setTimeout(function () {
+            alert.style.display = "none";
+          }, 3000);
+        }
+      });
+    </script>
+    <script>
+      function previewFile(fieldName) {
+        const preview = document.querySelector(".img-preview.img1");
+        const fileInput = document.getElementById(fieldName);
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.addEventListener(
+          "load",
+          function () {
+            preview.src = reader.result;
+          },
+          false
+        );
+
+        if (file) {
+          reader.readAsDataURL(file);
+        }
+      }
+    </script>
+
+    <!-- Include admin-panel.js -->
+    <script src="/static/js/admin-panel.js"></script>
+  </body>
+</html>

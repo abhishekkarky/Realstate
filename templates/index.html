@@ -16,8 +16,10 @@
       href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
-
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
 
     <link rel="stylesheet" href="/static/fonts/icomoon/style.css" />
     <link rel="stylesheet" href="/static/fonts/flaticon/font/flaticon.css" />
@@ -59,14 +61,16 @@
           class="img overlay"
           style="background-image: url('static/images/hero_bg_1.jpg')"
         ></div>
-        {% comment %} <div
+        {% comment %}
+        <div
           class="img overlay"
           style="background-image: url('static/images/hero_bg_2.jpg')"
         ></div>
         <div
           class="img overlay"
           style="background-image: url('static/images/hero_bg_1.jpg')"
-        ></div> {% endcomment %}
+        ></div>
+        {% endcomment %}
       </div>
 
       <div class="container">
@@ -120,7 +124,7 @@
           <div class="col-12">
             <div class="property-slider-wrap">
               <div class="property-slider">
-                {% for property in searchDetails %}
+                {% for property in searchDetails %} {% if not property.is_archived %}
                 <div class="property-item">
                   <a href="/singleproperty/{{ property.id }}" class="img">
                     {% if property.image != null %}
@@ -171,6 +175,7 @@
                     </div>
                   </div>
                 </div>
+                {% endif %}
                 {% endfor %}
                 <!-- .item -->
               </div>
@@ -229,7 +234,7 @@
           <div class="col-12">
             <div class="property-slider-wrap">
               <div class="property-slider">
-                {% for property in properties %}
+                {% for property in properties %} {% if not property.is_archived %}
                 <div class="property-item">
                   <a href="/singleproperty/{{ property.id }}" class="img">
                     <img
@@ -271,7 +276,7 @@
                     </div>
                   </div>
                 </div>
-                {% endfor %}
+                {% endif %} {% endfor %}
                 <!-- .item -->
               </div>
 
@@ -520,24 +525,6 @@
       </div>
     </div>
 
-    <div class="section">
-      <div class="row justify-content-center footer-cta" data-aos="fade-up">
-        <div class="col-lg-7 mx-auto text-center">
-          <h2 class="mb-4">Be a part of our growing real state agents</h2>
-          <p>
-            <a
-              href="#"
-              target="_blank"
-              class="btn btn-primary text-white py-3 px-4"
-              >Apply for Real Estate agent</a
-            >
-          </p>
-        </div>
-        <!-- /.col-lg-7 -->
-      </div>
-      <!-- /.row -->
-    </div>
-
     <div class="section section-5 bg-light">
       <div class="container">
         <div class="row justify-content-center text-center mb-5">
@@ -599,7 +586,7 @@
           <div class="col-lg-4">
             <div class="widget">
               <h3>Contact</h3>
-              <address>Nakshal, Hattisar Near Police Headquater</address>
+              <address>Naxal, Hattisar Near Police Headquater</address>
               <ul class="list-unstyled links">
                 <li><a href="tel://11234567890">+977(01)-456-7890</a></li>
                 <li><a href="tel://11234567890">+977(01)-456-7890</a></li>

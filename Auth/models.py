@@ -11,6 +11,11 @@ class CustomUser(AbstractUser):
     is_admin = models.BooleanField(default=False)
     is_agent = models.BooleanField(default=False)
     agentId = models.IntegerField(default=0)
+    intro = models.CharField(max_length = 50, null = False)
+    instagramLink = models.CharField(max_length = 1000, blank=True, null = False )
+    facebookLink = models.CharField(max_length = 1000, blank=True, null = False)
+    twitterLink = models.CharField(max_length = 1000, blank=True, null = False )
+    linkedInLink = models.CharField(max_length = 1000, blank=True, null = False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'number'
@@ -53,6 +58,7 @@ class Properties(models.Model):
     description = models.CharField(max_length = 1000)
     latitude = models.FloatField(default=27.707)
     longitude = models.FloatField(default=85.34238)
+    is_archived= models.BooleanField(default=False)
 
 class Testimonials(models.Model):
     image = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')

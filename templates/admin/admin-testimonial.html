@@ -15,9 +15,9 @@
     <link rel="stylesheet" href="/static/css/alert.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    rel="stylesheet"
-  />
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
     {% if messages %} {% for message in messages %}
@@ -39,10 +39,6 @@
     <section class="dashboard">
       <div class="top">
         <i class="uil uil-bars sidebar-toggle"></i>
-        {% comment %} <div class="search-box">
-          <i class="uil uil-search"></i>
-          <input type="text" placeholder="Search here..." />
-        </div> {% endcomment %}
         <img src="/static/images/profile.jpg" alt="" />
       </div>
 
@@ -50,8 +46,11 @@
         <div class="overview">
           <div class="title flex items-center justify-between mb-4">
             <div class="flex items-center">
-              <i class="uil uil-tachometer-fast-alt text-2xl" style="background-color: #0291dd;"></i>
-              <span class="text-2xl ml-2">Our Agents</span>
+              <i
+                class="uil uil-tachometer-fast-alt text-2xl"
+                style="background-color: #0291dd"
+              ></i>
+              <span class="text-2xl ml-2">Testimonials</span>
             </div>
             <button
               id="openModal"
@@ -67,55 +66,56 @@
             <table class="w-full bg-white border border-gray-200">
               <thead>
                 <tr>
-                  <th class="py-2 px-4 border-b">ID</th>
-                  <th class="py-2 px-4 border-b">Name</th>
-                  <th class="py-2 px-4 border-b">Address</th>
-                  <th class="py-2 px-4 border-b">Phone</th>
-                  <th class="py-2 px-4 border-b">Description</th>
-                  <th class="py-2 px-4 border-b">Facebook</th>
-                  <th class="py-2 px-4 border-b">Instagram</th>
-                  <th class="py-2 px-4 border-b">Image</th>
-                  <!-- <th class="py-2 px-4 border-b">Actions</th> -->
+                  <th class="py-2 px-8 border-b">Image</th>
+                  <th class="py-2 px-8 border-b">Intro</th>
+                  <th class="py-2 px-8 border-b">Name</th>
+                  <th class="py-2 px-8 border-b">Description</th>
+                  <th class="py-2 px-8 border-b">Action</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="text-center">
                 <!-- Example row with additional fields -->
-                {% for agent in allAgents %}
-                <tr>
-                  <td class="py-2 px-4 border-b">{{forloop.counter}}</td>
-                  <td class="py-2 px-4 border-b">{{agent.name}}</td>
-                  <td class="py-2 px-4 border-b">{{agent.intro}}</td>
-                  <td class="py-2 px-4 border-b">{{agent.instagramLink}}</td>
+                {% for testimonial in testimonials %}
+                <tr class="text-center">
                   <td class="py-2 px-4 border-b">
-                    <a href="{{agent.facebookLink}}">{{agent.facebookLink}}</a>
-                  </td>
-                  <td class="py-2 px-4 border-b">
-                    <a href="{{agent.twitterLink}}">{{agent.twitterLink}}</a>
-                  </td>
-                  <td class="py-2 px-4 border-b">
-                    <a href="{{agent.linkedInLink}}">{{agent.linkedInLink}}</a>
-                  </td>
-                  <td class="py-2 px-4 border-b">
+                    {% if testimonial.image.url != null %}
                     <img
-                      src="{{ agent.photo.url }}"
-                      alt="Photo 1"
+                      src="{{ testimonial.image.url }}"
+                      alt="testimonial Image"
                       class="w-8 h-8 mr-2"
                     />
+                    {% else %}
+                    <img
+                      src="static/images/noimage.jpg"
+                      alt="testimonial Image"
+                      class="w-8 h-8 mr-2"
+                    />
+                    {% endif %}
                   </td>
-                  <!-- <td class="py-2 px-4 border-b">
-                    <a href="{% url 'edit_agents' id=agent.id %}">
+                  <td class="py-2 px-8 border-b">{{testimonial.intro}}</td>
+                  <td class="py-2 px-8 border-b">{{testimonial.name}}</td>
+                  <td class="py-2 px-8 border-b">
+                    {{testimonial.description}}
+                  </td>
+                  <td class="py-2 px-4 border-b">
+                    <a href="/admin-edit-testimonial/{{ testimonial.id }}">
                       <i
-                      class="uil uil-edit text-green-500 cursor-pointer hover:text-green-700"
+                        id="openEditModal"
+                        class="uil uil-edit text-green-500 cursor-pointer hover:text-green-700"
                       ></i>
                     </a>
-                    <a href="{% url 'delete-agent' agent.id %}">
-                      <i
+                    <a
+                      href="{% url 'delete-testimonial' testimonial.id %}"
+                      type="submit"
+                      ><i
                         class="uil uil-trash-alt text-red-500 cursor-pointer hover:text-red-700"
+                        data-property-id="{{ property.id }}"
                       ></i>
                     </a>
-                  </td> -->
+                  </td>
                 </tr>
                 {% endfor %}
+                <!-- Add more rows as needed -->
               </tbody>
             </table>
           </div>
@@ -133,7 +133,7 @@
 
         <!-- Property Add Form -->
         <form
-          action="{% url 'admin-agent-management' %}"
+          action="{% url 'admin-testimonial' %}"
           method="post"
           id="propertyForm"
           class="grid grid-cols-2 gap-4"
@@ -141,89 +141,44 @@
         >
           {% csrf_token %}
           <div class="mb-4">
-            <label for="propertyName">Agent Name:</label>
+            <label for="name">Name:</label>
             <input
               type="text"
-              id="propertyName"
+              id="name"
               name="name"
               class="w-full border p-2"
               required
             />
           </div>
-
           <div class="mb-4">
-            <label for="number">Agent Number:</label>
+            <label for="intro">Intro:</label>
             <input
-              type="number"
-              id="number"
-              name="number"
-              class="w-full border p-2"
-              required
-            />
-          </div>
-
-          <div class="mb-4">
-            <label for="propertyDescription">Agent Short Intro</label>
-            <textarea
-              id="propertyDescription"
+              type="text"
+              id="intro"
               name="intro"
               class="w-full border p-2"
               required
-            ></textarea>
+            />
           </div>
-
           <div class="mb-4">
-            <label for="propertyAddress">Instragram Link</label>
+            <label for="description">Description:</label>
             <input
               type="text"
-              id="propertyAddress"
-              name="instagramLink"
+              id="description"
+              name="description"
               class="w-full border p-2"
               required
             />
           </div>
 
           <div class="mb-4">
-            <label for="propertyRooms">Facebook Link</label>
-            <input
-              type="text"
-              id="propertyRooms"
-              name="facebookLink"
-              class="w-full border p-2"
-              required
-            />
-          </div>
-
-          <div class="mb-4">
-            <label for="propertyBedrooms">Twitter Link</label>
-            <input
-              type="text"
-              id="propertyBedrooms"
-              name="twitterLink"
-              class="w-full border p-2"
-              required
-            />
-          </div>
-
-          <div class="mb-4">
-            <label for="propertyToilets">LinkedIn Link</label>
-            <input
-              type="text"
-              id="propertyToilets"
-              name="linkedInLink"
-              class="w-full border p-2"
-              required
-            />
-          </div>
-
-          <div class="mb-4">
-            <!-- Add a file input for photos -->
-            <label for="propertyPhotos">Photo</label>
+            <label for="image">Photos:</label>
             <input
               type="file"
-              id="propertyPhotos"
-              name="photo"
+              id="image"
+              name="image"
               class="w-full border p-2"
+              multiple
             />
           </div>
 
@@ -231,7 +186,7 @@
             type="submit"
             class="col-span-2 bg-[#2d6904] text-white px-4 py-2 rounded"
           >
-            Add Agent
+            Add Testimonial
           </button>
         </form>
       </div>

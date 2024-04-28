@@ -106,5 +106,16 @@
         }
       });
     </script>
+    </script>
+    <script>
+      var today = new Date();
+  
+      var tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+  
+      var tomorrowFormatted = tomorrow.toISOString().split('T')[0];
+  
+      document.getElementById("appointmentDate").setAttribute("min", tomorrowFormatted);
+  </script>
   </body>
 </html>

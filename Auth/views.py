@@ -10,6 +10,9 @@ from Auth.models import (Booking, BrokerAccount, ContactList,
                          CustomUser, Review, Properties, Testimonials)
 
 from datetime import datetime, timedelta
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 
 def user_login(request):
@@ -56,6 +59,16 @@ def register(request):
         email = request.POST['email']
         number = request.POST['number']
         password = request.POST['password']
+        
+        isUser = CustomUser.objects.filter(number=number).exists()
+        isEmail = CustomUser.objects.filter(email=email).exists()
+        
+        if (isUser):
+            messages.error(request, 'User already exists.')
+            return redirect('register')
+        if (isEmail):
+            messages.error(request, 'Email already exists.')
+            return redirect('register')
 
         User = get_user_model()
 
@@ -180,6 +193,7 @@ def services(request):
     testimonials = Testimonials.objects.all()[:6]
     return render(request, 'services.html', {'testimonials': testimonials})
 
+
 def calculate_land_area(request):
     if request.user.is_authenticated:
         if request.user.is_admin:
@@ -211,8 +225,13 @@ def about(request):
             messages.error(
                 request, "You do not have permission to access this page.")
             return redirect('admin-page')
+    testimonials = Testimonials.objects.all()[:3]
+    context = {
+        'testimonials': testimonials
+    }
 
-    return render(request, 'about.html')
+
+    return render(request, 'about.html', context)
 
 
 def adminPage(request):
@@ -226,27 +245,28 @@ def adminPage(request):
             agentcount = BrokerAccount.objects.all().count()
             boughtprpo = Booking.objects.all().count()
             seven_days_ago = datetime.now() - timedelta(days=7)
-            user_count_last_7_days = CustomUser.objects.filter(created_at=seven_days_ago).count()
+            user_count_last_7_days = CustomUser.objects.filter(
+                created_at=seven_days_ago).count()
 
             # Get active users based on login activities in the last 7 days
             # active_users = CustomUser.objects.filter(last_login=seven_days_ago).distinct()
             # active_user_count = active_users.count()
-            active_user_count = CustomUser.objects.filter(is_active=True).count()
-
+            active_user_count = CustomUser.objects.filter(
+                is_active=True).count()
 
             context = {
-         'properties': properties,
-        'testimonials': testimonials,
-        'broker': broker,
-        "prpocount": prpocount,
-        "userCount": userCount,
-        "agentcount": agentcount,
-        "boughtprpo": boughtprpo,
-        "active_user_count": active_user_count,
-        "user_count_last_7_days": user_count_last_7_days
-        }
+                'properties': properties,
+                'testimonials': testimonials,
+                'broker': broker,
+                "prpocount": prpocount,
+                "userCount": userCount,
+                "agentcount": agentcount,
+                "boughtprpo": boughtprpo,
+                "active_user_count": active_user_count,
+                "user_count_last_7_days": user_count_last_7_days
+            }
 
-            return render(request, 'admin/admin-panel.html',context)
+            return render(request, 'admin/admin-panel.html', context)
     else:
         messages.error(
             request, "You do not have permission to access this page.")
@@ -290,8 +310,11 @@ def agentManagement(request):
             agent_email = remove(email)
 
             agent_password = "password123"
-
-            # Create a BrokerAccount for the agent
+            
+            if BrokerAccount.objects.filter(number=number).exists():
+                messages.error(request, "Number already exists")
+                return redirect('/admin-agent-management')
+            
             agent = BrokerAccount.objects.create(
                 photo=photo,
                 name=name,
@@ -309,7 +332,7 @@ def agentManagement(request):
             try:
                 if User.objects.filter(number=number).exists():
                     messages.error(request,
-                                   "User with this number already exists")
+                                   "User already exists")
 
                 new_user = User.objects.create_user(
                     username=number,
@@ -317,6 +340,11 @@ def agentManagement(request):
                     email=agent_email,
                     password=agent_password,
                     name=name,
+                    intro=intro,
+                    instagramLink=instagramLink,
+                    facebookLink=facebookLink,
+                    twitterLink=twitterLink,
+                    linkedInLink=linkedInLink,
                     is_admin=False,
                     is_agent=True,
                     agentId=agent.id
@@ -326,6 +354,7 @@ def agentManagement(request):
                 message = "Couldn't process your request!! Please try again later."
                 messages.error(request, message)
                 print(e)
+                
         allAgents = BrokerAccount.objects.all()
         context = {'allAgents': allAgents}
         return render(request, 'admin/agent-management.html', context)
@@ -358,13 +387,45 @@ def edit_agents(request, id):
             editQuery.save()
             messages.success(request, "Agent Edited Successfully !!!")
 
-            return redirect("admin-agent-management")
+            return redirect("/admin-agent-management")
 
         return render(request, 'admin/agent-edit.html', context)
     else:
         messages.error(
             request, "You do not have permission to access this page.")
         return redirect('dashboard')
+
+
+def edit_testimonial(request, id):
+    if (request.user.is_authenticated and request.user.is_admin):
+        details = get_object_or_404(Testimonials, id=id)
+
+        if request.method == 'POST':
+            image = request.FILES.get("image")
+            name = request.POST.get("name")
+            intro = request.POST.get("intro")
+            description = request.POST.get("description")
+
+            try:
+                if image is None:
+                   image = details.image
+                   
+                editQuery = Testimonials(id=id, image=image, name=name, intro=intro, description=description)
+                editQuery.save()
+                message = "Testimonial edited successfully"
+                messages.success(request, message)
+                return redirect('/admin-testimonial')
+            except Exception as e:
+                message = "Couldn't edit property. Please try again later."
+                messages.error(request, message)
+                print(e)
+
+        return render(request, 'admin/testimonial-edit.html', {'testi': details})
+    else:
+        messages.error(
+            request, "You do not have permission to access this page.")
+        return redirect('dashboard')
+
 
 
 def assignedToagent(request):
@@ -397,6 +458,43 @@ def teamsManagement(request):
         'bookings': bookings
     }
     return render(request, 'admin/teams-management.html', context)
+
+def admin_testimonial(request):
+    if (request.user.is_authenticated and request.user.is_admin):
+        testimonials = Testimonials.objects.all()
+        context = {
+            'testimonials': testimonials,
+        }
+        if request.method == 'POST':
+            image = request.FILES.get("image")
+            name = request.POST.get("name")
+            description = request.POST.get("description")
+            intro = request.POST.get("intro")
+            print(image, name, description, intro)
+
+            test_obj = Testimonials(
+                image=image,
+                name=name,
+                description=description,
+                intro=intro
+            )
+            print(test_obj)
+
+            try:
+                test_obj.save()
+                message = "Testimonial added successfully"
+                messages.success(request, message)
+                return redirect('/admin-testimonial')
+            except Exception as e:
+                message = "Couldn't add Testimonial. Please try again later."
+                messages.error(request, message)
+                print(e)
+
+        return render(request, 'admin/admin-testimonial.html', context)
+    else:
+        messages.error(
+            request, "You do not have permission to access this page.")
+        return redirect('dashboard')
 
 
 def adminProperty(request):
@@ -465,7 +563,6 @@ def editProperty(request, property_id):
         details = get_object_or_404(Properties, id=property_id)
 
         if request.method == 'POST':
-            # Retrieve existing property instance
             property_obj = Properties.objects.get(pk=property_id)
 
             if 'image' in request.FILES:
@@ -550,6 +647,18 @@ def admin_delete_booking(request, id):
         message = "Booking deleted successfully"
         messages.success(request, message)
         return redirect('/admin-teams-management')
+    else:
+        messages.error(
+            request, "You do not have permission to access this page.")
+        return redirect('dashboard')
+
+def admin_delete_test(request, id):
+    if (request.user.is_authenticated and request.user.is_admin):
+        delete_test = get_object_or_404(Testimonials, pk=id)
+        delete_test.delete()
+        message = "Testimonial deleted successfully"
+        messages.success(request, message)
+        return redirect('/admin-testimonial')
     else:
         messages.error(
             request, "You do not have permission to access this page.")
@@ -679,7 +788,7 @@ def review_agent(request, property_id):
             property = Properties.objects.get(id=property_id)
             agentId = property.broker_id
             print(agentId)
-            if Booking.objects.filter(user=request.user, property_id=property_id, statsus='Confirmed').exists():
+            if Booking.objects.filter(user=request.user, property_id=property_id, status='Confirmed').exists():
                 rating = request.POST.get('rating')
                 comment = request.POST.get('comment')
 
@@ -724,3 +833,19 @@ def properties_booked(request, id):
                 return redirect('/')
     else:
         return redirect('/login')
+
+
+@csrf_exempt
+def update_is_archived(request, property_id):
+    if request.method == 'POST':
+        try:
+            request_data = json.loads(request.body)
+            is_archived = request_data.get('is_archived', False)
+            property = get_object_or_404(Properties, id=property_id)
+            property.is_archived = is_archived
+            property.save()
+            return JsonResponse({'success': True, 'is_archived': property.is_archived})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
