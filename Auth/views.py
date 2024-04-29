@@ -528,6 +528,7 @@ def adminProperty(request):
                 imageTwo=imageTwo,
                 imageThree=imageThree,
                 broker=broker,
+                type=type,
                 name=name,
                 location=location,
                 beds=beds,
