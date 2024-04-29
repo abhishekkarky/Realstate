@@ -124,10 +124,12 @@
             >
               <option value="" disabled selected>Select Broker</option>
               {% if details.is_rent == 1 %}
-            <option value="1" selected>Rent</option>
-        {% else %}
-            <option value="0" selected>Sell</option>
-        {% endif %}
+              <option option value="0" selected>Sell</option>
+              <option option value="1" selected>Rent</option>
+              {% else %}
+              <option option value="1" selected>Rent</option>
+              <option option value="0" selected>Sell</option>
+             {% endif %}
              
             </select>
           </div>
