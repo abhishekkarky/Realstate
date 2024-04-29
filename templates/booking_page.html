@@ -79,13 +79,21 @@
               class="w-full border p-2"
             ></textarea>
           </div>
-
+          {% if request.GET.property_type == "Sale" %}
           <button
             type="submit"
             class="col-span-2 bg-[#2d6904] text-white px-4 py-2 rounded"
           >
             Buy
           </button>
+          {% else %}
+          <button
+          type="submit"
+          class="col-span-2 bg-[#2d6904] text-white px-4 py-2 rounded"
+        >
+          Rent
+        </button>
+          {% endif %}
           <a
             href="/properties"
             class="col-span-2 bg-[#2d6904] text-white px-4 py-2 rounded text-center"

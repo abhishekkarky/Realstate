@@ -115,7 +115,7 @@
               </div>
               
           <div class="mb-4">
-            <label for="propertyName">Sell/Rent</label>
+            <label for="propertyName">Sale/Rent</label>
             <select
               id="brokerSelect"
               name="rent"
@@ -123,12 +123,12 @@
               required
             >
               <option value="" disabled selected>Select Broker</option>
-              {% if details.is_rent == 1 %}
-              <option option value="0" selected>Sell</option>
-              <option option value="1" selected>Rent</option>
+              {% if details.type == "Rent" %}
+              <option option value="Sale" selected>Sale</option>
+              <option option value="Rent" selected>Rent</option>
               {% else %}
-              <option option value="1" selected>Rent</option>
-              <option option value="0" selected>Sell</option>
+              <option option value="Rent" selected>Rent</option>
+              <option option value="Sale" selected>Sale</option>
              {% endif %}
              
             </select>

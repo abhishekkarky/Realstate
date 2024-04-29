@@ -206,12 +206,22 @@
               </div>
             </div>
             {% if user.is_authenticated and not user.is_agent %}
-            <a
-              href="{% url 'booking' %}?property_id={{ details.id }}&property_name={{ details.name }}"
+              {% if details.type == "Sale" %}
+              <a
+                href="{% url 'booking' %}?property_id={{ details.id }}&property_name={{ details.name }}&property_type={{ details.type }}"
+                class="btn btn-primary py-2 px-3 m-5"
+              >
+                Buy Now
+              </a>
+              {% else %}
+              <a
+              href="{% url 'booking' %}?property_id={{ details.id }}&property_name={{ details.name }}&property_type={{ details.type }}"
               class="btn btn-primary py-2 px-3 m-5"
             >
-              Buy Now
+              Rent Now
             </a>
+              {% endif %}
+
             {% elif user.is_agent %} {% else %}
             <a href="{% url 'login' %}" class="btn btn-primary py-2 px-3 m-5">
               Log In to Buy Now

@@ -153,10 +153,10 @@
                   <td class="py-2 px-4 border-b">{{ property.baths }}</td>
                   <td class="py-2 px-4 border-b">{{ property.price }}</td>
                   <td class="py-2 px-4 border-b">
-                    {% if property.is_rent %}
+                    {% if property.type == "Rent" %}
                         Rent
                     {% else %}
-                        Sell
+                        Sale
                     {% endif %}
                 </td>
                   <td class="py-2 px-4 border-b">
@@ -281,7 +281,7 @@
           </div>
 
           <div class="mb-4">
-            <label for="propertyName">Sell/Rent</label>
+            <label for="propertyName">Sale/Rent</label>
             <select
               id="brokerSelect"
               name="rent"
@@ -289,8 +289,8 @@
               required
             >
               <option value="" disabled selected>Select Broker</option>
-              <option value="0"  selected>Sell</option>
-              <option value="1"  selected>Rent</option>
+              <option value="Sale"  selected>Sale</option>
+              <option value="Rent"  selected>Rent</option>
              
             </select>
           </div>
