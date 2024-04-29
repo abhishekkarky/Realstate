@@ -49,7 +49,6 @@ class Properties(models.Model):
     imageTwo = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
     imageThree = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
     broker = models.ForeignKey(BrokerAccount, on_delete=models.CASCADE)
-    is_rent = models.BooleanField(default=False)
     name = models.CharField(max_length = 20)
     location = models.CharField(max_length = 50)
     beds = models.CharField(max_length = 10)
@@ -58,6 +57,7 @@ class Properties(models.Model):
     description = models.CharField(max_length = 1000)
     latitude = models.FloatField(default=27.707)
     longitude = models.FloatField(default=85.34238)
+    type = models.CharField(default="Sale", max_length = 30)
     is_archived= models.BooleanField(default=False)
 
 class Testimonials(models.Model):
