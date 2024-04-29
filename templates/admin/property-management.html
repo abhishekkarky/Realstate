@@ -85,12 +85,13 @@
                   <th class="py-2 px-4 border-b">Image</th>
                   <th class="py-2 px-4 border-b">Image 2</th>
                   <th class="py-2 px-4 border-b">Image 3</th>
-                  <th class="py-2 px-4 border-b">broker</th>
-                  <th class="py-2 px-4 border-b">name</th>
-                  <th class="py-2 px-4 border-b">location</th>
-                  <th class="py-2 px-4 border-b">beds</th>
-                  <th class="py-2 px-4 border-b">baths</th>
-                  <th class="py-2 px-4 border-b">price</th>
+                  <th class="py-2 px-4 border-b">Broker</th>
+                  <th class="py-2 px-4 border-b">Name</th>
+                  <th class="py-2 px-4 border-b">Location</th>
+                  <th class="py-2 px-4 border-b">Beds</th>
+                  <th class="py-2 px-4 border-b">Baths</th>
+                  <th class="py-2 px-4 border-b">Price</th>
+                  <th class="py-2 px-4 border-b">Type</th>
                   <th class="py-2 px-4 border-b">Is Archived</th>
                   <th class="py-2 px-4 border-b">Description</th>
                   <th class="py-2 px-4 border-b">Actions</th>
@@ -151,6 +152,13 @@
                   <td class="py-2 px-4 border-b">{{ property.beds }}</td>
                   <td class="py-2 px-4 border-b">{{ property.baths }}</td>
                   <td class="py-2 px-4 border-b">{{ property.price }}</td>
+                  <td class="py-2 px-4 border-b">
+                    {% if property.is_rent %}
+                        Rent
+                    {% else %}
+                        Sell
+                    {% endif %}
+                </td>
                   <td class="py-2 px-4 border-b">
                     <label class="inline-flex items-center cursor-pointer">
                       <input
