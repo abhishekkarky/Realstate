@@ -1,16 +1,20 @@
+import time
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.contrib import messages
 from django.contrib.auth import (authenticate, get_user_model, login, logout,
                                  update_session_auth_hash)
 import random
+from django.conf import settings
+import stripe
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 
 from Auth.models import (Booking, BrokerAccount, ContactList,
-                         CustomUser, Review, Properties, Testimonials)
+                         CustomUser, Payment, Review, Properties, Testimonials)
 
 from datetime import datetime, timedelta
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
@@ -59,10 +63,10 @@ def register(request):
         email = request.POST['email']
         number = request.POST['number']
         password = request.POST['password']
-        
+
         isUser = CustomUser.objects.filter(number=number).exists()
         isEmail = CustomUser.objects.filter(email=email).exists()
-        
+
         if (isUser):
             messages.error(request, 'User already exists.')
             return redirect('register')
@@ -230,7 +234,6 @@ def about(request):
         'testimonials': testimonials
     }
 
-
     return render(request, 'about.html', context)
 
 
@@ -310,11 +313,11 @@ def agentManagement(request):
             agent_email = remove(email)
 
             agent_password = "password123"
-            
+
             if BrokerAccount.objects.filter(number=number).exists():
                 messages.error(request, "Number already exists")
                 return redirect('/admin-agent-management')
-            
+
             agent = BrokerAccount.objects.create(
                 photo=photo,
                 name=name,
@@ -354,7 +357,7 @@ def agentManagement(request):
                 message = "Couldn't process your request!! Please try again later."
                 messages.error(request, message)
                 print(e)
-                
+
         allAgents = BrokerAccount.objects.all()
         context = {'allAgents': allAgents}
         return render(request, 'admin/agent-management.html', context)
@@ -408,9 +411,10 @@ def edit_testimonial(request, id):
 
             try:
                 if image is None:
-                   image = details.image
-                   
-                editQuery = Testimonials(id=id, image=image, name=name, intro=intro, description=description)
+                    image = details.image
+
+                editQuery = Testimonials(
+                    id=id, image=image, name=name, intro=intro, description=description)
                 editQuery.save()
                 message = "Testimonial edited successfully"
                 messages.success(request, message)
@@ -425,7 +429,6 @@ def edit_testimonial(request, id):
         messages.error(
             request, "You do not have permission to access this page.")
         return redirect('dashboard')
-
 
 
 def assignedToagent(request):
@@ -452,12 +455,21 @@ def assignedToagent(request):
         return redirect('/login')
 
 
-def teamsManagement(request):
-    bookings = Booking.objects.all()
+def booking_management(request):
+    bookings_sale = Booking.objects.all()
     context = {
-        'bookings': bookings
+        'bookings': bookings_sale
     }
-    return render(request, 'admin/teams-management.html', context)
+    return render(request, 'admin/booking-management.html', context)
+
+
+def rent_management(request):
+    bookings_sale = Booking.objects.all()
+    context = {
+        'bookings': bookings_sale
+    }
+    return render(request, 'admin/rental-management.html', context)
+
 
 def admin_testimonial(request):
     if (request.user.is_authenticated and request.user.is_admin):
@@ -647,6 +659,7 @@ def admin_delete_booking(request, id):
             request, "You do not have permission to access this page.")
         return redirect('dashboard')
 
+
 def admin_delete_test(request, id):
     if (request.user.is_authenticated and request.user.is_admin):
         delete_test = get_object_or_404(Testimonials, pk=id)
@@ -669,46 +682,140 @@ def bookinglist(request):
     return render(request, 'bookings.html', context)
 
 
+stripe.api_key = 'sk_test_51P1lOZ06ho0W5mPfHhr4drqVtm8P1AwXs4vaJc5fuG5lJdCiZSPWusgTNVFBIVqpTOHXCX2zUAJe3rF4RBlcIPUY00kiP8S4oq'
+
+
 def booking(request):
     if request.method == 'POST':
-        # Fetching property details from the request
         property_id = request.POST.get('property')
         date = request.POST.get('date')
         note = request.POST.get('note')
 
-        print(property_id, date, note)
+        if request.user.is_authenticated:
+            property_instance = get_object_or_404(
+                Properties, id=property_id)
 
-        try:
-            # Check if the user is authenticated
-            if request.user.is_authenticated:
-                # Retrieving the Property instance using the property_id
-                property_instance = get_object_or_404(
-                    Properties, id=property_id)
-
-                # Creating a Booking instance with the fetched Property instance and the user
-                if (Booking.objects.filter(date=date).exists()):
-                    message = "This property has been booked for this date"
-                    messages.error(request, message)
-                    return redirect('/singleproperty/' + str(property_id))
-                booking = Booking(
-                    user=request.user, property=property_instance, date=date, note=note)
-                booking.status = 'Confirmed'
-                booking.save()
-
-                message = "Booking added successfully!!"
-                messages.success(request, message)
-                return redirect('/properties')
-            else:
-                message = "User is not authenticated"
+            if (Booking.objects.filter(date=date).exists()):
+                message = "This property has been booked for this date"
                 messages.error(request, message)
-                return redirect('/login')
-        except Exception as e:
-            message = "Couldn't process your request!! Please try again later."
-            messages.error(request, message)
-            print(e)
-            return redirect('/booking')
-    else:
-        return render(request, 'booking_page.html')
+                return redirect('/singleproperty/' + str(property_id))
+
+            request.session['property'] = property_id
+            request.session['date'] = date
+            request.session['note'] = note
+
+            try:
+                property_instance = get_object_or_404(Properties, id=property_id)
+                price = stripe.Price.create(
+                    unit_amount=property_instance.price,
+                    currency='usd',
+                    product='prod_PrXMqQakxRxCcx',
+                    recurring=None,
+                )
+
+                checkout_session = stripe.checkout.Session.create(
+                    payment_method_types=['card'],
+                    line_items=[
+                        {
+                            'price': price.id,
+                            'quantity': 1
+                        }
+                    ],
+                    mode='payment',
+                    customer_creation='always',
+                    success_url='http://127.0.0.1:8000/payment_successful?session_id={CHECKOUT_SESSION_ID}',
+                    cancel_url='http://127.0.0.1:8000/payment_cancelled?session_id={CHECKOUT_SESSION_ID}',
+                )
+                return redirect(checkout_session.url, code=303)
+            except Exception as e:
+                messages.error(
+                    request, "Couldn't process your request!! Please try again later.")
+                print(e)
+                return redirect('/booking')
+    return render(request, 'booking_page.html')
+
+        #     booking = Booking(
+        #         user=request.user, property=property_instance, date=date, note=note)
+        #     booking.status = 'Confirmed'
+        #     booking.save()
+
+        #     message = "Booking added successfully!!"
+        #     messages.success(request, message)
+        #     return redirect('/properties')
+        # else:
+        #     message = "User is not authenticated"
+        #     messages.error(request, message)
+        #     return redirect('/login')
+
+
+def payment_successful(request):
+    checkout_session_id = request.GET.get('session_id', None)
+    print(request.session.get('property'))
+    property_id = request.session.get('property')
+    date = request.session.get('date')
+    note = request.session.get('note')
+
+    try:
+        session = stripe.checkout.Session.retrieve(checkout_session_id)
+        customer = stripe.Customer.retrieve(session.customer)
+        with transaction.atomic():
+            user_payment = Payment.objects.create(
+                user=request.user,
+                payment_bool=True,
+                stripe_checkout_id=checkout_session_id
+            )
+            user_payment.save()
+
+            property_instance = get_object_or_404(Properties, id=property_id)
+            print(property_instance)
+            booking = Booking.objects.create(
+                user=request.user,
+                property=property_instance,
+                date=date,
+                note=note,
+                isPaid=True
+            )
+            booking.save()
+    except Exception as e:
+        print(e)
+        messages.error(
+            request, "Payment unsuccessful. Please try again later.")
+        return redirect('/bookinglist')
+
+    messages.success(request, "Payment successful. Your booking is confirmed.")
+    return redirect('/bookinglist')
+
+
+def payment_cancelled(request):
+    return render(request, 'index.html')
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
+    time.sleep(10)
+    payload = request.body
+    signature_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, signature_header, settings.STRIPE_WEBHOOK_SECRECT_TEST
+        )
+    except ValueError as e:
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        return HttpResponse(status=400)
+
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+        session_id = session.get('id', None)
+        time.sleep(15)
+        user_payment = Payment.objects.get(stripe_checkout_id=session_id)
+        line_items = stripe.checkout.Session.list_line_items(
+            session_id, limit=1)
+        user_payment.payment_bool = True
+        user_payment.save()
+        return HttpResponse(status=200)
 
 
 def user_logout(request):

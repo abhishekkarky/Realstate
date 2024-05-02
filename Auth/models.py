@@ -71,7 +71,15 @@ class Booking(models.Model):
     property = models.ForeignKey(Properties, on_delete=models.CASCADE)
     date = models.DateField()
     note = models.TextField(blank=True, null=True)
+    isPaid = models.BooleanField(default=False)
     status = models.CharField(max_length=50, default='Pending')
+
+
+class Payment(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    payment_bool = models.BooleanField(default=False)
+    stripe_checkout_id = models.CharField(max_length=500)
+
 
 class Review(models.Model):
     broker = models.ForeignKey(BrokerAccount,on_delete=models.CASCADE)
