@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <title>Sell Property</title>
+  </head>
+  <body class="bg-gray-100 flex justify-center items-center h-screen">
+    <div class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50">
+      <div class="flex justify-center items-center h-full">
+        <div class="bg-white p-8 rounded-lg shadow-md max-h-full overflow-auto">
+          <h2 class="text-xl font-bold mb-4">Add Property</h2>
+          <form
+            id="propertyForm"
+            class="grid grid-cols-2 gap-4"
+            method="post"
+            action="{% url 'sell-property' %}"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+            <div class="mb-4">
+              <label for="propertyPhotos">Photo one:</label>
+              <input
+                type="file"
+                id="propertyPhotos"
+                name="image"
+                class="w-full border p-2"
+                multiple
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="propertyPhotos">Photo two:</label>
+              <input
+                type="file"
+                id="propertyPhotos"
+                name="imageTwo"
+                class="w-full border p-2"
+                multiple
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="propertyPhotos">Photo three:</label>
+              <input
+                type="file"
+                id="propertyPhotos"
+                name="imageThree"
+                class="w-full border p-2"
+                multiple
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="propertyName">Sale/Rent</label>
+              <select
+                id="selectRent"
+                name="rent"
+                class="w-full border p-2"
+                required
+              >
+                <option value="" disabled selected>Select Type</option>
+                <option value="Sale" selected>Sale</option>
+                <option value="Rent" selected>Rent</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="propertyName">Property Name:</label>
+              <input
+                type="text"
+                id="propertyName"
+                name="name"
+                class="w-full border p-2"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="propertyName">Property Location:</label>
+              <input
+                type="text"
+                id="propertyName"
+                name="location"
+                class="w-full border p-2"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="propertyAddress">Beds:</label>
+              <input
+                type="number"
+                id="propertyAddress"
+                name="beds"
+                class="w-full border p-2"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="propertyAddress">Baths:</label>
+              <input
+                type="number"
+                id="propertyAddress"
+                name="baths"
+                class="w-full border p-2"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="propertyAddress">Latitude:</label>
+              <input
+                type="number"
+                id="propertyAddress"
+                name="latitude"
+                class="w-full border p-2"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="propertyAddress">Longitude:</label>
+              <input
+                type="number"
+                id="propertyAddress"
+                name="longitude"
+                class="w-full border p-2"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="propertyToilets">Price:</label>
+              <input
+                type="number"
+                id="propertyToilets"
+                name="price"
+                class="w-full border p-2"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="propertyDescription">Property Description:</label>
+              <textarea
+                id="propertyDescription"
+                name="description"
+                class="w-full border p-2"
+                required
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="col-span-2 bg-[#2d6904] text-white px-4 py-2 rounded"
+            >
+              Add Property
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

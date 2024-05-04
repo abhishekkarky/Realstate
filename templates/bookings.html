@@ -74,7 +74,9 @@
               <td class="px-6 py-4 whitespace-nowrap">{{ booking.note }}</td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <!-- Add delete button here if needed -->
-                <a href="{% url 'delete-booking' booking.id %}">Delete</a>
+                <a
+                class="bg-[#0291dd] hover:bg-white hover:!text-[#0291dd] text-white font-bold p-2 border rounded"
+                href="{% url 'delete-booking' booking.id %}">Delete</a>
               </td>
             </tr>
             {% endfor %}

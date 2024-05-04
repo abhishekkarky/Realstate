@@ -79,6 +79,7 @@
             <tbody class='text-center'>
               <!-- Example row with additional fields -->
               {% for booking in bookings %}
+              {% if booking.isPaid == False %}
               <tr>
                 <td class="py-2 px-8 border-b">{{booking.user}}</td>
                 <td class="py-2 px-8 border-b">
@@ -95,6 +96,7 @@
                   </a>
                 </td>
               </tr>
+              {% endif %}
               {% endfor %}
               <!-- Add more rows as needed -->
             </tbody>

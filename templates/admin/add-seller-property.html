@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Property Management</title>
+    <title>Add Seller Properties</title>
     <!----======== CSS ======== -->
     <link rel="stylesheet" href="/static/css/adminpanel.css" />
 
@@ -41,10 +41,6 @@
     <section class="dashboard">
       <div class="top">
         <i class="uil uil-bars sidebar-toggle"></i>
-        {% comment %} <div class="search-box">
-          <i class="uil uil-search"></i>
-          <input type="text" placeholder="Search here..." />
-        </div> {% endcomment %}
         <img src="/static/images/profile.jpg" alt="" />
       </div>
 
@@ -53,38 +49,39 @@
           <div class="title flex items-center justify-between mb-4">
             <div class="flex items-center">
               <i class="uil uil-tachometer-fast-alt text-2xl" style="background-color: #0291dd;"></i>
-              <span class="text-2xl ml-2">Edit Property</span>
+              <span class="text-2xl ml-2">Add Seller Property</span>
             </div>
           </div>
           <div class="bg-white p-6 w-1/1 overflow-auto">
-            <!-- Property Edit Form -->
             <form
               id="propertyForm"
               class="grid grid-cols-2 gap-4"
               method="post"
-              action="{% url 'edit-property' property_id=details.id %}"
+              action="{% url 'admin-add-seller-property' property_id=details.id %}"
               enctype="multipart/form-data"
             >
               {% csrf_token %}
-              <div class="mb-4">
+              {% comment %} <div class="mb-4">
                 <!-- Add a file input for photos -->
                 <label for="propertyPhotos">Photo one:</label>
                 <input
                   type="file"
                   id="propertyPhotos"
                   name="image"
+                  value="{{ details.image.url }}"
                   class="w-full border p-2"
                   multiple
                 />
-              </div>
+              </div> {% endcomment %}
 
-              <div class="mb-4">
+              {% comment %} <div class="mb-4">
                 <!-- Add a file input for photos -->
                 <label for="propertyPhotos">Photo two:</label>
                 <input
                   type="file"
                   id="propertyPhotos"
                   name="imageTwo"
+                  value="{{ details.imageTwo.url }}"
                   class="w-full border p-2"
                   multiple
                 />
@@ -97,9 +94,25 @@
                   type="file"
                   id="propertyPhotos"
                   name="imageThree"
+                  value="{{ details.imageThree.url }}"
                   class="w-full border p-2"
                   multiple
                 />
+              </div> {% endcomment %}
+
+              <div class="mb-4">
+                <label for="brokers">Broker Name:</label>
+                <select
+                  id="brokerSelect"
+                  name="broker"
+                  class="w-full border p-2"
+                  required
+                >
+                  <option value="" disabled selected>Select Broker</option>
+                  {% for broker in brokers %}
+                  <option value="{{ broker.id }}">{{ broker.name }}</option>
+                  {% endfor %}
+                </select>
               </div>
 
               <div class="mb-4">
@@ -115,9 +128,9 @@
               </div>
               
           <div class="mb-4">
-            <label for="propertyName">Sale/Rent</label>
+            <label for="salerent">Sale/Rent</label>
             <select
-              id="brokerSelect"
+              id="salerent"
               name="rent"
               class="w-full border p-2"
               required
@@ -135,10 +148,10 @@
           </div>
 
               <div class="mb-4">
-                <label for="propertyName">Property Location:</label>
+                <label for="location">Property Location:</label>
                 <input
                   type="text"
-                  id="propertyName"
+                  id="location"
                   name="location"
                   class="w-full border p-2"
                   value="{{ details.location }}"
@@ -159,10 +172,10 @@
               </div>
 
               <div class="mb-4">
-                <label for="propertyAddress">Baths:</label>
+                <label for="propertybaths">Baths:</label>
                 <input
                   type="text"
-                  id="propertyAddress"
+                  id="propertybaths"
                   name="baths"
                   class="w-full border p-2"
                   value="{{ details.baths }}"
@@ -222,7 +235,7 @@
                 type="submit"
                 class="col-span-2 bg-[#0291dd] text-white px-4 py-2 rounded"
               >
-                Edit Property
+                Add Property
               </button>
             </form>
           </div>

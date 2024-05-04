@@ -11,7 +11,7 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 
 from Auth.models import (Booking, BrokerAccount, ContactList,
-                         CustomUser, Payment, Review, Properties, Testimonials)
+                         CustomUser, Payment, Review, Properties, SellingProperties, Testimonials)
 
 from datetime import datetime, timedelta
 from django.http import HttpResponse, JsonResponse
@@ -456,11 +456,17 @@ def assignedToagent(request):
 
 
 def booking_management(request):
-    bookings_sale = Booking.objects.all()
-    context = {
-        'bookings': bookings_sale
-    }
-    return render(request, 'admin/booking-management.html', context)
+    if (request.user.is_authenticated and request.user.is_admin):
+
+        bookings_sale = Booking.objects.all()
+        context = {
+            'bookings': bookings_sale
+        }
+        return render(request, 'admin/booking-management.html', context)
+    else:
+        messages.error(
+            request, "You do not have permission to access this page.")
+        return redirect('dashboard')
 
 
 def rent_management(request):
@@ -549,7 +555,6 @@ def adminProperty(request):
                 description=description,
                 latitude=latitude,
                 longitude=longitude
-
             )
 
             try:
@@ -563,6 +568,84 @@ def adminProperty(request):
                 print(e)
 
         return render(request, 'admin/property-management.html', context)
+    else:
+        messages.error(
+            request, "You do not have permission to access this page.")
+        return redirect('dashboard')
+
+
+def adminSellerProperty(request):
+    if (request.user.is_authenticated and request.user.is_admin):
+        properties = SellingProperties.objects.all()
+        context = {
+            'properties': properties,
+        }
+
+        return render(request, 'admin/admin-seller-property.html', context)
+    else:
+        messages.error(
+            request, "You do not have permission to access this page.")
+        return redirect('dashboard')
+
+
+def adminSaveSellerProperty(request, property_id):
+    if (request.user.is_authenticated and request.user.is_admin):
+        details = get_object_or_404(SellingProperties, id=property_id)
+
+        properties = Properties.objects.all()
+        brokers = BrokerAccount.objects.all()
+        context = {
+            'properties': properties,
+            'brokers': brokers,
+            'details': details
+        }
+
+        if request.method == 'POST':
+            image = details.image
+            imageTwo = details.imageTwo
+            imageThree = details.imageThree
+            broker_id = request.POST.get("broker")
+            type = request.POST.get("rent")
+            name = request.POST.get("name")
+            location = request.POST.get("location")
+            beds = request.POST.get("beds")
+            baths = request.POST.get("baths")
+            price = request.POST.get("price")
+            description = request.POST.get("description")
+            latitude = request.POST.get("latitude")
+            longitude = request.POST.get("longitude")
+
+            broker = BrokerAccount.objects.get(pk=broker_id)
+
+            property_obj = Properties(
+                image=image,
+                imageTwo=imageTwo,
+                imageThree=imageThree,
+                broker=broker,
+                type=type,
+                name=name,
+                location=location,
+                beds=beds,
+                baths=baths,
+                price=price,
+                description=description,
+                latitude=latitude,
+                longitude=longitude
+            )
+
+            try:
+                property_obj.save()
+                property_objd = get_object_or_404(SellingProperties, pk=property_id)
+                property_objd.delete()
+                message = "Property added successfully"
+                messages.success(request, message)
+                return redirect('/admin-property-management')
+            except Exception as e:
+                message = "Couldn't add property. Please try again later."
+                messages.error(request, message)
+                print(e)
+
+        return render(request, 'admin/add-seller-property.html', context)
     else:
         messages.error(
             request, "You do not have permission to access this page.")
@@ -689,6 +772,8 @@ stripe.api_key = 'sk_test_51P1lOZ06ho0W5mPfHhr4drqVtm8P1AwXs4vaJc5fuG5lJdCiZSPWu
 def booking(request):
     if request.method == 'POST':
         property_id = request.POST.get('property')
+        property_type = request.POST.get('property_type')
+        print(property_id, property_type)
         date = request.POST.get('date')
         note = request.POST.get('note')
 
@@ -700,53 +785,68 @@ def booking(request):
                 message = "This property has been booked for this date"
                 messages.error(request, message)
                 return redirect('/singleproperty/' + str(property_id))
+            if (property_type == 'Sale'):
+                property_instance = get_object_or_404(
+                    Properties, id=property_id)
 
-            request.session['property'] = property_id
-            request.session['date'] = date
-            request.session['note'] = note
+                booking = Booking(
+                    user=request.user, property=property_instance, date=date, note=note, isPaid=False)
+                booking.status = 'Confirmed'
+                booking.save()
 
-            try:
-                property_instance = get_object_or_404(Properties, id=property_id)
-                price = stripe.Price.create(
-                    unit_amount=property_instance.price,
-                    currency='usd',
-                    product='prod_PrXMqQakxRxCcx',
-                    recurring=None,
-                )
+                message = "Booking added successfully!!"
+                messages.success(request, message)
+                return redirect('/properties')
 
-                checkout_session = stripe.checkout.Session.create(
-                    payment_method_types=['card'],
-                    line_items=[
-                        {
-                            'price': price.id,
-                            'quantity': 1
-                        }
-                    ],
-                    mode='payment',
-                    customer_creation='always',
-                    success_url='http://127.0.0.1:8000/payment_successful?session_id={CHECKOUT_SESSION_ID}',
-                    cancel_url='http://127.0.0.1:8000/payment_cancelled?session_id={CHECKOUT_SESSION_ID}',
-                )
-                return redirect(checkout_session.url, code=303)
-            except Exception as e:
-                messages.error(
-                    request, "Couldn't process your request!! Please try again later.")
-                print(e)
-                return redirect('/booking')
+            else:
+
+                request.session['property'] = property_id
+                request.session['date'] = date
+                request.session['note'] = note
+
+                try:
+                    property_instance = get_object_or_404(
+                        Properties, id=property_id)
+                    price = stripe.Price.create(
+                        unit_amount=property_instance.price,
+                        currency='usd',
+                        product='prod_PrXMqQakxRxCcx',
+                        recurring=None,
+                    )
+
+                    checkout_session = stripe.checkout.Session.create(
+                        payment_method_types=['card'],
+                        line_items=[
+                            {
+                                'price': price.id,
+                                'quantity': 1
+                            }
+                        ],
+                        mode='payment',
+                        customer_creation='always',
+                        success_url='http://127.0.0.1:8000/payment_successful?session_id={CHECKOUT_SESSION_ID}',
+                        cancel_url='http://127.0.0.1:8000/payment_cancelled?session_id={CHECKOUT_SESSION_ID}',
+                    )
+                    return redirect(checkout_session.url, code=303)
+                except Exception as e:
+                    messages.error(
+                        request, "Couldn't process your request!! Please try again later.")
+                    print(e)
+                    return redirect('/booking')
     return render(request, 'booking_page.html')
 
-        #     booking = Booking(
-        #         user=request.user, property=property_instance, date=date, note=note)
-        #     booking.status = 'Confirmed'
-        #     booking.save()
+    #     booking = Booking(
+    #         user=request.user, property=property_instance, date=date, note=note)
+    #     booking.status = 'Confirmed'
+    #     booking.save()
 
-        #     message = "Booking added successfully!!"
-        #     messages.success(request, message)
-        #     return redirect('/properties')
-        # else:
-        #     message = "User is not authenticated"
-        #     messages.error(request, message)
-        #     return redirect('/login')
+    #     message = "Booking added successfully!!"
+    #     messages.success(request, message)
+    #     return redirect('/properties')
+    # else:
+    #     message = "User is not authenticated"
+    #     messages.error(request, message)
+    #     return redirect('/login')
 
 
 def payment_successful(request):
@@ -774,7 +874,8 @@ def payment_successful(request):
                 property=property_instance,
                 date=date,
                 note=note,
-                isPaid=True
+                isPaid=True,
+                status='Confirmed'
             )
             booking.save()
     except Exception as e:
@@ -858,6 +959,45 @@ def profile(request):
         }
         return render(request, 'profile.html', context)
     return render(request, 'profile.html')
+
+
+def sellProperty(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            name = request.POST.get('name')
+            location = request.POST.get('location')
+            beds = request.POST.get('beds')
+            baths = request.POST.get('baths')
+            price = request.POST.get('price')
+            description = request.POST.get('description')
+            latitude = request.POST.get('latitude')
+            longitude = request.POST.get('longitude')
+            image = request.FILES.get('image')
+            imageTwo = request.FILES.get('imageTwo')
+            imageThree = request.FILES.get('imageThree')
+
+            property = SellingProperties(
+                name=name,
+                location=location,
+                beds=beds,
+                baths=baths,
+                price=price,
+                description=description,
+                latitude=latitude,
+                longitude=longitude,
+                image=image,
+                imageTwo=imageTwo,
+                imageThree=imageThree,
+            )
+            property.save()
+            messages.success(
+                request, 'Property sent to admin for verification.')
+            return redirect('/')
+        else:
+            messages.error(request, 'You must log in first.')
+            return redirect('/login')
+
+    return render(request, 'sell_property.html')
 
 
 def changepassword(request):

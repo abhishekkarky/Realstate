@@ -67,14 +67,8 @@
                 class="uil uil-tachometer-fast-alt text-2xl"
                 style="background-color: #0291dd"
               ></i>
-              <span class="text-2xl ml-2">Property</span>
+              <span class="text-2xl ml-2">Seller Property</span>
             </div>
-            <button
-              id="openModal"
-              class="bg-[#0291dd] text-white px-4 py-2 rounded"
-            >
-              Add
-            </button>
           </div>
 
           <!-- Table with property data -->
@@ -85,14 +79,12 @@
                   <th class="py-2 px-4 border-b">Image</th>
                   <th class="py-2 px-4 border-b">Image 2</th>
                   <th class="py-2 px-4 border-b">Image 3</th>
-                  <th class="py-2 px-4 border-b">Broker</th>
                   <th class="py-2 px-4 border-b">Name</th>
                   <th class="py-2 px-4 border-b">Location</th>
                   <th class="py-2 px-4 border-b">Beds</th>
                   <th class="py-2 px-4 border-b">Baths</th>
                   <th class="py-2 px-4 border-b">Price</th>
                   <th class="py-2 px-4 border-b">Type</th>
-                  <th class="py-2 px-4 border-b">Is Archived</th>
                   <th class="py-2 px-4 border-b">Description</th>
                   <th class="py-2 px-4 border-b">Actions</th>
                 </tr>
@@ -146,7 +138,6 @@
                     />
                     {% endif %}
                   </td>
-                  <td class="py-2 px-4 border-b">{{ property.broker.name }}</td>
                   <td class="py-2 px-4 border-b">{{ property.name }}</td>
                   <td class="py-2 px-4 border-b">{{ property.location }}</td>
                   <td class="py-2 px-4 border-b">{{ property.beds }}</td>
@@ -159,20 +150,6 @@
                         Sale
                     {% endif %}
                 </td>
-                  <td class="py-2 px-4 border-b">
-                    <label class="inline-flex items-center cursor-pointer">
-                      <input
-                            type="checkbox"
-                            class="sr-only peer"
-                            {% if property.is_archived %}checked{% endif %}
-                            onchange="toggleArchived({{ property.id }}, this.checked)"
-                        />
-                      <div
-                        class="relative w-11 h-6 bg-red-600 peer-focus:outline-none dark:peer-focus:ring-red-800 rounded-full peer dark:bg-red-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-red-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"
-                      ></div>
-                    </label>
-                  </td>
-
                   <td
                     title="{{ property.description }}"
                     class="text-clip py-2 px-4 border-b"
@@ -187,19 +164,10 @@
                   </td>
 
                   <td class="py-2 px-4 border-b">
-                    <a href="/admin-edit-property/{{ property.id }}">
-                      <i
-                        id="openEditModal"
-                        class="uil uil-edit text-green-500 cursor-pointer hover:text-green-700"
-                      ></i>
-                    </a>
                     <a
-                      href="{% url 'delete-property' property.id %}"
-                      type="submit"
-                      ><i
-                        class="uil uil-trash-alt text-red-500 cursor-pointer hover:text-red-700"
-                        data-property-id="{{ property.id }}"
-                      ></i>
+                      href="/admin-add-seller-property/{{ property.id }}"
+                      class="bg-[#0291dd] text-white px-4 py-2 rounded" >
+                      Add
                     </a>
                   </td>
                 </tr>
@@ -215,9 +183,9 @@
     <!-- Modal -->
     <div
       id="myModal"
-      class="modal hidden fixed inset-0 bg-gray-300 bg-opacity-75 flex items-center justify-center z-20 overflow-auto"
+      class="modal hidden fixed inset-0 bg-gray-300 bg-opacity-75 flex items-center justify-center z-20"
     >
-      <div class="modal-content bg-white p-6 w-1/2 mt-32">
+      <div class="modal-content bg-white p-6 w-1/2">
         <span id="closeModal" class="close">&times;</span>
 
         <!-- Property Add Form -->
@@ -263,21 +231,6 @@
               class="w-full border p-2"
               multiple
             />
-          </div>
-
-          <div class="mb-4">
-            <label for="propertyName">Broker Name:</label>
-            <select
-              id="brokerSelect"
-              name="broker"
-              class="w-full border p-2"
-              required
-            >
-              <option value="" disabled selected>Select Broker</option>
-              {% for broker in brokers %}
-              <option value="{{ broker.id }}">{{ broker.name }}</option>
-              {% endfor %}
-            </select>
           </div>
 
           <div class="mb-4">

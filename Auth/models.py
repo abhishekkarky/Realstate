@@ -42,8 +42,20 @@ class BrokerAccount(models.Model):
     facebookLink = models.CharField(max_length = 1000, default='https://facebook.com')
     twitterLink = models.CharField(max_length = 1000, default = 'https://twitter.com')
     linkedInLink = models.CharField(max_length = 1000, default='https://linkedin.com')
-
-
+    
+class SellingProperties(models.Model):
+    image = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
+    imageTwo = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
+    imageThree = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg') 
+    name = models.CharField(max_length = 20)
+    location = models.CharField(max_length = 50)
+    beds = models.CharField(max_length = 10)
+    baths = models.CharField(max_length = 10)
+    price = models.CharField(max_length = 30)
+    description = models.CharField(max_length = 1000)
+    latitude = models.FloatField(default=27.707)
+    longitude = models.FloatField(default=85.34238)
+    type = models.CharField(default="Sale", max_length = 30)
 class Properties(models.Model):
     image = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
     imageTwo = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
