@@ -17,6 +17,9 @@ from datetime import datetime, timedelta
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+import secrets
+import string
+from django.core.mail import send_mail
 
 
 def user_login(request):
@@ -1092,3 +1095,32 @@ def update_is_archived(request, property_id):
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
+
+def forgotpassword(request):
+    if request.method == 'POST':
+        reset_email = request.POST.get('resetemail')
+        try:
+            user = CustomUser.objects.get(email=reset_email)
+        except CustomUser.DoesNotExist:
+            user = None
+
+        if user:
+            random_password = ''.join(secrets.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(12))
+            user.set_password(random_password)  
+            user.save()  
+
+            message = f'Your new password: {random_password}' 
+            send_mail(
+                'Password Reset',
+                message,  
+                'avicekbhatta.321@gmail.com',
+                [reset_email],
+                fail_silently=False
+            )
+            messages.success(request, 'Password reset successful. Check your email for the new password.')   
+            return redirect('login')
+        else:
+            return render(request, 'forgotpassword.html', {'error': True})
+
+    return render(request, 'forgotpassword.html')
+

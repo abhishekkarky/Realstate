@@ -61,7 +61,9 @@ urlpatterns = [
     path('update-is-archived/<int:property_id>/',
          views.update_is_archived, name='update_is_archived'),
     path('payment_successful', views.payment_successful, name='payment_successful'),
-    path('payment_cancelled', views.payment_cancelled, name='payment_cancelled'),
+    path('payment_ancelled', views.payment_cancelled, name='payment_cancelled'),
     path('stripe_webhook', views.stripe_webhook, name='stripe_webhook'),
+    path('forgotpassword', views.forgotpassword, name='forgotpassword'),
+
 
 ]
