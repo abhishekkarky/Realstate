@@ -207,8 +207,8 @@
       </div>
     </div>
     <!-- end -->
-    {% else %}
-    <p style="text-align: center; margin-top: 20px">No results were found.</p>
+    {% comment %} {% else %}
+    <p style="text-align: center; margin-top: 20px">No results were found.</p> {% endcomment %}
     {% endif %}
 
     <div class="section">
@@ -216,19 +216,9 @@
         <div class="row mb-5 align-items-center">
           <div class="col-lg-6">
             <h2 class="font-weight-bold text-primary heading pb-4">
-              Popular Properties
+              Properties on Sale
             </h2>
           </div>
-          {% comment %} <div class="col-lg-6 text-lg-end">
-            <p>
-              <a
-                href="#"
-                target="_blank"
-                class="btn btn-primary text-white py-3 px-4"
-                >View all properties</a
-              >
-            </p>
-          </div> {% endcomment %}
         </div>
         <div class="row">
           <div class="col-12">
@@ -308,6 +298,96 @@
       </div>
     </div>
 
+    <div class="section">
+      <div class="container">
+        <div class="row mb-5 align-items-center">
+          <div class="col-lg-6">
+            <h2 class="font-weight-bold text-primary heading pb-4">
+              Property on Rent
+            </h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="property-slider-wrap">
+              <div class="property-slider">
+                {% for property in propertiesrent %} {% if not property.is_archived %}
+                <div class="property-item">
+                  <a href="/singleproperty/{{ property.id }}" class="img">
+                    <img
+                      src="{{ property.image.url }}"
+                      alt="Image"
+                      class="img-fluid"
+                      style="height: 415px"
+                      />
+                  </a>
+
+                  <div class="property-content">
+                    <div class="price mb-2">
+                      <span>RS. {{ property.type }}</span>
+                    </div>
+                    <div class="price mb-2">
+                      <span>RS. {{ property.price }}</span>
+                    </div>
+                    <div>
+                      <span class="d-block mb-2 text-black-50"
+                        >{{property.name}}</span
+                      >
+                      <span class="city d-block mb-3"
+                        >{{property.location}}</span
+                      >
+
+                      <div class="specs d-flex mb-4">
+                        <span class="d-block d-flex align-items-center me-3">
+                          <span class="icon-bed me-2"></span>
+                          <span class="caption">{{property.beds}} beds</span>
+                        </span>
+                        <span class="d-block d-flex align-items-center">
+                          <span class="icon-bath me-2"></span>
+                          <span class="caption">{{property.baths}} baths</span>
+                        </span>
+                      </div>
+
+                      <a
+                        href="/singleproperty/{{ property.id }}"
+                        class="btn btn-primary py-2 px-3"
+                        >See details</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                {% endif %} {% endfor %}
+                <!-- .item -->
+              </div>
+
+              <div
+                id="property-nav"
+                class="controls"
+                tabindex="0"
+                aria-label="Carousel Navigation"
+                style="display: block !important;"
+              >
+                <span
+                  class="prev"
+                  data-controls="prev"
+                  aria-controls="property"
+                  tabindex="-1"
+                  >Prev</span
+                >
+                <span
+                  class="next"
+                  data-controls="next"
+                  aria-controls="property"
+                  tabindex="-1"
+                  >Next</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <section class="features-1">
       <div class="container">
         <div class="row">
@@ -316,8 +396,7 @@
               <span class="flaticon-house"></span>
               <h3 class="mb-3">Our Properties</h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptates, accusamus.
+                Whether you're a first-time buyer or seasoned investor, we'll help you find the perfect property and navigate the buying process with ease.
               </p>
               <p><a href="#" class="learn-more">Learn More</a></p>
             </div>
@@ -327,8 +406,7 @@
               <span class="flaticon-building"></span>
               <h3 class="mb-3">Property for Sale</h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptates, accusamus.
+                From pricing strategies to marketing tactics, we'll work tirelessly to sell your property quickly and for the best possible price.
               </p>
               <p><a href="#" class="learn-more">Learn More</a></p>
             </div>
@@ -338,8 +416,7 @@
               <span class="flaticon-house-3"></span>
               <h3 class="mb-3">Real Estate Agent</h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptates, accusamus.
+                Looking for a rental property? Let us help you find the ideal home that meets your needs and fits your budget.
               </p>
               <p><a href="#" class="learn-more">Learn More</a></p>
             </div>
@@ -349,8 +426,7 @@
               <span class="flaticon-house-1"></span>
               <h3 class="mb-3">House for Sale</h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptates, accusamus.
+                Our comprehensive property management services ensure that your investment is protected and your tenants are well taken care of.
               </p>
               <p><a href="#" class="learn-more">Learn More</a></p>
             </div>
@@ -417,8 +493,8 @@
               Let's find home that's perfect for you
             </h2>
             <p class="text-black-50">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-              enim pariatur similique debitis vel nisi qui reprehenderit.
+             Let's embark on this journey together and find the home that's perfect for you
+             With our expertise and personalized service, your search for the ideal living space ends here. 
             </p>
           </div>
         </div>
@@ -440,8 +516,7 @@
               <div class="feature-text">
                 <h3 class="heading">2M Properties</h3>
                 <p class="text-black-50">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Nostrum iste.
+                  Purchased with common sense, paid for in full, and managed with reasonable care, it is about the safest investment in the world.
                 </p>
               </div>
             </div>
@@ -453,8 +528,8 @@
               <div class="feature-text">
                 <h3 class="heading">Top Rated Agents</h3>
                 <p class="text-black-50">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Nostrum iste.
+                  Discover the perfect home, effortlessly tailored to your needs. Empower your agents with 
+                  the tools to match clients seamlessly with their dream properties.
                 </p>
               </div>
             </div>
@@ -466,8 +541,7 @@
               <div class="feature-text">
                 <h3 class="heading">Legit Properties</h3>
                 <p class="text-black-50">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Nostrum iste.
+                  Owning a home is a keystone of wealth, both financial affluence and emotional security.
                 </p>
               </div>
             </div>
@@ -534,9 +608,7 @@
               Our Agents
             </h2>
             <p class="text-black-50">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-              enim pariatur similique debitis vel nisi qui reprehenderit totam?
-              Quod maiores.
+              Unlock the door to your dream home effortlessly. Equip agents with the tools to match clients seamlessly with their perfect properties. Let us streamline the search process, ensuring every client finds their ideal living space. Together, let's make finding the perfect home a seamless experience.
             </p>
           </div>
         </div>

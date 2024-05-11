@@ -99,6 +99,7 @@ def dashboard(request):
                 request, "You do not have permission to access this page.")
             return redirect('admin-page')
     properties = Properties.objects.filter(type="Sale", is_archived=False)[:9]
+    propertiesrent = Properties.objects.filter(type="Rent", is_archived=False)[:9]
     prpocount = Properties.objects.all().count()
     testimonials = Testimonials.objects.all()[:3]
     userCount = CustomUser.objects.all().count()
@@ -113,6 +114,7 @@ def dashboard(request):
         searchDetails = Properties.objects.filter(location__contains=location)
     context = {
         'properties': properties,
+        "propertiesrent" : propertiesrent,
         'testimonials': testimonials,
         'broker': broker,
         'location': location,
