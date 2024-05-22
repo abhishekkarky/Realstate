@@ -29,6 +29,8 @@
     <link rel="stylesheet" href="/static/css/style.css" />
 
     <title>Gurkha Gateway: Real estate company &mdash;</title>
+    <style>
+    </style>
   </head>
   <body>
     {% if messages %} {% for message in messages %}
@@ -57,20 +59,18 @@
     {% include 'navbar.html' %}
     <div class="hero">
       <div class="hero-slide">
-        <div
+        {% comment %} <div
           class="img overlay"
           style="background-image: url('static/images/hero_bg_1.jpg')"
-        ></div>
-        {% comment %}
-        <div
+        ></div> {% endcomment %}
+        {% comment %} <div
           class="img overlay"
           style="background-image: url('static/images/hero_bg_2.jpg')"
-        ></div>
+        ></div> {% endcomment %}
         <div
           class="img overlay"
-          style="background-image: url('static/images/hero_bg_1.jpg')"
+          style="background-image: url('static/images/hero_bg_3.jpg')"
         ></div>
-        {% endcomment %}
       </div>
 
       <div class="container">
@@ -299,7 +299,7 @@
     </div>
 
     <div class="section">
-      <div class="container">
+      <div class="container" style="display:flex flex-row">
         <div class="row mb-5 align-items-center">
           <div class="col-lg-6">
             <h2 class="font-weight-bold text-primary heading pb-4">
@@ -310,9 +310,12 @@
         <div class="row">
           <div class="col-12">
             <div class="property-slider-wrap">
-              <div class="property-slider">
+              <div class="property-slider" style="    display: flex;
+              justify-content: flex-start;
+              flex-direction: row;
+              flex-wrap: wrap;">
                 {% for property in propertiesrent %} {% if not property.is_archived %}
-                <div class="property-item">
+                <div class="property-item" style="width:415px ;    padding: 10px;                ">
                   <a href="/singleproperty/{{ property.id }}" class="img">
                     <img
                       src="{{ property.image.url }}"
@@ -360,7 +363,7 @@
                 <!-- .item -->
               </div>
 
-              <div
+              {% comment %} <div
                 id="property-nav"
                 class="controls"
                 tabindex="0"
@@ -381,7 +384,7 @@
                   tabindex="-1"
                   >Next</span
                 >
-              </div>
+              </div> {% endcomment %}
             </div>
           </div>
         </div>
@@ -398,7 +401,7 @@
               <p>
                 Whether you're a first-time buyer or seasoned investor, we'll help you find the perfect property and navigate the buying process with ease.
               </p>
-              <p><a href="#" class="learn-more">Learn More</a></p>
+              {% comment %} <p><a href="#" class="learn-more">Learn More</a></p> {% endcomment %}
             </div>
           </div>
           <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="500">
@@ -408,7 +411,7 @@
               <p>
                 From pricing strategies to marketing tactics, we'll work tirelessly to sell your property quickly and for the best possible price.
               </p>
-              <p><a href="#" class="learn-more">Learn More</a></p>
+              {% comment %} <p><a href="#" class="learn-more">Learn More</a></p> {% endcomment %}
             </div>
           </div>
           <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
@@ -418,7 +421,7 @@
               <p>
                 Looking for a rental property? Let us help you find the ideal home that meets your needs and fits your budget.
               </p>
-              <p><a href="#" class="learn-more">Learn More</a></p>
+              {% comment %} <p><a href="#" class="learn-more">Learn More</a></p> {% endcomment %}
             </div>
           </div>
           <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="600">
@@ -428,7 +431,7 @@
               <p>
                 Our comprehensive property management services ensure that your investment is protected and your tenants are well taken care of.
               </p>
-              <p><a href="#" class="learn-more">Learn More</a></p>
+              {% comment %} <p><a href="#" class="learn-more">Learn More</a></p> {% endcomment %}
             </div>
           </div>
         </div>
@@ -485,7 +488,7 @@
       </div>
     </div>
 
-    <div class="section section-4 bg-light">
+    {% comment %} <div class="section section-4 bg-light">
       <div class="container">
         <div class="row justify-content-center text-center mb-5">
           <div class="col-lg-5">
@@ -598,7 +601,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> {% endcomment %}
 
     <div class="section section-5 bg-light">
       <div class="container">
@@ -677,21 +680,21 @@
             <div class="widget">
               <h3>Sources</h3>
               <ul class="list-unstyled float-start links">
-                <li><a href="about">About us</a></li>
-                <li><a href="services">Services</a></li>
-                <li><a href="#">Vision</a></li>
-                <li><a href="#">Mission</a></li>
-                <li><a href="#">Terms</a></li>
-                <li><a href="#">Privacy</a></li>
+                <li><a href="/about">About us</a></li>
+                <li><a href="/services">Services</a></li>
+                {% comment %} <li><a href="#">Vision</a></li> {% endcomment %}
+                {% comment %} <li><a href="#">Mission</a></li> {% endcomment %}
+                {% comment %} <li><a href="#">Terms</a></li> {% endcomment %}
+                {% comment %} <li><a href="#">Privacy</a></li> {% endcomment %}
               </ul>
-              <ul class="list-unstyled float-start links">
+              {% comment %} <ul class="list-unstyled float-start links">
                 <li><a href="#">Partners</a></li>
                 <li><a href="#">Business</a></li>
                 <li><a href="#">Careers</a></li>
                 <li><a href="#">Blog</a></li>
                 <li><a href="#">FAQ</a></li>
                 <li><a href="#">Creative</a></li>
-              </ul>
+              </ul> {% endcomment %}
             </div>
             <!-- /.widget -->
           </div>
@@ -701,8 +704,8 @@
               <h3>Links</h3>
               <ul class="list-unstyled links">
                 <li><a href="#">Our Vision</a></li>
-                <li><a href="#">About us</a></li>
-                <li><a href="#">Contact us</a></li>
+                <li><a href="/about">About us</a></li>
+                <li><a href="/services">Contact us</a></li>
               </ul>
 
               <ul class="list-unstyled social">

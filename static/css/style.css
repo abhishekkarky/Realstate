@@ -9218,11 +9218,11 @@ textarea.form-control-lg {
     .site-nav .site-navigation .site-menu > li {
       display: inline-block; }
       .site-nav .site-navigation .site-menu > li > a {
-        font-size: 14px;
+        font-size: 17px;
         padding: 10px 15px;
         display: inline-block;
         text-decoration: none !important;
-        color: rgba(255, 255, 255, 0.5); }
+        color: rgba(255, 255, 255, 1); }
         .site-nav .site-navigation .site-menu > li > a:hover {
           color: #fff; }
       .site-nav .site-navigation .site-menu > li.cta-button a {
