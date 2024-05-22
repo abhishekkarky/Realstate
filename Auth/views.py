@@ -21,6 +21,40 @@ import secrets
 import string
 from django.core.mail import send_mail
 
+import requests
+
+def initiate_payment(property, price, property_id, date, note):
+    url = "https://a.khalti.com/api/v2/epayment/initiate/"
+
+    payload = json.dumps({
+        "return_url": "http://localhost:8000/payment_successful",
+        "website_url": "http://localhost:8000/",
+        "amount": price,
+        "purchase_order_id": property_id,
+        "purchase_order_name": "Property rent",
+        "customer_info": {
+            "name": "Realstate",
+            "email": "test@khalti.com",
+            "phone": "9800000001",
+        },
+        "merchant_property_id": property_id,
+        "merchant_date": date,
+        "merchant_note": note
+    })
+    headers = {
+        'Authorization': 'key 37ac1d14b13a48d2b2a153a4046b1c32',
+        'Content-Type': 'application/json',
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    response_data = response.json()
+    print(response_data)
+
+    if response_data.get('payment_url'):
+        return {"url":response_data.get('payment_url'), "success": True}
+    else:
+        return {"success": False}
+
 
 def user_login(request):
     if request.user.is_authenticated:
@@ -464,6 +498,7 @@ def booking_management(request):
     if (request.user.is_authenticated and request.user.is_admin):
 
         bookings_sale = Booking.objects.all()
+        print(bookings_sale)
         context = {
             'bookings': bookings_sale
         }
@@ -812,27 +847,16 @@ def booking(request):
                 try:
                     property_instance = get_object_or_404(
                         Properties, id=property_id)
-                    price = stripe.Price.create(
-                        unit_amount=property_instance.price,
-                        currency='usd',
-                        product='prod_PrXMqQakxRxCcx',
-                        recurring=None,
-                    )
 
-                    checkout_session = stripe.checkout.Session.create(
-                        payment_method_types=['card'],
-                        line_items=[
-                            {
-                                'price': price.id,
-                                'quantity': 1
-                            }
-                        ],
-                        mode='payment',
-                        customer_creation='always',
-                        success_url='http://127.0.0.1:8000/payment_successful?session_id={CHECKOUT_SESSION_ID}',
-                        cancel_url='http://127.0.0.1:8000/payment_cancelled?session_id={CHECKOUT_SESSION_ID}',
-                    )
-                    return redirect(checkout_session.url, code=303)
+                    price = int(property_instance.price) * 100
+                    print(price)
+
+                    initiate_data = initiate_payment(property_instance, price, property_id, date, note)
+                    if initiate_data.get('success'):
+                        return redirect(initiate_data.get('url'))
+                    else:
+                        messages.error(request, "Couldn't process your request!! Please try again later.")
+                        return redirect('/booking')
                 except Exception as e:
                     messages.error(
                         request, "Couldn't process your request!! Please try again later.")
@@ -855,40 +879,29 @@ def booking(request):
 
 
 def payment_successful(request):
-    checkout_session_id = request.GET.get('session_id', None)
-    print(request.session.get('property'))
-    property_id = request.session.get('property')
-    date = request.session.get('date')
-    note = request.session.get('note')
+    data = request.GET
+    if data.get('status') == "Completed":
+        property_id = data.get("property_id")
+        date = data.get("date")
+        note = data.get("note")
+        user_payment = Payment.objects.create(
+            user=request.user,
+            payment_bool=True,
+            txnId=data.get("tidx")
+        )
+        user_payment.save()
 
-    try:
-        session = stripe.checkout.Session.retrieve(checkout_session_id)
-        customer = stripe.Customer.retrieve(session.customer)
-        with transaction.atomic():
-            user_payment = Payment.objects.create(
-                user=request.user,
-                payment_bool=True,
-                stripe_checkout_id=checkout_session_id
-            )
-            user_payment.save()
-
-            property_instance = get_object_or_404(Properties, id=property_id)
-            print(property_instance)
-            booking = Booking.objects.create(
-                user=request.user,
-                property=property_instance,
-                date=date,
-                note=note,
-                isPaid=True,
-                status='Confirmed'
-            )
-            booking.save()
-    except Exception as e:
-        print(e)
-        messages.error(
-            request, "Payment unsuccessful. Please try again later.")
-        return redirect('/bookinglist')
-
+        property_instance = get_object_or_404(Properties, id=property_id)
+        print(property_instance)
+        booking = Booking.objects.create(
+            user=request.user,
+            property=property_instance,
+            date=date,
+            note=note,
+            isPaid=True,
+            status='Confirmed'
+        )
+        booking.save()
     messages.success(request, "Payment successful. Your booking is confirmed.")
     return redirect('/bookinglist')
 
