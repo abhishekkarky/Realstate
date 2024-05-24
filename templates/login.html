@@ -5,13 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../static/css/alert.css">
+    <link rel="stylesheet" href="../static/css/alert.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      .alert {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 9999;
+      }
+      .password-input {
+        font-family: "text-security-disc", Roboto;
+        -webkit-text-security: disc;
+        text-security: disc;
+      }
+    </style>
   </head>
   <body>
     {% if messages %} {% for message in messages %}
     <div
       class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
-      style="position: fixed; top: 0; right: 0; z-index: 9999"
       role="alert"
     >
       {{ message }}
@@ -23,11 +42,9 @@
       ></button>
     </div>
     {% endfor %} {% endif %}
-    <main
-      class="md:flex justify-center items-center w-[100%] h-screen mx-auto my-auto"
-    >
+    <main class="md:flex justify-center items-center w-full h-screen mx-auto">
       <form
-        class="flex flex-col justify-center items-center px-10 w-full md:w-[400px] py-20 shadow-lg rounded-md"
+        class="flex flex-col justify-center items-center px-10 w-full md:w-96 py-20 shadow-lg rounded-md"
         method="post"
         action="{% url 'login' %}"
       >
@@ -35,48 +52,68 @@
         <img
           class="w-20 h-20 rounded-full"
           src="/static/images/realstate-logo.png"
-          alt=""
+          alt="Real Estate Logo"
         />
         <h1 class="font-bold text-3xl mt-20">Login here...</h1>
-        <!-- {% if error %}
-                <p class="text-red-500">{{ error }}</p>
-            {% endif %} -->
         <input
-          class="w-full h-[50px] mt-10 border-2 px-5 rounded-md"
+          class="w-full h-12 mt-10 border-2 px-5 rounded-md"
           type="number"
           id="number"
           name="number"
           placeholder="Enter your number..."
           required
         />
-        <input
-          class="w-full h-[50px] mt-3 mb-8 border-2 px-5 rounded-md"
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Enter your password..."
-          required
-        />
-        <button class="bg-black text-white py-3 px-10"  style="font-size: 18px; background-color: #0291dd;color: white" type="submit">
+        <div class="relative w-full">
+          <input
+            class="w-full h-12 mt-3 mb-8 border-2 px-5 rounded-md password-input"
+            type="text"
+            id="password"
+            name="password"
+            placeholder="Enter your password..."
+            required
+          />
+          <span
+            class="absolute inset-x-end top-[29px] right-0 flex items-center pr-3 cursor-pointer"
+            onclick="togglePassword()"
+          >
+            <i id="eyeIcon" class="fa-regular fa-eye"></i>
+          </span>
+        </div>
+        <button
+          class="bg-[#0291dd] text-white py-3 px-10 text-lg"
+          type="submit"
+        >
           Login
         </button>
         <a class="text-black-500 py-3 px-10" href="signup"
-          >New Member ? <span> Click here</span></a
+          >New Member? <span>Click here</span></a
         >
         <a
-        href="{% url 'forgotpassword' %}"
-        class="block text-center mt-2 text-[#0291dd] font-semibold right-4"
-        >Forgot password?</a
-      >
+          href="{% url 'forgotpassword' %}"
+          class="block text-center mt-2 text-[#0291dd] font-semibold"
+          >Forgot password?</a
+        >
       </form>
     </main>
     <script>
+      function togglePassword() {
+        var passwordInput = document.getElementById("password");
+        var eyeIcon = document.getElementById("eyeIcon");
+        if (passwordInput.classList.contains("password-input")) {
+          passwordInput.classList.remove("password-input");
+          eyeIcon.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+          passwordInput.classList.add("password-input");
+          eyeIcon.classList.replace("fa-eye-slash", "fa-eye");
+        }
+      }
+
       window.addEventListener("DOMContentLoaded", function () {
         var alert = document.querySelector(".alert");
         if (alert) {
           setTimeout(function () {
             alert.style.display = "none";
-          }, 3000); 
+          }, 3000);
         }
       });
     </script>

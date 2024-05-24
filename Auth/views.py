@@ -23,11 +23,11 @@ from django.core.mail import send_mail
 
 import requests
 
-def initiate_payment(property, price, property_id, date, note):
+def initiate_payment(user_id,property, price, property_id, date, note):
     url = "https://a.khalti.com/api/v2/epayment/initiate/"
 
     payload = json.dumps({
-        "return_url": "http://localhost:8000/payment_successful",
+        "return_url": "http://localhost:8000/payment_successful?user_id={user_id}",
         "website_url": "http://localhost:8000/",
         "amount": price,
         "purchase_order_id": property_id,
@@ -48,7 +48,7 @@ def initiate_payment(property, price, property_id, date, note):
 
     response = requests.request("POST", url, headers=headers, data=payload)
     response_data = response.json()
-    print(response_data)
+   # print(response_data)
 
     if response_data.get('payment_url'):
         return {"url":response_data.get('payment_url'), "success": True}
@@ -68,7 +68,7 @@ def user_login(request):
         number = request.POST.get('number')
         password = request.POST.get('password')
 
-        print(number, password)
+        # print(number, password)
 
         user = authenticate(request, username=number, password=password)
 
@@ -203,7 +203,7 @@ def contact(request):
         message = request.POST.get("message")
         query = ContactList(name=name, email=email,
                             subject=subject, message=message)
-        print(name, email, subject, message)
+        # print(name, email, subject, message)
         try:
             query.save()
             message = "Received your message!! We will contact you shortly."
@@ -475,10 +475,10 @@ def assignedToagent(request):
         if request.user.is_agent:
             properties = Properties.objects.filter(
                 broker_id=request.user.agentId)
-            print(request.user)
-            print(properties)
-            for property in properties:
-                print(property.name)
+            # print(request.user)
+            # print(properties)
+            # for property in properties:
+                # print(property.name)
             context = {"properties": properties}
             return render(request, 'agent/assigned-properties.html', context)
         else:
@@ -498,7 +498,7 @@ def booking_management(request):
     if (request.user.is_authenticated and request.user.is_admin):
 
         bookings_sale = Booking.objects.all()
-        print(bookings_sale)
+        # print(bookings_sale)
         context = {
             'bookings': bookings_sale
         }
@@ -528,7 +528,7 @@ def admin_testimonial(request):
             name = request.POST.get("name")
             description = request.POST.get("description")
             intro = request.POST.get("intro")
-            print(image, name, description, intro)
+            # print(image, name, description, intro)
 
             test_obj = Testimonials(
                 image=image,
@@ -536,7 +536,7 @@ def admin_testimonial(request):
                 description=description,
                 intro=intro
             )
-            print(test_obj)
+            # print(test_obj)
 
             try:
                 test_obj.save()
@@ -707,9 +707,9 @@ def editProperty(request, property_id):
                 property_obj.imageThree = request.FILES.get("imageThree")
 
             property_obj.name = request.POST.get("name")
-            print(request.POST.get("rent"))
+            # print(request.POST.get("rent"))
             property_obj.type = request.POST.get("rent")
-            print(property_obj.type)
+            # print(property_obj.type)
             property_obj.location = request.POST.get("location")
             property_obj.beds = request.POST.get("beds")
             property_obj.baths = request.POST.get("baths")
@@ -813,7 +813,7 @@ def booking(request):
     if request.method == 'POST':
         property_id = request.POST.get('property')
         property_type = request.POST.get('property_type')
-        print(property_id, property_type)
+        # print(property_id, property_type)
         date = request.POST.get('date')
         note = request.POST.get('note')
 
@@ -839,19 +839,19 @@ def booking(request):
                 return redirect('/properties')
 
             else:
-
                 request.session['property'] = property_id
                 request.session['date'] = date
                 request.session['note'] = note
+                user_id = request.user.id
 
                 try:
                     property_instance = get_object_or_404(
                         Properties, id=property_id)
 
                     price = int(property_instance.price) * 100
-                    print(price)
+                    # print(price)
 
-                    initiate_data = initiate_payment(property_instance, price, property_id, date, note)
+                    initiate_data = initiate_payment(user_id,property_instance, price, property_id, date, note)
                     if initiate_data.get('success'):
                         return redirect(initiate_data.get('url'))
                     else:
@@ -880,6 +880,7 @@ def booking(request):
 
 def payment_successful(request):
     data = request.GET
+    # print("sfdghjklhgfdsafhjkl",data)
     if data.get('status') == "Completed":
         property_id = data.get("property_id")
         date = data.get("date")
@@ -892,7 +893,7 @@ def payment_successful(request):
         user_payment.save()
 
         property_instance = get_object_or_404(Properties, id=property_id)
-        print(property_instance)
+        # print(property_instance)
         booking = Booking.objects.create(
             user=request.user,
             property=property_instance,
@@ -1048,7 +1049,7 @@ def review_agent(request, property_id):
         if request.user.is_authenticated:
             property = Properties.objects.get(id=property_id)
             agentId = property.broker_id
-            print(agentId)
+            # print(agentId)
             if Booking.objects.filter(user=request.user, property_id=property_id, status='Confirmed').exists():
                 rating = request.POST.get('rating')
                 comment = request.POST.get('comment')
@@ -1082,7 +1083,7 @@ def properties_booked(request, id):
     if request.user.is_authenticated:
         if request.user.is_agent:
             details = get_object_or_404(Properties, id=id)
-            print(details.id)
+            # print(details.id)
             bookings = Booking.objects.filter(property_id=details.id)
             return render(request, 'agent/agent-single-property.html', {'details': details, "bookings": bookings})
         else:
