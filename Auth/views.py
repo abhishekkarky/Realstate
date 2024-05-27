@@ -4,6 +4,7 @@ from django.core.files.base import ContentFile
 from django.contrib import messages
 from django.contrib.auth import (authenticate, get_user_model, login, logout,
                                  update_session_auth_hash)
+from django.contrib.auth.decorators import login_required
 import random
 from django.conf import settings
 import stripe
@@ -28,7 +29,7 @@ def initiate_payment(user_id, property, price, property_id, date, note):
     url = "https://a.khalti.com/api/v2/epayment/initiate/"
 
     payload = json.dumps({
-        "return_url": "http://localhost:8000/payment_successful?user_id={user_id}",
+        "return_url": f"http://localhost:8000/payment_successful?user_id={user_id}",
         "website_url": "http://localhost:8000/",
         "amount": price,
         "purchase_order_id": property_id,
@@ -47,16 +48,18 @@ def initiate_payment(user_id, property, price, property_id, date, note):
         'Content-Type': 'application/json',
     }
 
-    response = requests.request("POST", url, headers=headers, data=payload)
-    response_data = response.json()
-   # print(response_data)
+    try:
+        response = requests.post(url, headers=headers, data=payload)
+        response.raise_for_status()
+        response_data = response.json()
 
-    if response_data.get('payment_url'):
-        return {"url": response_data.get('payment_url'), "success": True}
-    else:
-        return {"success": False}
+        if response_data.get('payment_url'):
+            return {"url": response_data.get('payment_url'), "success": True}
+        else:
+            return {"success": False, "message": "Failed to get payment URL."}
 
-
+    except requests.RequestException as e:
+        return {"success": False, "message": str(e)}
 def user_login(request):
     if request.user.is_authenticated:
         messages.error(request, 'You are already logged in.')
@@ -482,7 +485,7 @@ def assignedToagent(request):
             if request.user.is_admin:
                 return redirect('/')
             else:
-                return redirect('.admin-page')
+                return redirect('admin-page')
     else:
         messages.error(
             request, "You must be logged in to access this page.")
@@ -875,34 +878,54 @@ def booking(request):
     #     messages.error(request, message)
     #     return redirect('/login')
 
-
+@login_required
 def payment_successful(request):
     data = request.GET
-    # print("sfdghjklhgfdsafhjkl",data)
-    if data.get('status') == "Completed":
-        property_id = data.get("property_id")
-        date = data.get("date")
-        note = data.get("note")
-        user_payment = Payment.objects.create(
-            user=request.user,
-            payment_bool=True,
-            txnId=data.get("tidx")
-        )
-        user_payment.save()
+    user = request.user
 
-        property_instance = get_object_or_404(Properties, id=property_id)
-        # print(property_instance)
-        booking = Booking.objects.create(
-            user=request.user,
-            property=property_instance,
-            date=date,
-            note=note,
-            isPaid=True,
-            status='Confirmed'
-        )
-        booking.save()
-    messages.success(request, "Payment successful. Your booking is confirmed.")
-    return redirect('/bookinglist')
+    if data.get('status') == "Completed":
+        try:
+            property_id = data.get("property_id")
+            date = data.get("date")
+            note = data.get("note")
+            txn_id = data.get("tidx")
+
+            # Ensure the user is authenticated and is a valid instance of CustomUser
+            if user.is_authenticated:
+                user_payment = Payment.objects.create(
+                    user=user,
+                    payment_bool=True,
+                    txnId=txn_id
+                )
+                user_payment.save()
+
+                property_instance = get_object_or_404(Properties, id=property_id)
+                
+                booking = Booking.objects.create(
+                    user=user,
+                    property=property_instance,
+                    date=date,
+                    note=note,
+                    isPaid=True,
+                    status='Confirmed'
+                )
+                booking.save()
+
+                messages.success(request, "Payment successful. Your booking is confirmed.")
+                return redirect('/bookinglist')
+            else:
+                messages.error(request, "User not authenticated.")
+                return redirect('/login')
+        
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+            return redirect('/')
+
+    messages.error(request, "Payment not completed.")
+    return redirect('/')
+
+def payment_cancelled(request):
+    return render(request, 'index.html')
 
 
 def payment_cancelled(request):
