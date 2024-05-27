@@ -275,7 +275,7 @@
             >
               <option value="" disabled selected>Select Broker</option>
               {% for broker in brokers %}
-              <option value="{{ broker.id }}">{{ broker.name }}</option>
+              <option value="{{ broker.agentId }}">{{ broker.name }}</option>
               {% endfor %}
             </select>
           </div>

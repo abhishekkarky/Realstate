@@ -619,7 +619,7 @@
           {% for broker in broker %}
           <div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
             <div class="h-100 person">
-              <img src="{{broker.photo.url}}" alt="Image" class="img-fluid" />
+              <img src="{{broker.image.url}}" alt="Image" class="img-fluid" />
 
               <div class="person-contents">
                 <h2 class="mb-0"><a href="#">{{broker.name}}</a></h2>
@@ -628,18 +628,8 @@
 
                 <ul class="social list-unstyled list-inline dark-hover">
                   <li class="list-inline-item">
-                    <a href="{{broker.twitterLink}}"
-                      ><span class="icon-twitter"></span
-                    ></a>
-                  </li>
-                  <li class="list-inline-item">
                     <a href="{{broker.facebookLink}}"
                       ><span class="icon-facebook"></span
-                    ></a>
-                  </li>
-                  <li class="list-inline-item">
-                    <a href="{{broker.linkedInLink}}"
-                      ><span class="icon-linkedin"></span
                     ></a>
                   </li>
                   <li class="list-inline-item">

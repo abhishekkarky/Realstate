@@ -173,7 +173,7 @@
             <div class="d-block agent-box p-5">
               <div class="img mb-4">
                 <img
-                  src="{{ details.broker.photo.url }}"
+                  src="{{ details.broker.image.url }}"
                   alt="Image"
                   class="img-fluid"
                 />
@@ -189,18 +189,8 @@
                     ></a>
                   </li>
                   <li class="me-1">
-                    <a href="{{ details.broker.twitterLink }}"
-                      ><span class="icon-twitter"></span
-                    ></a>
-                  </li>
-                  <li class="me-1">
                     <a href="{{ details.broker.facebookLink }}"
                       ><span class="icon-facebook"></span
-                    ></a>
-                  </li>
-                  <li class="me-1">
-                    <a href="{{ details.broker.linkedInLink }}"
-                      ><span class="icon-linkedin"></span
                     ></a>
                   </li>
                 </ul>
@@ -281,6 +271,7 @@
               method="POST"
               action="{% url 'review_agent' details.broker_id %}"
             >
+            <h1>{{details.broker_id}}</h1>
               {% csrf_token %}
               <!-- Rating input -->
               <div class="mb-3">

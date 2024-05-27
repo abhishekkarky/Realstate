@@ -69,7 +69,6 @@
                 <tr>
                   <th class="py-2 px-4 border-b">ID</th>
                   <th class="py-2 px-4 border-b">Name</th>
-                  <th class="py-2 px-4 border-b">Address</th>
                   <th class="py-2 px-4 border-b">Phone</th>
                   <th class="py-2 px-4 border-b">Description</th>
                   <th class="py-2 px-4 border-b">Facebook</th>
@@ -84,20 +83,17 @@
                 <tr>
                   <td class="py-2 px-4 border-b">{{forloop.counter}}</td>
                   <td class="py-2 px-4 border-b">{{agent.name}}</td>
+                  <td class="py-2 px-4 border-b">{{agent.number}}</td>
                   <td class="py-2 px-4 border-b">{{agent.intro}}</td>
                   <td class="py-2 px-4 border-b">{{agent.instagramLink}}</td>
                   <td class="py-2 px-4 border-b">
                     <a href="{{agent.facebookLink}}">{{agent.facebookLink}}</a>
                   </td>
-                  <td class="py-2 px-4 border-b">
-                    <a href="{{agent.twitterLink}}">{{agent.twitterLink}}</a>
-                  </td>
-                  <td class="py-2 px-4 border-b">
-                    <a href="{{agent.linkedInLink}}">{{agent.linkedInLink}}</a>
-                  </td>
+
+
                   <td class="py-2 px-4 border-b">
                     <img
-                      src="{{ agent.photo.url }}"
+                      src="{{ agent.image.url }}"
                       alt="Photo 1"
                       class="w-8 h-8 mr-2"
                     />
@@ -193,29 +189,7 @@
               required
             />
           </div>
-
-          <div class="mb-4">
-            <label for="propertyBedrooms">Twitter Link</label>
-            <input
-              type="text"
-              id="propertyBedrooms"
-              name="twitterLink"
-              class="w-full border p-2"
-              required
-            />
-          </div>
-
-          <div class="mb-4">
-            <label for="propertyToilets">LinkedIn Link</label>
-            <input
-              type="text"
-              id="propertyToilets"
-              name="linkedInLink"
-              class="w-full border p-2"
-              required
-            />
-          </div>
-
+          
           <div class="mb-4">
             <!-- Add a file input for photos -->
             <label for="propertyPhotos">Photo</label>

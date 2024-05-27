@@ -23,7 +23,8 @@ from django.core.mail import send_mail
 
 import requests
 
-def initiate_payment(user_id,property, price, property_id, date, note):
+
+def initiate_payment(user_id, property, price, property_id, date, note):
     url = "https://a.khalti.com/api/v2/epayment/initiate/"
 
     payload = json.dumps({
@@ -51,7 +52,7 @@ def initiate_payment(user_id,property, price, property_id, date, note):
    # print(response_data)
 
     if response_data.get('payment_url'):
-        return {"url":response_data.get('payment_url'), "success": True}
+        return {"url": response_data.get('payment_url'), "success": True}
     else:
         return {"success": False}
 
@@ -133,12 +134,13 @@ def dashboard(request):
                 request, "You do not have permission to access this page.")
             return redirect('admin-page')
     properties = Properties.objects.filter(type="Sale", is_archived=False)[:9]
-    propertiesrent = Properties.objects.filter(type="Rent", is_archived=False)[:9]
+    propertiesrent = Properties.objects.filter(
+        type="Rent", is_archived=False)[:9]
     prpocount = Properties.objects.all().count()
     testimonials = Testimonials.objects.all()[:3]
     userCount = CustomUser.objects.all().count()
-    broker = BrokerAccount.objects.all()[:3]
-    agentcount = BrokerAccount.objects.all().count()
+    broker = CustomUser.objects.filter(is_agent=True)[:3]
+    agentcount = CustomUser.objects.filter(is_agent=True).count()
     boughtprpo = Booking.objects.all().count()
 
     location = ''
@@ -148,7 +150,7 @@ def dashboard(request):
         searchDetails = Properties.objects.filter(location__contains=location)
     context = {
         'properties': properties,
-        "propertiesrent" : propertiesrent,
+        "propertiesrent": propertiesrent,
         'testimonials': testimonials,
         'broker': broker,
         'location': location,
@@ -166,8 +168,8 @@ def agentDash(request):
     prpocount = Properties.objects.all().count()
     testimonials = Testimonials.objects.all()[:3]
     userCount = CustomUser.objects.all().count()
-    broker = BrokerAccount.objects.all()[:3]
-    agentcount = BrokerAccount.objects.all().count()
+    broker = CustomUser.objects.filter(is_agent=True)[:3]
+    agentcount = CustomUser.objects.filter(is_agent=True).count()
     boughtprpo = Booking.objects.all().count()
 
     location = ''
@@ -283,8 +285,8 @@ def adminPage(request):
             prpocount = Properties.objects.all().count()
             testimonials = Testimonials.objects.all()[:3]
             userCount = CustomUser.objects.all().count()
-            broker = BrokerAccount.objects.all()[:3]
-            agentcount = BrokerAccount.objects.all().count()
+            broker = CustomUser.objects.filter(is_agent=True)[:3]
+            agentcount = CustomUser.objects.filter(is_agent=True).count()
             boughtprpo = Booking.objects.all().count()
             seven_days_ago = datetime.now() - timedelta(days=7)
             user_count_last_7_days = CustomUser.objects.filter(
@@ -346,8 +348,6 @@ def agentManagement(request):
             intro = request.POST.get("intro")
             instagramLink = request.POST.get("instagramLink")
             facebookLink = request.POST.get("facebookLink")
-            twitterLink = request.POST.get("twitterLink")
-            linkedInLink = request.POST.get("linkedInLink")
             email = f"{name.lower()}{random.randint(1000, 9999)}@gmail.com"
             agent_email = remove(email)
 
@@ -364,8 +364,6 @@ def agentManagement(request):
                 intro=intro,
                 instagramLink=instagramLink,
                 facebookLink=facebookLink,
-                twitterLink=twitterLink,
-                linkedInLink=linkedInLink
             )
             message = "Agent added successfully!!"
             messages.success(request, message)
@@ -381,12 +379,11 @@ def agentManagement(request):
                     number=number,
                     email=agent_email,
                     password=agent_password,
+                    image=photo,
                     name=name,
                     intro=intro,
                     instagramLink=instagramLink,
                     facebookLink=facebookLink,
-                    twitterLink=twitterLink,
-                    linkedInLink=linkedInLink,
                     is_admin=False,
                     is_agent=True,
                     agentId=agent.id
@@ -397,7 +394,7 @@ def agentManagement(request):
                 messages.error(request, message)
                 print(e)
 
-        allAgents = BrokerAccount.objects.all()
+        allAgents = CustomUser.objects.filter(is_agent=True)
         context = {'allAgents': allAgents}
         return render(request, 'admin/agent-management.html', context)
     else:
@@ -408,7 +405,7 @@ def agentManagement(request):
 
 def edit_agents(request, id):
     if (request.user.is_authenticated and request.user.is_admin):
-        agent = get_object_or_404(BrokerAccount, id=id)
+        agent = get_object_or_404(CustomUser, id=id)
         context = {
             'agent': agent
         }
@@ -418,14 +415,12 @@ def edit_agents(request, id):
             intro = request.POST.get("intro")
             instagramLink = request.POST.get("instagramLink")
             facebookLink = request.POST.get("facebookLink")
-            twitterLink = request.POST.get("twitterLink")
-            linkedInLink = request.POST.get("linkedInLink")
 
             if photo is None:
                 photo = agent.photo
 
-            editQuery = BrokerAccount(id=id, photo=photo, name=name, intro=intro, instagramLink=instagramLink,
-                                      facebookLink=facebookLink, twitterLink=twitterLink, linkedInLink=linkedInLink)
+            editQuery = CustomUser(id=id, photo=photo, name=name, intro=intro, instagramLink=instagramLink,
+                                   facebookLink=facebookLink)
             editQuery.save()
             messages.success(request, "Agent Edited Successfully !!!")
 
@@ -478,7 +473,7 @@ def assignedToagent(request):
             # print(request.user)
             # print(properties)
             # for property in properties:
-                # print(property.name)
+            # print(property.name)
             context = {"properties": properties}
             return render(request, 'agent/assigned-properties.html', context)
         else:
@@ -557,7 +552,7 @@ def admin_testimonial(request):
 
 def adminProperty(request):
     if (request.user.is_authenticated and request.user.is_admin):
-        brokers = BrokerAccount.objects.all()
+        brokers = CustomUser.objects.filter(is_agent=True)
         properties = Properties.objects.all()
         context = {
             'properties': properties,
@@ -579,7 +574,7 @@ def adminProperty(request):
             latitude = request.POST.get("latitude")
             longitude = request.POST.get("longitude")
 
-            broker = BrokerAccount.objects.get(pk=broker_id)
+            broker = CustomUser.objects.get(pk=broker_id)
 
             property_obj = Properties(
                 image=image,
@@ -633,7 +628,7 @@ def adminSaveSellerProperty(request, property_id):
         details = get_object_or_404(SellingProperties, id=property_id)
 
         properties = Properties.objects.all()
-        brokers = BrokerAccount.objects.all()
+        brokers = CustomUser.objects.filter(is_agent=True)
         context = {
             'properties': properties,
             'brokers': brokers,
@@ -675,7 +670,8 @@ def adminSaveSellerProperty(request, property_id):
 
             try:
                 property_obj.save()
-                property_objd = get_object_or_404(SellingProperties, pk=property_id)
+                property_objd = get_object_or_404(
+                    SellingProperties, pk=property_id)
                 property_objd.delete()
                 message = "Property added successfully"
                 messages.success(request, message)
@@ -752,7 +748,7 @@ def deleteProperty(request, property_id):
 
 def delete_agent(request, id):
     if (request.user.is_authenticated and request.user.is_admin):
-        agent_delete = get_object_or_404(BrokerAccount, pk=id)
+        agent_delete = get_object_or_404(CustomUser, id=id)
         agent_delete.delete()
         message = "Agent deleted successfully"
         messages.success(request, message)
@@ -836,7 +832,7 @@ def booking(request):
 
                 message = "Booking added successfully!!"
                 messages.success(request, message)
-                return redirect('/properties')
+                return redirect('bookinglist')
 
             else:
                 request.session['property'] = property_id
@@ -851,11 +847,13 @@ def booking(request):
                     price = int(property_instance.price) * 100
                     # print(price)
 
-                    initiate_data = initiate_payment(user_id,property_instance, price, property_id, date, note)
+                    initiate_data = initiate_payment(
+                        user_id, property_instance, price, property_id, date, note)
                     if initiate_data.get('success'):
                         return redirect(initiate_data.get('url'))
                     else:
-                        messages.error(request, "Couldn't process your request!! Please try again later.")
+                        messages.error(
+                            request, "Couldn't process your request!! Please try again later.")
                         return redirect('/booking')
                 except Exception as e:
                     messages.error(
@@ -1049,7 +1047,7 @@ def review_agent(request, property_id):
         if request.user.is_authenticated:
             property = Properties.objects.get(id=property_id)
             agentId = property.broker_id
-            # print(agentId)
+            print("\n review Agenenaljgsglk \n", agentId)
             if Booking.objects.filter(user=request.user, property_id=property_id, status='Confirmed').exists():
                 rating = request.POST.get('rating')
                 comment = request.POST.get('comment')
@@ -1112,6 +1110,7 @@ def update_is_archived(request, property_id):
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 
+
 def forgotpassword(request):
     if request.method == 'POST':
         reset_email = request.POST.get('resetemail')
@@ -1121,22 +1120,23 @@ def forgotpassword(request):
             user = None
 
         if user:
-            random_password = ''.join(secrets.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(12))
-            user.set_password(random_password)  
-            user.save()  
+            random_password = ''.join(secrets.choice(
+                string.ascii_letters + string.digits + string.punctuation) for _ in range(12))
+            user.set_password(random_password)
+            user.save()
 
-            message = f'Your new password: {random_password}' 
+            message = f'Your new password: {random_password}'
             send_mail(
                 'Password Reset',
-                message,  
+                message,
                 'avicekbhatta.321@gmail.com',
                 [reset_email],
                 fail_silently=False
             )
-            messages.success(request, 'Password reset successful. Check your email for the new password.')   
+            messages.success(
+                request, 'Password reset successful. Check your email for the new password.')
             return redirect('login')
         else:
             return render(request, 'forgotpassword.html', {'error': True})
 
     return render(request, 'forgotpassword.html')
-
