@@ -830,7 +830,7 @@ def booking(request):
             property_instance = get_object_or_404(
                 Properties, id=property_id)
 
-            if (Booking.objects.filter(date=date).exists()):
+            if (Booking.objects.filter(id=property_id,date=date).exists()):
                 message = "This property has been booked for this date"
                 messages.error(request, message)
                 return redirect('/singleproperty/' + str(property_id))
