@@ -656,6 +656,8 @@ def adminSaveSellerProperty(request, property_id):
             description = request.POST.get("description")
             latitude = request.POST.get("latitude")
             longitude = request.POST.get("longitude")
+            user = request.POST.get("username")
+            userAssigned = CustomUser.objects.get(name=user)
 
             broker = CustomUser.objects.get(pk=broker_id)
 
@@ -672,7 +674,8 @@ def adminSaveSellerProperty(request, property_id):
                 price=price,
                 description=description,
                 latitude=latitude,
-                longitude=longitude
+                longitude=longitude,
+                user=userAssigned
             )
 
             try:

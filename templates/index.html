@@ -184,7 +184,12 @@
                       <span class="city d-block mb-3"
                         >{{property.location}}</span
                       >
-
+                      <span class="city d-block mb-3">
+                        {% if property.user != null %}
+                        Seller : {{ property.user.name}}
+                        {% else %}
+                        {% endif %}</span>
+                      </span>
                       <div class="specs d-flex mb-4">
                         <span class="d-block d-flex align-items-center me-3">
                           <span class="icon-bed me-2"></span>
@@ -195,7 +200,6 @@
                           <span class="caption">{{property.baths}} baths</span>
                         </span>
                       </div>
-
                       <a
                         href="/singleproperty/{{ property.id }}"
                         class="btn btn-primary py-2 px-3"
@@ -265,7 +269,7 @@
 
                   <div class="property-content">
                     <div class="price mb-2">
-                      <span>RS. {{ property.type }}</span>
+                      <span>{{ property.type }}</span>
                     </div>
                     <div class="price mb-2">
                       <span>RS. {{ property.price }}</span>
@@ -277,6 +281,12 @@
                       <span class="city d-block mb-3"
                         >{{property.location}}</span
                       >
+                      <span class="city d-block mb-3">
+                        {% if property.user != null %}
+                        Seller : {{ property.user.name}}
+                        {% else %}
+                        {% endif %}</span>
+                      </span>
 
                       <div class="specs d-flex mb-4">
                         <span class="d-block d-flex align-items-center me-3">

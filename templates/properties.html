@@ -141,6 +141,11 @@
                           <span class="caption"
                             >{{featuredProperties.baths}} baths</span
                           >
+                          <span class="caption"
+                            >{% if featuredProperties.user != null %}
+                            Seller : {{ featuredProperties.user.name}}
+                            {% else %}
+                            {% endif %}</span>
                         </span>
                       </div>
 

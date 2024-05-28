@@ -91,6 +91,7 @@
                   <th class="py-2 px-4 border-b">Beds</th>
                   <th class="py-2 px-4 border-b">Baths</th>
                   <th class="py-2 px-4 border-b">Price</th>
+                  <th class="py-2 px-4 border-b">Seller Name</th>
                   <th class="py-2 px-4 border-b">Type</th>
                   <th class="py-2 px-4 border-b">Is Archived</th>
                   <th class="py-2 px-4 border-b">Description</th>
@@ -152,6 +153,13 @@
                   <td class="py-2 px-4 border-b">{{ property.beds }}</td>
                   <td class="py-2 px-4 border-b">{{ property.baths }}</td>
                   <td class="py-2 px-4 border-b">{{ property.price }}</td>
+                  <td class="py-2 px-4 border-b">
+                    {% if property.user != null %}
+                      {{ property.user.name }}                    
+                    {% else %}
+                    No Seller
+                    {% endif %}
+                  </td>
                   <td class="py-2 px-4 border-b">
                     {% if property.type == "Rent" %}
                         Rent
