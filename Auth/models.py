@@ -15,7 +15,7 @@ class CustomUser(AbstractUser):
     instagramLink = models.CharField(max_length=1000, blank=True, null=False)
     facebookLink = models.CharField(max_length=1000, blank=True, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    
     USERNAME_FIELD = 'number'
 
     groups = models.ManyToManyField('auth.Group', related_name='customuser_groups', blank=True)
@@ -54,7 +54,7 @@ class SellingProperties(models.Model):
     latitude = models.FloatField(default=27.707)
     longitude = models.FloatField(default=85.34238)
     type = models.CharField(default="Sale", max_length=30)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADEf)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE , null=True, blank=True)
 
 
 class Properties(models.Model):
@@ -72,7 +72,7 @@ class Properties(models.Model):
     longitude = models.FloatField(default=85.34238)
     type = models.CharField(default="Sale", max_length=30)
     is_archived = models.BooleanField(default=False)
-
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name='user_properties')
 
 class Testimonials(models.Model):
     image = models.ImageField(upload_to='media/', default='/static/images/img_1.jpg')
