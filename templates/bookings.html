@@ -7,6 +7,7 @@
   <title>Bookings</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/aos.css" />
   <link rel="stylesheet" href="/static/css/style.css" />
   <style>
     img {
@@ -54,10 +55,16 @@
                 Date
               </th>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Type
+                Property Type
               </th>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Note
+              </th>     
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Price
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Booking Type
               </th>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Action
@@ -74,7 +81,9 @@
                 {{ booking.property.name }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap">{{ booking.date }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ booking.property.type }}</td>
               <td class="px-6 py-4 whitespace-nowrap">{{ booking.note }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ booking.property.price }}</td>
               <td class="px-6 py-4 whitespace-nowrap">
                 {% if booking.isPaid %}Booked{% else %}Rented{% endif %}
               </td>

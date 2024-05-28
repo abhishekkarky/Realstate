@@ -60,6 +60,8 @@ def initiate_payment(user_id, property, price, property_id, date, note):
 
     except requests.RequestException as e:
         return {"success": False, "message": str(e)}
+
+
 def user_login(request):
     if request.user.is_authenticated:
         messages.error(request, 'You are already logged in.')
@@ -228,7 +230,8 @@ def singleProperty(request, id):
                 request, "You do not have permission to access this page.")
             return redirect('admin-page')
     details = get_object_or_404(Properties, id=id)
-    reviews = Review.objects.filter(broker=id)
+    brokerId = details.broker_id
+    reviews = Review.objects.filter(broker=brokerId)
     return render(request, 'property-single.html', {'details': details, 'reviews': reviews})
 
 
@@ -353,6 +356,7 @@ def agentManagement(request):
             facebookLink = request.POST.get("facebookLink")
             email = f"{name.lower()}{random.randint(1000, 9999)}@gmail.com"
             agent_email = remove(email)
+            print(photo)
 
             agent_password = "password123"
 
@@ -391,6 +395,7 @@ def agentManagement(request):
                     is_agent=True,
                     agentId=agent.id
                 )
+                print(new_user)
                 return redirect('/admin-agent-management')
             except Exception as e:
                 message = "Couldn't process your request!! Please try again later."
@@ -496,7 +501,6 @@ def booking_management(request):
     if (request.user.is_authenticated and request.user.is_admin):
 
         bookings_sale = Booking.objects.all()
-        # print(bookings_sale)
         context = {
             'bookings': bookings_sale
         }
@@ -653,7 +657,7 @@ def adminSaveSellerProperty(request, property_id):
             latitude = request.POST.get("latitude")
             longitude = request.POST.get("longitude")
 
-            broker = BrokerAccount.objects.get(pk=broker_id)
+            broker = CustomUser.objects.get(pk=broker_id)
 
             property_obj = Properties(
                 image=image,
@@ -799,6 +803,9 @@ def admin_delete_test(request, id):
 def bookinglist(request):
     user = request.user.id
     user_bookings = Booking.objects.filter(user=user)
+    for bk in user_bookings:
+        print(bk.property.type)
+
     context = {
         'bookings': user_bookings
     }
@@ -843,6 +850,8 @@ def booking(request):
                 request.session['note'] = note
                 user_id = request.user.id
 
+                print("\nuser_id\n", user_id)
+
                 try:
                     property_instance = get_object_or_404(
                         Properties, id=property_id)
@@ -865,23 +874,12 @@ def booking(request):
                     return redirect('/booking')
     return render(request, 'booking_page.html')
 
-    #     booking = Booking(
-    #         user=request.user, property=property_instance, date=date, note=note)
-    #     booking.status = 'Confirmed'
-    #     booking.save()
 
-    #     message = "Booking added successfully!!"
-    #     messages.success(request, message)
-    #     return redirect('/properties')
-    # else:
-    #     message = "User is not authenticated"
-    #     messages.error(request, message)
-    #     return redirect('/login')
-
-@login_required
 def payment_successful(request):
     data = request.GET
     user = request.user
+    # print("\ndata\n", data)
+    # print("\nuser\n", user)
 
     if data.get('status') == "Completed":
         try:
@@ -899,8 +897,9 @@ def payment_successful(request):
                 )
                 user_payment.save()
 
-                property_instance = get_object_or_404(Properties, id=property_id)
-                
+                property_instance = get_object_or_404(
+                    Properties, id=property_id)
+
                 booking = Booking.objects.create(
                     user=user,
                     property=property_instance,
@@ -911,21 +910,22 @@ def payment_successful(request):
                 )
                 booking.save()
 
-                messages.success(request, "Payment successful. Your booking is confirmed.")
+                property_instance.is_archived = True
+                property_instance.save()
+
+                messages.success(
+                    request, "Payment successful. Your booking is confirmed.")
                 return redirect('/bookinglist')
             else:
                 messages.error(request, "User not authenticated.")
-                return redirect('/login')
-        
+                return redirect('login')
+
         except Exception as e:
             messages.error(request, f"An error occurred: {str(e)}")
             return redirect('/')
 
     messages.error(request, "Payment not completed.")
     return redirect('/')
-
-def payment_cancelled(request):
-    return render(request, 'index.html')
 
 
 def payment_cancelled(request):
@@ -1065,24 +1065,25 @@ def changepassword(request):
     return render(request, 'changepassword.html')
 
 
-def review_agent(request, property_id):
+def review_agent(request, broker_id):
     if request.method == 'POST':
         if request.user.is_authenticated:
-            property = Properties.objects.get(id=property_id)
-            agentId = property.broker_id
-            print("\n review Agenenaljgsglk \n", agentId)
+            property_id = request.POST.get('property_id')
+            property = get_object_or_404(Properties, id=property_id)
+            print("\n review Agenenaljgsglk \n", broker_id)
             if Booking.objects.filter(user=request.user, property_id=property_id, status='Confirmed').exists():
                 rating = request.POST.get('rating')
                 comment = request.POST.get('comment')
 
-                if Review.objects.filter(user=request.user, broker=agentId).exists():
+                if Review.objects.filter(user=request.user, broker=broker_id).exists():
                     messages.error(
                         request, 'You have already submitted a review for this broker.')
                 else:
                     review = Review(
-                        broker_id=agentId, user=request.user, rating=rating, comment=comment)
+                        broker_id=broker_id, user=request.user, rating=rating, comment=comment)
                     review.save()
                     messages.success(request, 'Review submitted successfully.')
+                    print("\n review Agenenaljgsglk \n", review)
             else:
                 messages.error(request, 'You must book this property first.')
         else:

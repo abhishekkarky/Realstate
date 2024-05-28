@@ -79,20 +79,9 @@
             <h1 class="heading" data-aos="fade-up">
               Easiest way to find your dream home
             </h1>
-            <form
-              class="narrow-w form-search d-flex align-items-stretch mb-3"
-              data-aos="fade-up"
-              data-aos-delay="200"
-              method="POST"
-              action="{% url 'dashboard'  %}"
-            >
+            <form class="narrow-w form-search d-flex align-items-stretch mb-3" data-aos="fade-up" data-aos-delay="200" method="POST" action="{% url 'dashboard' %}">
               {% csrf_token %}
-              <input
-                type="text"
-                class="form-control px-4"
-                name="location"
-                placeholder="Your ZIP code or City. e.g. New York"
-              />
+              <input type="text" class="form-control px-4" name="location" placeholder="Your ZIP code or City. e.g. New York" />
               <button type="submit" class="btn btn-primary">Search</button>
             </form>
           </div>
@@ -100,118 +89,67 @@
       </div>
     </div>
 
-    {% if searchDetails %}
-    <div class="section">
-      <div class="container">
-        <div class="row mb-5 align-items-center">
-          <div class="col-lg-6">
-            <h2 class="font-weight-bold text-primary heading">
-              Searched Properties
-            </h2>
+    {% if searchDetails is not None %}
+      <div class="section">
+        <div class="container">
+          <div class="row mb-5 align-items-center">
+            <div class="col-lg-6">
+              <h2 class="font-weight-bold text-primary heading">
+                Searched Properties
+              </h2>
+            </div>
           </div>
-          {% comment %} <div class="col-lg-6 text-lg-end">
-            <p>
-              <a
-                href="#"
-                target="_blank"
-                class="btn btn-primary text-white py-3 px-4"
-                >View all properties</a
-              >
-            </p>
-          </div> {% endcomment %}
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <div class="property-slider-wrap">
-              <div class="property-slider">
-                {% for property in searchDetails %} {% if not property.is_archived %}
-                <div class="property-item">
-                  <a href="/singleproperty/{{ property.id }}" class="img">
-                    {% if property.image != null %}
-                    <img
-                      src="{{ property.image.url }}"
-                      alt="Image"
-                      class="img-fluid"
-                      style="height: 415px"
-                    />
-                    {% else %}
-                    <img
-                      src="static/images/noimage.jpg"
-                      alt="Image"
-                      class="img-fluid"
-                      style="height: 415px"
-                    />
-                    {% endif %}
-                  </a>
-
-                  <div class="property-content">
-                    <div class="price mb-2">
-                      <span>RS. {{ property.price }}</span>
-                    </div>
-                    <div>
-                      <span class="d-block mb-2 text-black-50"
-                        >{{property.name}}</span
-                      >
-                      <span class="city d-block mb-3"
-                        >{{property.location}}</span
-                      >
-
-                      <div class="specs d-flex mb-4">
-                        <span class="d-block d-flex align-items-center me-3">
-                          <span class="icon-bed me-2"></span>
-                          <span class="caption">{{property.beds}} beds</span>
-                        </span>
-                        <span class="d-block d-flex align-items-center">
-                          <span class="icon-bath me-2"></span>
-                          <span class="caption">{{property.baths}} baths</span>
-                        </span>
+          <div class="row">
+            <div class="col-12">
+              <div class="property-slider-wrap">
+                <div class="property-slider">
+                  {% for property in searchDetails %}
+                    {% if not property.is_archived %}
+                      <div class="property-item">
+                        <a href="/singleproperty/{{ property.id }}" class="img">
+                          {% if property.image %}
+                            <img src="{{ property.image.url }}" alt="Image" class="img-fluid" style="height: 415px" />
+                          {% else %}
+                            <img src="{% static 'images/noimage.jpg' %}" alt="Image" class="img-fluid" style="height: 415px" />
+                          {% endif %}
+                        </a>
+                        <div class="property-content">
+                          <div class="price mb-2">
+                            <span>RS. {{ property.price }}</span>
+                          </div>
+                          <div>
+                            <span class="d-block mb-2 text-black-50">{{ property.name }}</span>
+                            <span class="city d-block mb-3">{{ property.location }}</span>
+                            <div class="specs d-flex mb-4">
+                              <span class="d-block d-flex align-items-center me-3">
+                                <span class="icon-bed me-2"></span>
+                                <span class="caption">{{ property.beds }} beds</span>
+                              </span>
+                              <span class="d-block d-flex align-items-center">
+                                <span class="icon-bath me-2"></span>
+                                <span class="caption">{{ property.baths }} baths</span>
+                              </span>
+                            </div>
+                            <a href="/singleproperty/{{ property.id }}" class="btn btn-primary py-2 px-3">See details</a>
+                          </div>
+                        </div>
                       </div>
-
-                      <a
-                        href="/singleproperty/{{ property.id }}"
-                        class="btn btn-primary py-2 px-3"
-                        >See details</a
-                      >
-                    </div>
-                  </div>
+                    {% endif %}
+                  {% endfor %}
                 </div>
-                {% endif %}
-                {% endfor %}
-                <!-- .item -->
-              </div>
-
-              <div
-                id="property-nav"
-                class="controls"
-                tabindex="0"
-                aria-label="Carousel Navigation"
-              >
-                <span
-                  class="prev"
-                  data-controls="prev"
-                  aria-controls="property"
-                  tabindex="-1"
-                  >Prev</span
-                >
-                <span
-                  class="next"
-                  data-controls="next"
-                  aria-controls="property"
-                  tabindex="-1"
-                  >Next</span
-                >
+                <div id="property-nav" class="controls" tabindex="0" aria-label="Carousel Navigation">
+                  <span class="prev" data-controls="prev" aria-controls="property" tabindex="-1">Prev</span>
+                  <span class="next" data-controls="next" aria-controls="property" tabindex="-1">Next</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- end -->
-    {% comment %} {% else %}
-    <p style="text-align: center; margin-top: 20px">No results were found.</p> {% endcomment %}
-    {% endif %}
-
-    <div class="section">
+      {% if not searchDetails %}
+        <p style="text-align: center; margin-top: 20px">No results were found.</p>
+      {% endif %}
+    {% endif %}    <div class="section">
       <div class="container">
         <div class="row mb-5 align-items-center">
           <div class="col-lg-6">

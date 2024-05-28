@@ -75,6 +75,7 @@
       ></button>
     </div>
     {% endfor %} {% endif %}
+    {% include "navbar.html" %}
     <div class="site-mobile-menu site-navbar-target">
       <div class="site-mobile-menu-header">
         <div class="site-mobile-menu-close">
@@ -271,11 +272,18 @@
               method="POST"
               action="{% url 'review_agent' details.broker_id %}"
             >
-            <h1>{{details.broker_id}}</h1>
+            <!-- <h1>{{details.broker_id}}</h1> -->
               {% csrf_token %}
               <!-- Rating input -->
               <div class="mb-3">
-                <label for="rating" class="form-label">Rating:</label>
+                <input type="number"
+                  class="form-control"
+                  id="selected-rating"
+                  name="property_id"
+                  value="{{ details.id }}"
+                  hidden
+                  required
+                >
                 <input
                   type="number"
                   class="form-control"
