@@ -1,15 +1,18 @@
 .alert {
+    z-index: 99999 !important;
     padding: 15px;
     border-radius: 4px;
   }
   
   .alert-success {
+    z-index: 99999 !important;
     background-color: #d4edda;
     border-color: #c3e6cb;
     color: #155724;
   }
   
   .alert-danger {
+    z-index: 99999 !important;
     background-color: #f8d7da;
     border-color: #f5c6cb;
     color: #721c24;

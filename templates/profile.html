@@ -37,6 +37,14 @@
   </head>
 
   <body class="bg-gray-100 h-screen">
+    <div class="site-mobile-menu site-navbar-target">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close">
+          <span class="icofont-close js-menu-toggle"></span>
+        </div>
+      </div>
+      <div class="site-mobile-menu-body"></div>
+    </div>
     {% include "navbar.html" %} {% if messages %} {% for message in messages %}
     <div
       class="alert alert-dismissible fade show {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
@@ -167,5 +175,6 @@
           reader.readAsDataURL(file);
         });
     </script>
+    <script src="static/js/navbar.js"></script>
   </body>
 </html>

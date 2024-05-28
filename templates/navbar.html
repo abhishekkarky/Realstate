@@ -16,22 +16,22 @@
           <li><a href="/">Home</a></li>
           {% comment %} <li><a href="/properties">Rent</a></li> {% endcomment %}
           {% if user.is_authenticated and not user.is_agent %}
-          <li><a href="bookinglist">My Properties</a></li>
+          <li><a href="/bookinglist">My Properties</a></li>
           {% elif user.is_authenticated and user.is_agent %}
-          <li><a href="assigned-properties">My Assigned Properties</a></li>
+          <li><a href="/assigned-properties">My Assigned Properties</a></li>
           {% endif %}
-          {% comment %} <li><a href="services">Services</a></li> {% endcomment %}
+          {% comment %} <li><a href="/services">Services</a></li> {% endcomment %}
           {% comment %} {% if user.is_authenticated and not user.is_agent  %}
-          <li><a href="bookinglist">Bookings</a></li> {% endcomment %}
+          <li><a href="/bookinglist">Bookings</a></li> {% endcomment %}
           {% comment %} {% else %} {% endcomment %}
           {% comment %} {% endif %} {% endcomment %}
-          <li><a href="about">About</a></li>
-          <li><a href="contact">Contact Us</a></li>
-          <li><a href="calculate_land_area">Land Calculator</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+          <li><a href="/calculate_land_area">Land Calculator</a></li>
           {% if user.is_authenticated %}
-            <li><a href="profile_page"><i class="fa-solid fa-user"></i></a></li>
+            <li><a href="/profile_page"><i class="fa-solid fa-user"></i></a></li>
           {% else %}
-            <li><a href="login">Login</a></li>
+            <li><a href="/login">Login</a></li>
           {% endif %}
           
         </ul>

@@ -54,6 +54,7 @@ class SellingProperties(models.Model):
     latitude = models.FloatField(default=27.707)
     longitude = models.FloatField(default=85.34238)
     type = models.CharField(default="Sale", max_length=30)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADEf)
 
 
 class Properties(models.Model):

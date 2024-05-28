@@ -1015,6 +1015,7 @@ def sellProperty(request):
             image = request.FILES.get('image')
             imageTwo = request.FILES.get('imageTwo')
             imageThree = request.FILES.get('imageThree')
+            user = request.user
 
             property = SellingProperties(
                 name=name,
@@ -1028,6 +1029,7 @@ def sellProperty(request):
                 image=image,
                 imageTwo=imageTwo,
                 imageThree=imageThree,
+                user=user
             )
             property.save()
             messages.success(
